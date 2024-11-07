@@ -1,7 +1,5 @@
 'use client'
-import { redirect } from "next/navigation"
-import { signIn, providerMap } from "@/lib/auth"
-import { AuthError } from "next-auth"
+import { providerMap } from "@/lib/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -10,14 +8,14 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signInWithCredentials } from "./actions/auth.actions"
+import { signInWithCredentials, signInWithOAuthProvider } from "../actions/auth.actions"
+import { Provider } from "@/types"
 
 interface AuthFormProps {
     callbackUrl: string
@@ -25,8 +23,6 @@ interface AuthFormProps {
 }
 
 const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
-
-    const { handleSubmit } = useForm()
 
     const form = useForm<z.infer<typeof signInSchema>>({
         resolver: zodResolver(signInSchema),
@@ -44,11 +40,15 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
         await signInWithCredentials(values);
     }
 
+    const handleOAuthSubmit = async (provider: Provider) => {
+        await signInWithOAuthProvider(provider, callbackUrl);
+    }
+
     return (
         <div className="flex flex-col gap-2">
             <Form {...form}>
                 <form
-                    onSubmit={handleSubmit(handleCredentialSubmit)}>
+                    onSubmit={form.handleSubmit(handleCredentialSubmit)}>
                     <FormField
                         control={form.control}
                         name="name"
@@ -95,22 +95,8 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
             {Object.values(providerMap).map((provider) => (
                 <form
-                    // action={async () => {
-                    //     "use server"
-                    //     try {
-                    //         await signIn(provider.id, {
-                    //             redirectTo: callbackUrl ?? "",
-                    //         })
-                    //     } catch (error) {
-
-                    //         if (error instanceof AuthError) {
-                    //             //todo: have to redirect to error page
-                    //             // return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`)
-                    //         }
-
-                    //         throw error
-                    //     }
-                    // }}
+                    key={provider.id}
+                    action={() => handleOAuthSubmit(provider)}
                 >
                     <Button type="submit">
                         <span>Sign in with {provider.name}</span>
