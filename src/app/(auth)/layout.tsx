@@ -13,7 +13,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
                     height={1000}
                     width={1000}
                     alt='auth hero'
-                    className='w-full h-full object-cover' />
+                    className=' object-cover' />
             </div>
         </main>
     )

@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { signInWithCredentials, signInWithOAuthProvider } from "../actions/auth.actions"
 import { Provider } from "@/types"
+import Image from "next/image"
 
 interface AuthFormProps {
     callbackUrl: string
@@ -46,17 +47,36 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
     return (
         <div className="flex flex-col gap-2">
+
+            <div className="flex justify-center items-center gap-2">
+                <Image
+                    src={'/icons/logo.svg'}
+                    width={25}
+                    height={25}
+                    alt="logo" />
+
+                <h1 className="font-bold text-2xl">Flickers</h1>
+            </div>
+
+            <div className="p-3 flex flex-col items-center justify-center">
+                <h3 className="text-3xl font-bold">Log in to your account</h3>
+                <p className="text-purple-secondary font-normal text-base">Welcome back! Please enter your details.</p>
+            </div>
             <Form {...form}>
                 <form
+                    className="w-full min-w-[400px] flex flex-col gap-4"
                     onSubmit={form.handleSubmit(handleCredentialSubmit)}>
                     <FormField
                         control={form.control}
                         name="name"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem
+                                className="">
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Your Name" {...field} />
+                                    <Input 
+                                    placeholder="Your Name"
+                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0 !bg-dark-4" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -69,7 +89,10 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="abc@example.com" {...field} />
+                                    <Input 
+                                    placeholder="abc@example.com"
+                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                                    !bg-dark-4" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -82,24 +105,32 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
-                                    <Input {...field} />
+                                    <Input 
+                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                                    !bg-dark-4"
+                                    {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Sign In</Button>
+                    <Button 
+                    className="rounded-lg font-semibold" type="submit">Log In</Button>
 
                 </form>
             </Form>
 
             {Object.values(providerMap).map((provider) => (
                 <form
+                className="w-full min-w-[400px] flex flex-col gap-3 "
                     key={provider.id}
                     action={() => handleOAuthSubmit(provider)}
                 >
-                    <Button type="submit">
-                        <span>Sign in with {provider.name}</span>
+                    <Button 
+                    type="submit" 
+                    variant={'white'}
+                    className="rounded-lg">
+                        <span className="font-semibold text-dark-4">Sign in with {provider.name}</span>
                     </Button>
                 </form>
             ))}
