@@ -1,11 +1,10 @@
-import React from 'react'
+import AuthForm from "@/components/AuthForm"
 
-const SignUpPage = () => {
+export default async function SignUpPage({ searchParams }: { searchParams: { callbackUrl: string } }) {
   return (
-    <div>
-      
-    </div>
+    <AuthForm
+      callbackUrl={searchParams?.callbackUrl}
+      type="signup" />
   )
 }
 
-export default SignUpPage

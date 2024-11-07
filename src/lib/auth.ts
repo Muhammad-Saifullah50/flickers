@@ -3,7 +3,7 @@ import GitHub from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
 import type { Provider } from "next-auth/providers"
 import Google from "next-auth/providers/google"
- 
+
 const providers: Provider[] = [
   Credentials({
     credentials: { password: { label: "Password", type: "password" } },
@@ -19,18 +19,22 @@ const providers: Provider[] = [
   GitHub,
   Google
 ]
- 
+
 export const providerMap = providers
   .map((provider) => {
     if (typeof provider === "function") {
       const providerData = provider()
-      return { id: providerData.id, name: providerData.name }
+      return {
+        id: providerData.id, name: providerData.name, icon:
+          providerData.name === "Google" ? 'https://authjs.dev/img/providers/google.svg' :
+            providerData.name === "GitHub" ? 'https://authjs.dev/img/providers/github.svg' : null
+      }
     } else {
       return { id: provider.id, name: provider.name }
     }
   })
   .filter((provider) => provider.id !== "credentials")
- 
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers,
   pages: {

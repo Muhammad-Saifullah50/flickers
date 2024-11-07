@@ -10,8 +10,8 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
             <div className='hidden lg:flex w-1/2 h-full bg-dark-2'>
                 <Image
                     src={'/images/auth-hero.png'}
-                    height={1000}
-                    width={1000}
+                    height={250}
+                    width={500}
                     alt='auth hero'
                     className=' object-cover' />
             </div>
