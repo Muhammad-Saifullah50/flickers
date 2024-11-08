@@ -1,9 +1,12 @@
 import AuthForm from "@/components/AuthForm"
 
 export default async function SignUpPage({ searchParams }: { searchParams: { callbackUrl: string } }) {
+
+const {callbackUrl} = await searchParams;
+
   return (
     <AuthForm
-      callbackUrl={searchParams?.callbackUrl}
+      callbackUrl={callbackUrl}
       type="signup" />
   )
 }

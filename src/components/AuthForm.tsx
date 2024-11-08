@@ -3,7 +3,7 @@ import { providerMap } from "@/lib/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
-import { signUpSchema } from "@/validations/authFormSchema"
+import { authSchema } from "@/validations/authFormSchema"
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -14,10 +14,11 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signInWithCredentials, signInWithOAuthProvider } from "../actions/auth.actions"
+import { signInWithCredentials, signInWithOAuthProvider, signUpWithCredentials } from "../actions/auth.actions"
 import { Provider } from "@/types"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 
 interface AuthFormProps {
     callbackUrl: string
@@ -26,19 +27,24 @@ interface AuthFormProps {
 
 const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
-    const form = useForm<z.infer<typeof signUpSchema>>({
-        resolver: zodResolver(signUpSchema),
-        defaultValues: {
-            name: "",
-            email: "",
-            password: "",
-        },
+    const [loading, setloading] = useState(false);
+
+    const schema = authSchema(type);
+
+    const form = useForm<z.infer<typeof schema>>({
+        resolver: zodResolver(schema)
     })
 
-    type SignInFormValues = z.infer<typeof signUpSchema>;
+    type SignInFormValues = z.infer<typeof schema>;
 
 
     const handleCredentialSubmit: SubmitHandler<SignInFormValues> = async (values) => {
+
+        if (type === 'signin') {
+            await signInWithCredentials(values);
+        } else {
+            await signUpWithCredentials(values);
+        }
         await signInWithCredentials(values);
     }
 
@@ -68,7 +74,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                     className="w-full min-w-[400px] flex flex-col gap-4"
                     onSubmit={form.handleSubmit(handleCredentialSubmit)}>
 
-                    {type !== 'signin' && <FormField
+                    {type === 'signup' && <FormField
                         control={form.control}
                         name="name"
                         render={({ field }) => (
@@ -106,6 +112,24 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                                !bg-dark-4"
+                                        {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>
+                                    Confirm Password
+                                </FormLabel>
                                 <FormControl>
                                     <Input
                                         className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
