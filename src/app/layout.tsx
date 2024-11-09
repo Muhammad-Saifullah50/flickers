@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/themeProvider"
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   weight: ['300', '400', '500', '600', '700'],
@@ -28,7 +29,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SessionProvider>
+            {children}
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

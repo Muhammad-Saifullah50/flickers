@@ -14,11 +14,15 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { signInWithCredentials, signInWithOAuthProvider, signUpWithCredentials } from "../actions/auth.actions"
+import { signInWithOAuthProvider, signUpWithCredentials } from "../actions/auth.actions"
 import { Provider } from "@/types"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import Loader from "./Loader"
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+
 
 interface AuthFormProps {
     callbackUrl: string
@@ -28,11 +32,18 @@ interface AuthFormProps {
 const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
     const [loading, setloading] = useState(false);
+    const router = useRouter();
 
     const schema = authSchema(type);
 
     const form = useForm<z.infer<typeof schema>>({
-        resolver: zodResolver(schema)
+        resolver: zodResolver(schema),
+        defaultValues: {
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+        }
     })
 
     type SignInFormValues = z.infer<typeof schema>;
@@ -40,16 +51,39 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
     const handleCredentialSubmit: SubmitHandler<SignInFormValues> = async (values) => {
 
-        if (type === 'signin') {
-            await signInWithCredentials(values);
-        } else {
-            await signUpWithCredentials(values);
+
+        try {
+            setloading(true);
+            if (type === 'signin') {
+
+                await signIn('credentials', { redirect: false }, { ...values });
+
+                router.push(callbackUrl && callbackUrl !== '' ? callbackUrl : '/');
+
+            } else {
+                await signUpWithCredentials(values);
+            }
+        } catch (error) {
+            setloading(false);
+            console.log(error);
+            // TODO: Handle error
+        } finally {
+            setloading(false);
         }
-        await signInWithCredentials(values);
     }
 
     const handleOAuthSubmit = async (provider: Provider) => {
-        await signInWithOAuthProvider(provider, callbackUrl);
+        try {
+            setloading(true)
+            await signInWithOAuthProvider(provider, callbackUrl);
+        } catch (error) {
+            setloading(false);
+            throw new Error('Failed to sign in')
+            // TODO: Handle error
+        }
+        finally {
+            setloading(false);
+        }
     }
 
     return (
@@ -66,13 +100,14 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
             </div>
 
             <div className="p-3 flex flex-col items-center justify-center">
-                <h3 className="text-3xl font-bold">{type === 'signin' ?'Log in to your account': 'Create a new account'}</h3>
-                <p className="text-purple-secondary font-normal text-base">{type === 'signin' ? 'Welcome back! ':' To use Flickers,'} Please enter your details.</p>
+                <h3 className="text-3xl font-bold">{type === 'signin' ? 'Log in to your account' : 'Create a new account'}</h3>
+                <p className="text-purple-secondary font-normal text-base">{type === 'signin' ? 'Welcome back! ' : ' To use Flickers,'} Please enter your details.</p>
             </div>
             <Form {...form}>
                 <form
                     className="w-full min-w-[400px] flex flex-col gap-4"
-                    onSubmit={form.handleSubmit(handleCredentialSubmit)}>
+                    onSubmit={form.handleSubmit(handleCredentialSubmit)}
+                >
 
                     {type === 'signup' && <FormField
                         control={form.control}
@@ -83,6 +118,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
                                     <Input
+
                                         placeholder="Your Name"
                                         className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0 !bg-dark-4" {...field} />
                                 </FormControl>
@@ -114,6 +150,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                                 <FormLabel>Password</FormLabel>
                                 <FormControl>
                                     <Input
+                                        type="password"
                                         className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
                                 !bg-dark-4"
                                         {...field} />
@@ -122,7 +159,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                             </FormItem>
                         )}
                     />
-                    <FormField
+                    {type === 'signup' && (<FormField
                         control={form.control}
                         name="confirmPassword"
                         render={({ field }) => (
@@ -132,6 +169,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                                 </FormLabel>
                                 <FormControl>
                                     <Input
+                                        type="password"
                                         className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
                                 !bg-dark-4"
                                         {...field} />
@@ -139,9 +177,16 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />
+                    />)}
                     <Button
-                        className="rounded-lg font-semibold !bg-purple-primary hover:!bg-purple-primary/95 !text-light-1" type="submit">{type === 'signin' ? 'Log In' : 'Sign Up'}</Button>
+                        disabled={loading}
+                        className="rounded-lg font-semibold !bg-purple-primary hover:!bg-purple-primary/95 !text-light-1" type="submit">
+                        {
+                            loading ? <Loader variant="white" /> : <p>
+                                {type === 'signin' ? 'Log In' : 'Sign Up'}
+                            </p>
+                        }
+                    </Button>
 
                 </form>
             </Form>
@@ -155,16 +200,19 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                         action={() => handleOAuthSubmit(provider)}
                     >
                         <Button
+                            disabled={loading}
                             type="submit"
                             className="rounded-lg ">
-                            <span className="flex gap-2 items-center justify-center font-semibold text-dark-4">
-                                <Image
-                                    src={provider.icon!}
-                                    width={20}
-                                    height={20}
-                                    alt="logo"
-                                /> Sign {type === 'signin' ? 'in' : 'up'} with {provider.name}
-                            </span>
+                            {loading
+                                ? (<Loader variant="purple" />)
+                                : <span className="flex gap-2 items-center justify-center font-semibold text-dark-4">
+                                    <Image
+                                        src={provider.icon!}
+                                        width={20}
+                                        height={20}
+                                        alt="logo"
+                                    /> Sign {type === 'signin' ? 'in' : 'up'} with {provider.name}
+                                </span>}
                         </Button>
                     </form>
                 ))}

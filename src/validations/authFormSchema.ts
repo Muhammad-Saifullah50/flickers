@@ -12,10 +12,9 @@ const signUpSchema = z.object({
         message: "Password must be at least 8 characters.",
     })
 
-}).refine((data) => data.password !== data.confirmPassword, {
+}).refine((data) => data.password === data.confirmPassword, {
     message: "Password and confirm password do not match.",
 })
-
 const signInSchema = z.object({
     email: z.string().email("Invalid email address."),
     password: z.string().min(2, {
