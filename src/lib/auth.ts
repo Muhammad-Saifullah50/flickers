@@ -14,19 +14,39 @@ const providers: Provider[] = [
       password: { label: "Password", type: "password" }
     },
     async authorize(credentials) {
-      const existingUser = await prisma.user.findUnique({
-        where: {
-          email: credentials.email as string,
+
+      try {
+        
+        if (!credentials.email || !credentials.password) {
+          throw new Error("Email and password are required")
+        };
+
+        const existingUser = await prisma.user.findUnique({
+          where: {
+            email: credentials.email as string,
+          }
+        });
+
+        if (!existingUser) {
+          throw new Error("Invalid email or password")
         }
-      });
 
-      const passwordMatches = await bcrypt.compare(credentials.password as string, existingUser?.password as string)
+        const passwordMatches = await bcrypt.compare(credentials.password as string, existingUser?.password as string)
 
-      if (!existingUser || !passwordMatches) {
-        throw new Error("Invalid email or password")
+        if (!passwordMatches) {
+          throw new Error("Incorrect password")
+        }
+        
+        if (existingUser) {
+          return existingUser
+        } else {
+          throw new Error("Invalid email or password")
+
+        }
+      } catch (error) {
+        //@ts-ignore
+        throw new Error(error.message || "Failed to sign in")
       }
-
-      return existingUser
 
     },
   }),
@@ -55,5 +75,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/signin",
   },
+  session: {
+    strategy: "jwt",
+  },
+  debug: true
 })
+
 

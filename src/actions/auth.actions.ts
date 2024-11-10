@@ -48,5 +48,6 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
             password: await bcrypt.hash(formData.password, 10),
         }
     });
+    
     redirect(`/signin`);
 }

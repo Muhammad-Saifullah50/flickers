@@ -1,5 +1,4 @@
 'use client'
-import { providerMap } from "@/lib/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { z } from "zod"
@@ -22,6 +21,8 @@ import { useState } from "react"
 import Loader from "./Loader"
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { useToast } from "@/hooks/use-toast"
+import { providerMap } from "@/lib/auth"
 
 
 interface AuthFormProps {
@@ -33,6 +34,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
     const [loading, setloading] = useState(false);
     const router = useRouter();
+    const { toast } = useToast()
 
     const schema = authSchema(type);
 
@@ -56,12 +58,31 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
             setloading(true);
             if (type === 'signin') {
 
-                await signIn('credentials', { redirect: false }, { ...values });
-
-                router.push(callbackUrl && callbackUrl !== '' ? callbackUrl : '/');
+                const result = await signIn('credentials', {
+                    redirect: false,
+                    email: values.email,
+                    password: values.password
+                });
+                if (!result?.error) {
+                    router.push('/');
+                    toast({
+                        description: 'Signed in successfully'
+                    });
+                }
+                else {
+                    //todo: have to show erorr to the UI
+                    toast({
+                        description: result?.error,
+                        variant: 'destructive'
+                    });
+                }
 
             } else {
                 await signUpWithCredentials(values);
+                toast({
+                    description: 'Signed up successfully'
+                });
+
             }
         } catch (error) {
             setloading(false);
@@ -75,7 +96,8 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
     const handleOAuthSubmit = async (provider: Provider) => {
         try {
             setloading(true)
-            await signInWithOAuthProvider(provider, callbackUrl);
+            const result = await signInWithOAuthProvider(provider, callbackUrl);
+
         } catch (error) {
             setloading(false);
             throw new Error('Failed to sign in')
