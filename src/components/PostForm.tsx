@@ -23,12 +23,12 @@ const PostForm = () => {
         <Form {...form}>
              <FormField
                         control={form.control}
-                        name="email"
+                        name="caption"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Email</FormLabel>
+                                <FormLabel>Caption</FormLabel>
                                 <FormControl>
-                                    <Input
+                                    <Textarea
                                         placeholder="abc@example.com"
                                         className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
                                     !bg-dark-4" {...field} />

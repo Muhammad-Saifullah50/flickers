@@ -23,4 +23,3 @@ const rootlayout = ({ children }: { children: React.ReactNode }) => {
 }
 
 export default rootlayout
-// yCpfUeoAvzISRsBa
