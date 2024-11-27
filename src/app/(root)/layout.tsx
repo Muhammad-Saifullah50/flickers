@@ -1,9 +1,15 @@
 import LeftSidebar from "@/components/LeftSidebar"
 import RightSidebar from "@/components/RightSidebar"
+import { Inter } from "next/font/google"
+
+const inter = Inter({
+    weight: ['300', '400', '500', '600', '700'],
+    variable: "--font-inter",
+})
 
 const rootlayout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <main className="bg-dark-1 flex justify-between min-h-screen ">
+        <main className={`${inter.className} bg-dark-1 flex justify-between min-h-screen`}>
             <div className="fixed left-0 top-0 h-screen overflow-y-auto">
                 <LeftSidebar />
             </div>
@@ -17,3 +23,4 @@ const rootlayout = ({ children }: { children: React.ReactNode }) => {
 }
 
 export default rootlayout
+// yCpfUeoAvzISRsBa

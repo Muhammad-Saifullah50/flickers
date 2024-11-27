@@ -1,26 +1,42 @@
-import Form from 'next/form'
+'use client'
 import { Label } from './ui/label'
 import { Textarea } from './ui/textarea'
 import { Input } from './ui/input'
+import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from './ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { PostSchema } from '@/validations/postSchema'
 
 const PostForm = () => {
+
+    const form = useForm<z.infer<typeof PostSchema>>({
+        resolver: zodResolver(PostSchema),
+        defaultValues: {
+            caption: '',
+            altText: '',
+            assets: []
+        }
+    })
+
     return (
-        <Form action={async () => {
-            'use server'
-        }}>
-            <div className='py-10 flex flex-col gap-4'>
-                <div className='flex flex-col gap-2'>
-                    <Label htmlFor='caption'>Caption</Label>
-                    <Textarea name='caption' rows={5} />
-                </div>
-                <div>
-                    {/* todo: add file input */}
-                </div>
-                <div className='flex flex-col gap-2'>
-                    <Label htmlFor='altText'>Photo/Video Alt Text</Label>
-                    <Input name='altText' />
-                </div>
-            </div>
+        <Form {...form}>
+             <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="abc@example.com"
+                                        className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                                    !bg-dark-4" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
         </Form>
     )
