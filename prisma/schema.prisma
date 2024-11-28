@@ -74,16 +74,10 @@ model Post {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   author    User      @relation(fields: [authorId], references: [id])
-  asset     Asset[]
+  assets     String[]
+  altText   String
 }
 
-model Asset {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  url     String
-  altText String
-  postId  String? @db.ObjectId
-  post    Post?   @relation(fields: [postId], references: [id])
-}
 
 model Comment {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId

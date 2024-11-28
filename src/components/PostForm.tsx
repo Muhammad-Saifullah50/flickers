@@ -8,14 +8,17 @@ import { PostSchema } from '@/validations/postSchema'
 import FileUploader from './FileUploader'
 import { useState } from 'react'
 import { Button } from './ui/button'
-import { CreatePost } from '@/actions/post.actions'
 import Loader from './Loader'
+import { toast } from '@/hooks/use-toast'
+import { useRouter } from 'next/navigation'
 
 const PostForm = () => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState(false);
+
+    const router = useRouter();
 
     const form = useForm<z.infer<typeof PostSchema>>({
         resolver: zodResolver(PostSchema),
@@ -37,8 +40,26 @@ const PostForm = () => {
         try {
             setIsUploading(true);
 
-            const post = await CreatePost(data, files)
-            console.log(post)
+            const request = await fetch('/api/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const response = await request.json();
+
+            if (response.status === 201) {
+                toast({
+                    description: response.message,
+                    variant: 'default'
+                });
+
+                router.push(`/posts/${response.data.id}`)
+            };
+
+
 
         } catch (error) {
             console.error('Error creating post:', error);
