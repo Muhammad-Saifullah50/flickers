@@ -9,6 +9,7 @@ import FileUploader from './FileUploader'
 import { useState } from 'react'
 import { Button } from './ui/button'
 import { CreatePost } from '@/actions/post.actions'
+import Loader from './Loader'
 
 const PostForm = () => {
 
@@ -27,16 +28,18 @@ const PostForm = () => {
 
     const handleFilesChange = (newFiles: File[]) => {
         setFiles(newFiles);
+        form.setValue('assets', newFiles, { shouldValidate: true });
+
     };
 
-   
+
     const handleFormSubmit = async (data: z.infer<typeof PostSchema>) => {
         try {
             setIsUploading(true);
-            
+
             const post = await CreatePost(data, files)
-           console.log(post)
-            
+            console.log(post)
+
         } catch (error) {
             console.error('Error creating post:', error);
         } finally {
@@ -45,70 +48,70 @@ const PostForm = () => {
     };
 
     return (
-            <form onSubmit={form.handleSubmit(handleFormSubmit)}
-                className='flex flex-col gap-9 py-9'>
-                <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleFormSubmit)}
+            className='flex flex-col gap-9 py-9'>
+            <Form {...form}>
 
-                    <FormField
-                        control={form.control}
-                        name="caption"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Caption</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                <FormField
+                    control={form.control}
+                    name="caption"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Caption</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
                                 !bg-dark-3" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-                    <FormField
-                        control={form.control}
-                        name="assets"
-                        render={() => (
-                            <FormItem>
-                                <FormLabel>Add Photos/Videos</FormLabel>
-                                <FormControl>
-                                    <FileUploader
-                                        files={files}
-                                        onChange={handleFilesChange}
-                                        uploadedFiles={uploadedFiles}
-                                        setUploadedFiles={setUploadedFiles}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                <FormField
+                    control={form.control}
+                    name="assets"
+                    render={() => (
+                        <FormItem>
+                            <FormLabel>Add Photos/Videos</FormLabel>
+                            <FormControl>
+                                <FileUploader
+                                    files={files}
+                                    onChange={handleFilesChange}
+                                    uploadedFiles={uploadedFiles}
+                                    setUploadedFiles={setUploadedFiles}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-                    <FormField
-                        control={form.control}
-                        name="altText"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Photo/Video Alt Text</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                <FormField
+                    control={form.control}
+                    name="altText"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Photo/Video Alt Text</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
                                 !bg-dark-3" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <div className='flex justify-end'>
-                        <Button
-                            type='submit'
-                            disabled={isUploading}
-                        >
-                            {isUploading ? 'Uploading...' : 'Share Post'}
-                        </Button>
-                    </div>
-                </Form >
-            </form>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <div className='flex justify-end'>
+                    <Button
+                        type='submit'
+                        disabled={isUploading}
+                    >
+                        {isUploading ? <Loader variant='white' /> : 'Share Post'}
+                    </Button>
+                </div>
+            </Form >
+        </form>
     )
 }
 
