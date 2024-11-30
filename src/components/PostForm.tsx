@@ -11,8 +11,11 @@ import { Button } from './ui/button'
 import Loader from './Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
+import { uploadToCloudinary } from '@/lib/cloudinary'
+import { createPost } from '@/actions/post.actions'
+import { User } from 'next-auth'
 
-const PostForm = () => {
+const PostForm = ({ user }: { user: User }) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
@@ -37,32 +40,55 @@ const PostForm = () => {
 
 
     const handleFormSubmit = async (data: z.infer<typeof PostSchema>) => {
+
+
         try {
             setIsUploading(true);
 
-            const request = await fetch('/api/posts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            // Upload files to Cloudinary first
+            const uploadedUrls: string[] = [];
+            for (const file of files) {
+                try {
+                    const url = await uploadToCloudinary(file);
+                    if (url) {
+                        uploadedUrls.push(url);
+                    }
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                    toast({
+                        description: `Error uploading file: ${file.name}`,
+                        variant: 'destructive'
+                    });
+                }
+            }
 
-            const response = await request.json();
+            // Update the form data with Cloudinary URLs
+            const formData = {
+                caption: data.caption,
+                altText: data.altText,
+                assets: uploadedUrls,
+                authorId: user.id || ''
+            };
 
-            if (response.status === 201) {
+            const post = await createPost(formData);
+
+            console.log(post)
+            if (post) {
                 toast({
-                    description: response.message,
+                    description: 'Post created successfully',
                     variant: 'default'
                 });
 
-                router.push(`/posts/${response.data.id}`)
-            };
-
-
+                router.push(`/posts/${post.id}`);
+            }
 
         } catch (error) {
+
             console.error('Error creating post:', error);
+            toast({
+                description: 'Error creating post',
+                variant: 'destructive'
+            })
         } finally {
             setIsUploading(false);
         }

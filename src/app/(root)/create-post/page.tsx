@@ -1,22 +1,21 @@
-import Heading from '@/components/Heading'
-import PostForm from '@/components/PostForm'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import React from 'react'
+import PostForm from '@/components/PostForm'
+import Heading from '@/components/Heading'
+import { getCurrentUserFromDb } from '@/actions/user.actions'
 
-const CreatePostPage = async () => {
-
+export default async function CreatePost() {
   const session = await auth()
 
   if (!session?.user) return redirect('/signin')
-    
+  
+  const user = await getCurrentUserFromDb(session.user.email!);
+
   return (
     <section>
         <Heading text='Create a Post' icon='/icons/create-white.svg' />
-
-        <PostForm/>
+        <PostForm user={user}/>
     </section>
   )
 }
-
-export default CreatePostPage
