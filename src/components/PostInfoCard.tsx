@@ -1,10 +1,11 @@
 import { auth } from "@/lib/auth"
 import { formatDateTime } from "@/lib/utils"
-import { Post, User } from "@prisma/client"
+import { Comment, Post, User } from "@prisma/client"
 import Image from "next/image"
 import PostComment from "./PostComment"
+import CommentCard from "./CommentCard"
 
-const PostInfoCard = async ({ post }: { post: Post & { author: User } }) => {
+const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: Comment[] } }) => {
     const session = await auth();
 
     const isOwner = session?.user?.email === post.author.email;
@@ -53,9 +54,16 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User } }) => {
                 </section>
 
                 <hr className="border-dark-4" />
+
+                <section className="flex flex-col overflow-y-auto gap-6 max-h-[320px]">
+                    {post.comments.map((comment) => (
+                        <CommentCard
+                            key={comment.id}
+                            comment={comment} />
+                    ))}
+                </section>
             </section>
 
-            {/*  todo: add comments ui */}
 
             <section className="flex flex-col gap-4">
                 <section className="flex items-center justify-between ">
@@ -79,7 +87,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User } }) => {
                                 className='cursor-pointer'
                             />
                             {/* todo: add comments functionality */}
-                            <span>0</span>
+                            <span>{post.comments.length}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <Image

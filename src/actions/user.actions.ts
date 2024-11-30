@@ -26,3 +26,18 @@ export const getCurrentUserFromDb = async (email: string) => {
         throw error;
     }
 }
+
+export const getDbUserById = async (id: string) => {
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id
+            }
+        })
+
+        return user 
+    } catch (error) {
+        console.error('Error fetching current user on server:', error);
+    }
+}
