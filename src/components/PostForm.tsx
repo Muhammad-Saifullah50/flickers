@@ -79,7 +79,8 @@ const PostForm = ({ user }: { user: User }) => {
                 caption: data.caption,
                 altText: data.altText,
                 assets: uploadedUrls,
-                authorId: user.id || ''
+                authorId: user.id || '',
+                hashtags: data.hashtags
             };
 
             if (uploadedUrls.length > 0) {

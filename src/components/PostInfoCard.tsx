@@ -9,7 +9,6 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
     const session = await auth();
 
     const isOwner = session?.user?.email === post.author.email;
-
     return (
         <aside className="flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full">
 
