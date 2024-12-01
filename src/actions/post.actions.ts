@@ -64,3 +64,18 @@ export const getPostById = async (id: string) => {
 
     }
 }
+
+export const getFeedPosts = async (userhasFollowed: boolean) => {
+
+    try {
+        let postsArray;
+
+        if (userhasFollowed) {
+            posts = await prisma.post.findMany({
+
+            })
+        }
+    } catch (error) {
+        console.error('Error fetching post feed on server:', error);
+    }
+}

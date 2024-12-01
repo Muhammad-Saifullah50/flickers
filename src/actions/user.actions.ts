@@ -18,6 +18,18 @@ export const getCurrentUserFromDb = async () => {
             where: {
                 email
             },
+            include: {
+                followedBy: {
+                    include: {
+                        follower: true
+                    }
+                },
+                following: {
+                    include: {
+                        following: true
+                    }
+                }
+            }
         });
 
         if (!user) {
@@ -69,3 +81,4 @@ export const getAllUsers = async () => {
 
     }
 }
+
