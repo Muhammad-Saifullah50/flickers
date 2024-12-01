@@ -13,6 +13,7 @@ import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { uploadToCloudinary } from '@/lib/cloudinary'
 import { User } from 'next-auth'
+import { createPost } from '@/actions/post.actions'
 
 const PostForm = ({ user }: { user: User }) => {
 
@@ -49,10 +50,21 @@ const PostForm = ({ user }: { user: User }) => {
             const uploadedUrls: string[] = [];
             for (const file of files) {
                 try {
-                    const url = await uploadToCloudinary(file);
+                    const formData = new FormData();
+                    formData.append("file", file);
+
+                    const request = await fetch('/api/upload', {
+                        method: 'POST',
+                       
+                        body: formData, 
+                      });
+                      
+                    const url = await request.json();
                     if (url) {
-                        uploadedUrls.push(url);
+                        //data field is returned by our upload api
+                        uploadedUrls.push(url.data);
                     }
+
                 } catch (error) {
                     console.error('Error uploading file:', error);
                     toast({
@@ -70,28 +82,18 @@ const PostForm = ({ user }: { user: User }) => {
                 authorId: user.id || ''
             };
 
-            if (!uploadedUrls) return;
-
-            const request = await fetch('/api/posts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            })
-
-            const response = await request.json();
-            if (response.status === 201) {
-                toast({
-                    description: 'Post created successfully',
-                    variant: 'default'
-                });
-
-                router.push(`/posts/${response.data.id}`);
+            if (uploadedUrls.length > 0) {
+                const post = await createPost(formData);
+                if (post) {
+                    toast({
+                        description: 'Post created successfully',
+                        variant: 'default'
+                    })
+                    router.push(`/posts/${post.id}`);
+                }
             }
 
         } catch (error) {
-
             console.error('Error creating post:', error);
             toast({
                 description: 'Error creating post',
