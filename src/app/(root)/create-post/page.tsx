@@ -6,11 +6,8 @@ import Heading from '@/components/Heading'
 import { getCurrentUserFromDb } from '@/actions/user.actions'
 
 export default async function CreatePost() {
-  const session = await auth()
 
-  if (!session?.user) return redirect('/signin')
-  
-  const user = await getCurrentUserFromDb(session.user.email!);
+  const user = await getCurrentUserFromDb();
 
   return (
     <section>

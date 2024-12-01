@@ -15,10 +15,7 @@ const CommentCard = async ({ comment, isReply, replyCount }: CommentCardProps) =
 
     const commentAuthor = await getDbUserById(comment.authorId);
 
-    const session = await auth();
-
-    if (!session?.user?.email) return null
-    const currentUser = await getCurrentUserFromDb(session?.user?.email);
+    const currentUser = await getCurrentUserFromDb();
 
     return (
         // have to add functionality for comment likes

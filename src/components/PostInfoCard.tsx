@@ -48,7 +48,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
                     </div>)}
                 </section>
 
-                <section>
+                <section className="flex flex-col">
                     <p className="text-base">{post.caption}</p>
                     <span>&nbsp; &nbsp;</span>
                     <p className="text-base text-purple-secondary">{post.hashtags}</p>

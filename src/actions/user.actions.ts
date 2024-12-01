@@ -3,8 +3,12 @@
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
-export const getCurrentUserFromDb = async (email: string) => {
+export const getCurrentUserFromDb = async () => {
     try {
+
+        const session = await auth();
+
+        const email = session?.user?.email
 
         if (!email) {
             throw new Error('Not authenticated');

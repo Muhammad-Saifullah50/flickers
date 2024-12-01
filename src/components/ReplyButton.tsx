@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { useState } from 'react';
 import PostComment from './PostComment';
 import { useSession } from 'next-auth/react';
-import { getCurrentUserFromDb } from '@/actions/user.actions';
 import { User } from '@prisma/client';
 
 interface ReplyButtonProps {

@@ -55,3 +55,4 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
 export const signoutOnServer = async () => {
     await signOut({ redirectTo: '/signin' });
 }
+

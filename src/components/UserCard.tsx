@@ -18,11 +18,7 @@ type UserWithFollows = User & {
 
 const UserCard = async ({ user }: { user: UserWithFollows }) => {
 
-    const session = await auth();
-
-    if (!session?.user?.email) return redirect('/signin');
-
-    const currentUser = await getCurrentUserFromDb(session?.user?.email);
+    const currentUser = await getCurrentUserFromDb();
 
     const isFollowing = user.followedBy.some((follow) => follow.follower.id === currentUser?.id);
 

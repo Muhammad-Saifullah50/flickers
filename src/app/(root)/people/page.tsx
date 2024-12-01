@@ -6,11 +6,8 @@ import { redirect } from 'next/navigation';
 import React from 'react'
 
 const PeoplePage = async () => {
-
-    const session = await auth();
-
-    if (!session?.user?.email) return redirect('/signin');
-    const currentUser = await getCurrentUserFromDb(session?.user?.email);
+    
+    const currentUser = await getCurrentUserFromDb();
 
     const allUsers = await getAllUsers();
 
