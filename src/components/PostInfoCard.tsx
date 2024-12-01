@@ -11,7 +11,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
     const isOwner = session?.user?.email === post.author.email;
 
     return (
-        <aside className="flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between ">
+        <aside className="flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full border min-h-full">
 
             <section className="flex flex-col gap-4">
                 <section className="flex items-center justify-between">

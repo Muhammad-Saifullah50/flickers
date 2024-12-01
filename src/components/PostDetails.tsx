@@ -5,7 +5,7 @@ import { Post, User,Comment } from '@prisma/client'
 
 const PostDetails = ({post}: {post: Post & { author: User, comments: Comment[] }}) => {
   return (
-    <section className="flex w-full">
+    <section className="flex w-full h-full">
     <div className="flex flex-1 w-1/2">
         <PostCarousel items={post.assets} />
     </div>

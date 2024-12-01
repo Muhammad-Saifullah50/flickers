@@ -12,7 +12,6 @@ import Loader from './Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { uploadToCloudinary } from '@/lib/cloudinary'
-import { createPost } from '@/actions/post.actions'
 import { User } from 'next-auth'
 
 const PostForm = ({ user }: { user: User }) => {
@@ -71,16 +70,24 @@ const PostForm = ({ user }: { user: User }) => {
                 authorId: user.id || ''
             };
 
-            const post = await createPost(formData);
+            if (!uploadedUrls) return;
 
-            console.log(post)
-            if (post) {
+            const request = await fetch('/api/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+
+            const response = await request.json();
+            if (response.status === 201) {
                 toast({
                     description: 'Post created successfully',
                     variant: 'default'
                 });
 
-                router.push(`/posts/${post.id}`);
+                router.push(`/posts/${response.data.id}`);
             }
 
         } catch (error) {

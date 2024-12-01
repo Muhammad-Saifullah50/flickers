@@ -11,30 +11,6 @@ interface createPostParams {
     hashtags?: string
 }
 
-export const createPost = async (data: createPostParams) => {
-
-    try {
-
-        const post = await prisma.post.create({
-            data: {
-                caption: data.caption,
-                altText: data.altText,
-                likes: 0,
-                shares: 0,
-                assets: data.assets,
-                authorId: data.authorId,
-                hashtags: data.hashtags || ''
-            },
-            include: {
-                author: true
-            }
-        });
-
-        return post
-    } catch (error) {
-        console.log('error creating post', error);
-    }
-}
 
 export const getPostById = async (id: string) => {
 

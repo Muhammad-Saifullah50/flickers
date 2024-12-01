@@ -23,3 +23,5 @@ export const uploadToCloudinary = async (file: File) => {
         throw error;
     }
 };
+
+// have to upload images to cludinary via api
