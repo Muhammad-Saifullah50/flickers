@@ -28,7 +28,8 @@ const PostForm = ({ user }: { user: User }) => {
         defaultValues: {
             caption: '',
             altText: '',
-            assets: []
+            assets: [],
+            hashtags: ''
         }
     })
 
@@ -140,6 +141,21 @@ const PostForm = ({ user }: { user: User }) => {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Photo/Video Alt Text</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
+                                !bg-dark-3" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="hashtags"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Hashtags</FormLabel>
                             <FormControl>
                                 <Textarea
                                     className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0

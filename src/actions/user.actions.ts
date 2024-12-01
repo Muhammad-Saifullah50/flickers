@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma"
 
 export const getCurrentUserFromDb = async (email: string) => {
     try {
-        
+
         if (!email) {
             throw new Error('Not authenticated');
         }
@@ -36,8 +36,32 @@ export const getDbUserById = async (id: string) => {
             }
         })
 
-        return user 
+        return user
     } catch (error) {
         console.error('Error fetching current user on server:', error);
+    }
+}
+
+export const getAllUsers = async () => {
+
+    try {
+        const users = await prisma.user.findMany({
+            include: {
+                followedBy: {
+                    include: {
+                        follower: true
+                    }
+                },
+                following: {
+                    include: {
+                        following: true
+                    }
+                }
+            }
+        });
+        return users;
+    } catch (error) {
+        console.error('Error fetching all users:', error);
+
     }
 }

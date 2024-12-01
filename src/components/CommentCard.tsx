@@ -1,14 +1,28 @@
-import { getDbUserById } from "@/actions/user.actions"
-import { formatTimeDifference } from "@/lib/utils"
+import { getCurrentUserFromDb, getDbUserById } from "@/actions/user.actions"
+import { cn, formatTimeDifference } from "@/lib/utils"
 import { Comment } from "@prisma/client"
 import Image from "next/image";
+import ReplyButton from "./ReplyButton";
+import { auth } from "@/lib/auth";
 
-const CommentCard = async ({ comment }: { comment: Comment }) => {
+interface CommentCardProps {
+    comment: Comment
+    isReply?: boolean
+    replyCount?: number
+}
+
+const CommentCard = async ({ comment, isReply, replyCount }: CommentCardProps) => {
 
     const commentAuthor = await getDbUserById(comment.authorId);
 
+    const session = await auth();
+
+    if (!session?.user?.email) return null
+    const currentUser = await getCurrentUserFromDb(session?.user?.email);
+
     return (
-        <div className="flex gap-4">
+        // have to add functionality for comment likes
+        <div className={cn("flex gap-4", isReply && "ml-12")}>
             <div>
                 <Image
                     src={commentAuthor?.image || '/icons/dummyuser.svg'}
@@ -23,16 +37,21 @@ const CommentCard = async ({ comment }: { comment: Comment }) => {
                     <span className="text-sm text-purple-secondary">{commentAuthor?.name}</span>
                     <p className=" break-all  w-full"> {comment.content}</p>
                 </div>
-                <div className="flex gap-4">
-                    <span className="text-[10px] text-purple-secondary">{formatTimeDifference(comment.createdAt)}</span>
-                    <button className="flex text-[10px] items-center gap-2">
-                        <Image
-                            src={'/icons/reply-arrow.svg'}
-                            width={14}
-                            height={14}
-                            alt='reply'
-                        />
-                        Reply</button>
+                <div className="flex gap-2 flex-col">
+                    <div className="flex gap-4">
+                        <span className="text-[10px] text-purple-secondary">{formatTimeDifference(comment.createdAt)}</span>
+
+                        {replyCount! > 0 && <span className="text-[10px] text-purple-secondary">
+                            {replyCount} repl{replyCount! > 1 ? 'ies' : 'y'}</span>}
+
+                    </div>
+
+                    {!isReply && <ReplyButton
+                        postId={comment.postId}
+                        replyAuthor={currentUser}
+                        parentCommentId={comment.id}
+                    />}
+
                 </div>
             </div>
         </div>
@@ -40,5 +59,3 @@ const CommentCard = async ({ comment }: { comment: Comment }) => {
 }
 
 export default CommentCard
-
-// have to use refs to get the scroll position

@@ -8,9 +8,8 @@ interface createCommentParams {
     postId: string,
     authorId: string
     parentCommentId?: string
-    isNestedComment?: boolean
 }
-export const createComment = async (commentData: createCommentParams) => {
+export const createCommentOrReply = async (commentData: createCommentParams) => {
 
     try {
 

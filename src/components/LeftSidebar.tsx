@@ -50,6 +50,7 @@ const LeftSidebar = async () => {
           />
         ))}
       </ul>
+      
 
     </aside>
   )

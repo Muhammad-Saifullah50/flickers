@@ -3,7 +3,9 @@ import PostDetails from "@/components/PostDetails";
 
 import { notFound } from "next/navigation"
 
-const PostPage = async ({ params: { id } }: { params: { id: string } }) => {
+const PostPage = async ({ params }: { params: { id: string } }) => {
+
+    const { id } = await params
 
     const post = await getPostById(id)
 

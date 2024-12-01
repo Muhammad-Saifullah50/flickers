@@ -223,6 +223,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                     >
                         <Button
                             disabled={loading}
+                            variant={'white'}
                             type="submit"
                             className="rounded-lg ">
                             {loading

@@ -19,7 +19,9 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   posts         Post[]
-  Comment       Comment[]
+  comments      Comment[]
+  followedBy    Follows[] @relation("following")
+  following     Follows[] @relation("follower")
 }
 
 model Account {
@@ -74,10 +76,10 @@ model Post {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   author    User      @relation(fields: [authorId], references: [id])
-  assets     String[]
+  assets    String[]
   altText   String
+  hashtags  String?
 }
-
 
 model Comment {
   id              String    @id @default(auto()) @map("_id") @db.ObjectId
@@ -87,8 +89,20 @@ model Comment {
   parentCommentId String?   @db.ObjectId
   parentComment   Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replies         Comment[] @relation("CommentReplies")
+  commentLikes      Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   author          User      @relation(fields: [authorId], references: [id])
   Post            Post      @relation(fields: [postId], references: [id])
+}
+
+model Follows {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  follower    User     @relation("follower", fields: [followerId], references: [id])
+  followerId  String   @db.ObjectId
+  following   User     @relation("following", fields: [followingId], references: [id])
+  followingId String   @db.ObjectId
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
 }

@@ -9,10 +9,18 @@ import { useForm } from "react-hook-form"
 import { commentSchema } from "@/validations/commentSchema"
 import { z } from "zod"
 import { useState } from "react"
-import { createComment } from "@/actions/comments.actons"
-import { getSession, useSession } from "next-auth/react"
+import { createCommentOrReply } from "@/actions/comments.actons"
+import { useSession } from "next-auth/react"
 
-const PostComment = ({ author, postId }: { author: User, postId: string }) => {
+interface PostCommentProps {
+    author: User
+    postId: string
+    isReply?: boolean
+    parentCommentId?: string
+    setisReplying?: (value: boolean) => void
+}
+
+const PostComment = ({ author, postId, isReply, parentCommentId, setisReplying }: PostCommentProps) => {
 
     const form = useForm({
         resolver: zodResolver(commentSchema),
@@ -21,7 +29,6 @@ const PostComment = ({ author, postId }: { author: User, postId: string }) => {
         }
     });
 
-    const [loading, setloading] = useState(false);
 
     const session = useSession();
 
@@ -34,24 +41,30 @@ const PostComment = ({ author, postId }: { author: User, postId: string }) => {
 
     const onSubmit = async (data: z.infer<typeof commentSchema>) => {
         try {
-            setloading(true);
 
             const commentObject = {
                 comment: data.comment,
                 authorId: author.id || '',
                 postId: postId
             }
-            const comment = await createComment(commentObject);
+
+            const replyObject = {
+                comment: data.comment,
+                authorId: author.id || '',
+                postId: postId,
+                parentCommentId: parentCommentId
+            }
+            await createCommentOrReply(isReply ? replyObject : commentObject);
+
         } catch (error) {
             console.error('error creating comment', error);
         } finally {
-            setloading(false);
             form.reset();
-
+            setisReplying && setisReplying(false);
         }
     }
     return (
-        <section className="flex justify-between gap-2 w-full">
+        <section className="flex justify-between gap-2 w-full py-2">
             <Image
                 src={author.image || '/icons/dummyuser.svg'}
                 width={40}
@@ -69,7 +82,7 @@ const PostComment = ({ author, postId }: { author: User, postId: string }) => {
                                 <FormControl>
                                     <div className="relative flex items-center w-full">
                                         <Input
-                                            placeholder="Enter your comment"
+                                            placeholder={isReply ? "Post a reply..." : "Post a comment..."}
                                             {...field}
                                             className="!bg-dark-3 pr-10 focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0"
                                         />

@@ -1,6 +1,6 @@
 'use server'
 
-import { signIn } from "@/lib/auth"
+import { signIn, signOut } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { Provider } from "@/types"
 import { authSchema } from "@/validations/authFormSchema"
@@ -48,6 +48,10 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
             password: await bcrypt.hash(formData.password, 10),
         }
     });
-    
+
     redirect(`/signin`);
+}
+
+export const signoutOnServer = async () => {
+    await signOut({ redirectTo: '/signin' });
 }

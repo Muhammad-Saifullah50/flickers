@@ -8,6 +8,7 @@ interface createPostParams {
     altText: string;
     assets: string[];
     authorId: string;
+    hashtags?: string
 }
 
 export const createPost = async (data: createPostParams) => {
@@ -22,6 +23,7 @@ export const createPost = async (data: createPostParams) => {
                 shares: 0,
                 assets: data.assets,
                 authorId: data.authorId,
+                hashtags: data.hashtags || ''
             },
             include: {
                 author: true
@@ -37,13 +39,24 @@ export const createPost = async (data: createPostParams) => {
 export const getPostById = async (id: string) => {
 
     try {
-        const post = prisma.post.findUnique({
+        const post = await prisma.post.findUnique({
             where: {
                 id
             },
             include: {
                 author: true,
-                comments: true
+                comments: {
+                    orderBy: {
+                        createdAt: 'desc'
+                    },
+                    include: {
+                        replies: {
+                            orderBy: {
+                                createdAt: 'desc'
+                            }
+                        }
+                    }
+                },
             }
         })
 

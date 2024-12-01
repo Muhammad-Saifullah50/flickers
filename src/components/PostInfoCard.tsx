@@ -11,7 +11,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
     const isOwner = session?.user?.email === post.author.email;
 
     return (
-        <aside className="flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between">
+        <aside className="flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between ">
 
             <section className="flex flex-col gap-4">
                 <section className="flex items-center justify-between">
@@ -51,16 +51,40 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
 
                 <section>
                     <p className="text-base">{post.caption}</p>
+                    <span>&nbsp; &nbsp;</span>
+                    <p className="text-base text-purple-secondary">{post.hashtags}</p>
                 </section>
 
                 <hr className="border-dark-4" />
 
-                <section className="flex flex-col overflow-y-auto gap-6 max-h-[320px]">
-                    {post.comments.map((comment) => (
-                        <CommentCard
-                            key={comment.id}
-                            comment={comment} />
-                    ))}
+                <section className="flex flex-col overflow-y-scroll gap-6 max-h-[280px] ">
+                    {post.comments
+                        .filter(comment => !comment.parentCommentId) // Only get top-level comments
+                        .map((comment) => {
+                            // Get replies for this comment
+                            const replies = post.comments.filter(reply => reply.parentCommentId === comment.id);
+                            
+                            return (
+                                <div key={comment.id} className="flex flex-col gap-4">
+                                    <CommentCard
+                                        comment={comment}
+                                        replyCount={replies.length}
+                                    />
+                                    
+                                    {replies.length > 0 && (
+                                        <div className="flex flex-col gap-4">
+                                            {replies.map((reply) => (
+                                                <CommentCard
+                                                    key={reply.id}
+                                                    comment={reply}
+                                                    isReply
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
                 </section>
             </section>
 
