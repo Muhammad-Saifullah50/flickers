@@ -1,6 +1,7 @@
 import { getFeedPosts } from "@/actions/post.actions";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import Heading from "@/components/Heading";
+import PostDetails from "@/components/PostDetails";
 
 export default async function HomePage() {
 
@@ -19,13 +20,21 @@ export default async function HomePage() {
   }
 
   const posts = await getFeedPosts(userhasFollowed);
-   
+
   return (
     <main>
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
       <section>
-
+        {posts && posts.length > 0 ? (
+          posts.map((post) => (
+            <PostDetails key={post.id} post={post} isHomeCard={true}/>
+          ))
+          ) : (
+          <div className="text-white text-center mt-10">
+            <h2>No posts to show</h2>
+          </div>
+        )}
       </section>
     </main>
   )

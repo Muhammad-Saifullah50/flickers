@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUserFromDb } from "./user.actions";
 
 interface createPostParams {
     caption: string;
@@ -68,13 +69,40 @@ export const getPostById = async (id: string) => {
 export const getFeedPosts = async (userhasFollowed: boolean) => {
 
     try {
-        let postsArray;
 
         if (userhasFollowed) {
-            posts = await prisma.post.findMany({
+            const currUser = await getCurrentUserFromDb();
+            // followed people posts
+            const posts = await prisma.post.findMany({
+                where: {
+                    // correct typeerror
+                    //@ts-ignore
+                    authorId: currUser.following.id
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                include: {
+                    author: true
+                }
+            });
 
-            })
+            return posts
         }
+
+        if (!userhasFollowed) {
+            const posts = await prisma.post.findMany({
+                orderBy: {
+                    createdAt: 'desc'
+                },
+                include: {
+                    author: true
+                }
+            });
+
+            return posts
+        }
+
     } catch (error) {
         console.error('Error fetching post feed on server:', error);
     }

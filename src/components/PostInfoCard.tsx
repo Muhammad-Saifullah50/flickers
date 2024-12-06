@@ -5,10 +5,10 @@ import Image from "next/image"
 import PostComment from "./PostComment"
 import CommentCard from "./CommentCard"
 
-const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: Comment[] } }) => {
+const PostInfoCard = async ({ post,isHomeCard }: { post: Post & { author: User, comments: Comment[] },isHomeCard?: boolean }) => {
     const session = await auth();
 
-    const isOwner = session?.user?.email === post.author.email;
+    const isOwner = session?.user?.email === post.author?.email;
     return (
         <aside className="flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full">
 
@@ -17,14 +17,14 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
                     <div className="flex items-center gap-2">
                         <div>
                             <Image
-                                src={post.author.image!}
+                                src={post.author?.image!}
                                 width={40}
                                 height={40}
                                 alt='profile photo'
                                 className='rounded-full' />
                         </div>
                         <div>
-                            <h2 className="font-semibold text-lg text-white">{post.author.name}</h2>
+                            <h2 className="font-semibold text-lg text-white">{post.author?.name}</h2>
                             <p className="text-sm text-purple-secondary font-medium">{formatDateTime(post.createdAt)}</p>
                         </div>
                     </div>
@@ -56,7 +56,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
 
                 <hr className="border-dark-4" />
 
-                <section className="flex flex-col overflow-y-scroll gap-6 max-h-[280px] ">
+                {!isHomeCard && <section className="flex flex-col overflow-y-scroll gap-6 max-h-[280px] ">
                     {post.comments
                         .filter(comment => !comment.parentCommentId) // Only get top-level comments
                         .map((comment) => {
@@ -67,10 +67,10 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
                                 <div key={comment.id} className="flex flex-col gap-4">
                                     <CommentCard
                                         comment={comment}
-                                        replyCount={replies.length}
+                                        replyCount={replies?.length}
                                     />
                                     
-                                    {replies.length > 0 && (
+                                    {replies?.length > 0 && (
                                         <div className="flex flex-col gap-4">
                                             {replies.map((reply) => (
                                                 <CommentCard
@@ -84,7 +84,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
                                 </div>
                             );
                         })}
-                </section>
+                </section>}
             </section>
 
 
@@ -110,7 +110,7 @@ const PostInfoCard = async ({ post }: { post: Post & { author: User, comments: C
                                 className='cursor-pointer'
                             />
                             {/* todo: add comments functionality */}
-                            <span>{post.comments.length}</span>
+                            {!isHomeCard && <span>{post.comments?.length}</span>}
                         </div>
                         <div className="flex items-center gap-2">
                             <Image
