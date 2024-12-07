@@ -25,7 +25,7 @@ export default async function HomePage() {
     <main>
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
-      <section>
+      <section className="flex flex-col gap-6 py-9">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
             <PostDetails key={post.id} post={post} isHomeCard={true}/>

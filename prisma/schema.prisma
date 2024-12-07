@@ -22,6 +22,8 @@ model User {
   comments      Comment[]
   followedBy    Follows[] @relation("following")
   following     Follows[] @relation("follower")
+  Like          Like[]
+  Save          Save[]
 }
 
 model Account {
@@ -79,6 +81,10 @@ model Post {
   assets    String[]
   altText   String
   hashtags  String?
+  savedBy   Save[]    @relation("PostSaves")
+  likedBy   Like[]    @relation("PostLikes")
+
+  @@index([authorId])
 }
 
 model Comment {
@@ -89,11 +95,35 @@ model Comment {
   parentCommentId String?   @db.ObjectId
   parentComment   Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   replies         Comment[] @relation("CommentReplies")
-  commentLikes      Int       @default(0)
+  commentLikes    Int       @default(0)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   author          User      @relation(fields: [authorId], references: [id])
-  Post            Post      @relation(fields: [postId], references: [id])
+  Post            Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([userId])
+}
+
+model Save {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  postId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation("PostSaves", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([userId])
 }
 
 model Follows {

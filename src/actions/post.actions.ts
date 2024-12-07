@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserFromDb } from "./user.actions";
+import { revalidatePath } from "next/cache";
 
 interface createPostParams {
     caption: string;
@@ -83,7 +84,8 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
                     createdAt: 'desc'
                 },
                 include: {
-                    author: true
+                    author: true,
+                    comments: true
                 }
             });
 
@@ -105,5 +107,39 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
 
     } catch (error) {
         console.error('Error fetching post feed on server:', error);
+    }
+}
+
+export const updatePost = async (postId: string, data: createPostParams) => {
+    try {
+        const post = await prisma.post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                caption: data.caption,
+                altText: data.altText,
+                assets: data.assets,
+                hashtags: data.hashtags || ''
+            },
+        })
+
+        return post
+    } catch (error) {
+        console.error('Error updating post on server:', error);
+    }
+}
+
+export const deletePost = async (postId: string) => {
+
+    try {
+        await prisma.post.delete({
+            where: {
+                id: postId
+            }
+        });
+        revalidatePath('/')
+    } catch (error) {
+        console.error('Error deleting post on server:', error);
     }
 }

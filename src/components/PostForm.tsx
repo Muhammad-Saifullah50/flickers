@@ -4,32 +4,41 @@ import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from '
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { PostSchema } from '@/validations/postSchema'
+import { PostEditingSchema, PostSchema } from '@/validations/postSchema'
 import FileUploader from './FileUploader'
 import { useState } from 'react'
 import { Button } from './ui/button'
 import Loader from './Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
-import { uploadToCloudinary } from '@/lib/cloudinary'
-import { User } from 'next-auth'
-import { createPost } from '@/actions/post.actions'
+import { createPost, updatePost } from '@/actions/post.actions'
+import { Post, User } from '@prisma/client'
 
-const PostForm = ({ user }: { user: User }) => {
+interface PostFormProps {
+    user: User
+    post?: Post
+    isEditing?: boolean
+}
+const PostForm = ({ user, post, isEditing }: PostFormProps) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
+    const [existingFiles, setExistingFiles] = useState<string[]>(post?.assets || []);
     const [isUploading, setIsUploading] = useState(false);
 
     const router = useRouter();
 
-    const form = useForm<z.infer<typeof PostSchema>>({
-        resolver: zodResolver(PostSchema),
+    const totalFiles = files.length + existingFiles.length;
+
+    const schema = (!isEditing || totalFiles === 0) ? PostSchema : PostEditingSchema
+
+    const form = useForm<z.infer<typeof schema>>({
+        resolver: zodResolver(schema),
         defaultValues: {
-            caption: '',
-            altText: '',
-            assets: [],
-            hashtags: ''
+            caption: post?.caption || '',
+            altText: post?.altText || '',
+            assets: post?.assets || [],
+            hashtags: post?.hashtags || ''
         }
     })
 
@@ -39,9 +48,11 @@ const PostForm = ({ user }: { user: User }) => {
 
     };
 
+    const handleRemoveExisting = (fileUrl: string) => {
+        setExistingFiles(prev => prev.filter(f => f !== fileUrl));
+    };
 
-    const handleFormSubmit = async (data: z.infer<typeof PostSchema>) => {
-
+    const handleFormSubmit = async (data: z.infer<typeof schema>) => {
 
         try {
             setIsUploading(true);
@@ -55,10 +66,10 @@ const PostForm = ({ user }: { user: User }) => {
 
                     const request = await fetch('/api/upload', {
                         method: 'POST',
-                       
-                        body: formData, 
-                      });
-                      
+
+                        body: formData,
+                    });
+
                     const url = await request.json();
                     if (url) {
                         //data field is returned by our upload api
@@ -78,20 +89,35 @@ const PostForm = ({ user }: { user: User }) => {
             const formData = {
                 caption: data.caption,
                 altText: data.altText,
-                assets: uploadedUrls,
+                assets: [...uploadedUrls, ...existingFiles],
                 authorId: user.id || '',
                 hashtags: data.hashtags
             };
 
-            if (uploadedUrls.length > 0) {
-                const post = await createPost(formData);
-                if (post) {
-                    toast({
-                        description: 'Post created successfully',
-                        variant: 'default'
-                    })
-                    router.push(`/posts/${post.id}`);
+            if (uploadedUrls.length > 0 || existingFiles.length > 0) {
+
+                if (isEditing) {
+                    const updatedPost = await updatePost(post?.id!, formData)
+                    if (updatedPost) {
+                        toast({
+                            description: 'Post updated successfully',
+                            variant: 'default'
+                        })
+                        router.push(`/posts/${updatedPost.id}`);
+                    }
+                } else {
+                    const post = await createPost(formData);
+                    if (post) {
+                        toast({
+                            description: 'Post created successfully',
+                            variant: 'default'
+                        })
+                        router.push(`/posts/${post.id}`);
+                    }
                 }
+
+
+
             }
 
         } catch (error) {
@@ -135,9 +161,14 @@ const PostForm = ({ user }: { user: User }) => {
                             <FormControl>
                                 <FileUploader
                                     files={files}
-                                    onChange={handleFilesChange}
+                                    onChange={(files) => {
+                                        setFiles(files);
+                                        form.setValue('assets', files, { shouldValidate: true });
+                                    }}
                                     uploadedFiles={uploadedFiles}
                                     setUploadedFiles={setUploadedFiles}
+                                    existingFiles={existingFiles}
+                                    onRemoveExisting={handleRemoveExisting}
                                 />
                             </FormControl>
                             <FormMessage />
@@ -180,7 +211,7 @@ const PostForm = ({ user }: { user: User }) => {
                         type='submit'
                         disabled={isUploading}
                     >
-                        {isUploading ? <Loader variant='white' /> : 'Share Post'}
+                        {isUploading ? <Loader variant='white' /> : isEditing ? 'Update Post' : 'Share Post'}
                     </Button>
                 </div>
             </Form >

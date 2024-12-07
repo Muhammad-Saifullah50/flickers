@@ -3,21 +3,24 @@ import { auth } from '@/lib/auth'
 import Image from 'next/image'
 import React from 'react'
 import LeftSidebarItem from './LeftSidebarItem';
+import Link from 'next/link';
 
 const LeftSidebar = async () => {
 
   const session = await auth();
   return (
     <aside className='w-[270px] bg-dark-2 px-6 pt-8 pb-8 flex flex-col gap-12 overflow-y-scroll relative border-dark-4'>
-      <div className="flex justify-start items-center gap-2">
-        <Image
-          src={'/icons/logo.svg'}
-          width={25}
-          height={25}
-          alt="logo" />
+      <Link href={'/'}>
+        <div className="flex justify-start items-center gap-2">
+          <Image
+            src={'/icons/logo.svg'}
+            width={25}
+            height={25}
+            alt="logo" />
 
-        <h1 className="font-bold text-2xl">Flickers</h1>
-      </div>
+          <h1 className="font-bold text-2xl">Flickers</h1>
+        </div>
+      </Link>
 
       <div className='flex items-center justify-start gap-4'>
         <Image src={session?.user?.image || '/icons/dummyuser.svg'}
@@ -50,7 +53,7 @@ const LeftSidebar = async () => {
           />
         ))}
       </ul>
-      
+
 
     </aside>
   )
