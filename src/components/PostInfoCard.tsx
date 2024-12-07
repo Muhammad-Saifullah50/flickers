@@ -29,12 +29,13 @@ const PostInfoCard = async ({ post, isHomeCard }: { post: Post & { author: User,
                                 className='rounded-full' />
                         </div>
                         <div>
+                            <Link href={`/users/${post.author?.id}`}>
                             <h2 className="font-semibold text-lg text-white">{post.author?.name}</h2>
+                            </Link>
                             <p className="text-sm text-purple-secondary font-medium">{formatDateTime(post.createdAt)}</p>
                         </div>
                     </div>
 
-                    {/* todo: add edit and delete functionality */}
 
                     {isOwner && (<div className="flex items-center justify-end gap-2">
                         <Link href={`/edit-post/${post.id}`}>
@@ -117,7 +118,6 @@ const PostInfoCard = async ({ post, isHomeCard }: { post: Post & { author: User,
                                     alt='like'
                                     className='cursor-pointer'
                                 />
-                                {/* todo: add comments functionality */}
                                 <span>{post.comments?.length}</span>
                             </div>
                             <div className="flex items-center gap-2">

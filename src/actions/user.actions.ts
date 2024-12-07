@@ -58,6 +58,25 @@ export const getDbUserById = async (id: string) => {
     }
 }
 
+export const getDbUserByIdWithDetails = async (id: string) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id
+            }, 
+            include:{
+                followedBy: true,
+                following: true,
+                posts: true
+            }
+        })
+
+        return user
+    } catch (error) {
+        console.error('Error fetching current user on server:', error);
+    }
+}
+
 export const getAllUsers = async () => {
 
     try {
