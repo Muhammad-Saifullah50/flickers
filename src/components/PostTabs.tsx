@@ -15,7 +15,7 @@ const PostTabs = ({ posts }: PostTabsProps) => {
 
             <TabsContent value="posts">Make changes to your account here.</TabsContent>
             <TabsContent value="reels">Change your password here.</TabsContent>
-            {/* <TabsContent value="tagged">Change your password here.</TabsContent> */}
+            <TabsContent value="tagged">Change your password here.</TabsContent>
         </Tabs>
 
     )

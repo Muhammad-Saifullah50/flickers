@@ -2,6 +2,7 @@ import { getDbUserById, getDbUserByIdWithDetails } from '@/actions/user.actions'
 import PostTabs from '@/components/PostTabs';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
@@ -25,7 +26,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                         <h2 className='font-semibold text-4xl'>{user?.name}</h2>
                         <div className='flex gap-4'>
                             <Button>Follow</Button>
-                            <Button>Message</Button>
+                           <Link href={`/chats/?userId=${user?.id}`}><Button>Message</Button></Link>
                         </div>
                     </div>
 
