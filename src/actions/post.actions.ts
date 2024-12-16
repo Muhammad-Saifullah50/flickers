@@ -68,7 +68,6 @@ export const getPostById = async (id: string) => {
 }
 
 export const getFeedPosts = async (userhasFollowed: boolean) => {
-
     try {
 
         if (userhasFollowed) {

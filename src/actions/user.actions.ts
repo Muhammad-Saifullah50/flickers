@@ -7,16 +7,14 @@ export const getCurrentUserFromDb = async () => {
     try {
 
         const session = await auth();
-
         const email = session?.user?.email
-
         if (!email) {
             throw new Error('Not authenticated');
         }
 
         const user = await prisma.user.findUnique({
             where: {
-                email
+                email: email
             },
             include: {
                 followedBy: {
@@ -39,7 +37,6 @@ export const getCurrentUserFromDb = async () => {
         return user;
     } catch (error) {
         console.error('Error fetching current user:', error);
-        throw error;
     }
 }
 
@@ -63,8 +60,8 @@ export const getDbUserByIdWithDetails = async (id: string) => {
         const user = await prisma.user.findUnique({
             where: {
                 id
-            }, 
-            include:{
+            },
+            include: {
                 followedBy: true,
                 following: true,
                 posts: true

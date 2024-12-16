@@ -2,7 +2,7 @@
 const ChatLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <div>
-        <h1>jk</h1>
+        <h1>Chat</h1>
         {children}
     </div>
   )
