@@ -163,7 +163,6 @@ model Message {
   image     String?
   createdAt DateTime @default(now())
 
-  seenIds String[] @db.ObjectId
 
   chatId String @db.ObjectId
   chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)

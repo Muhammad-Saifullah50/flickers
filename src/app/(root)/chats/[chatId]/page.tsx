@@ -51,11 +51,12 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
       <span className="w-full h-[1px] bg-dark-4" />
 
       <section className="h-full">
-        <Messages/>
+        {/* // have to add the messages */}
+        <Messages />
       </section>
 
       <section>
-        <SendMessageForm />
+        <SendMessageForm chatId={chatId} senderId={chat?.userIds[0]!} />
       </section>
     </main>
   )

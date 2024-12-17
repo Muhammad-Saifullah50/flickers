@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Form, FormControl, FormField, FormItem } from './ui/form'
@@ -8,16 +8,34 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
+import { createMessage } from '@/actions/chat.actions';
 
-const SendMessageForm = () => {
+const SendMessageForm = ({ chatId, senderId }: { chatId: string, senderId: string }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
     });
 
+    const [loading, setLoading] = useState(false);
+
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
-        console.log(data)
+        try {
+            setLoading(true);
+            form.reset();
+            const dataObj = {
+                ...data,
+                chatId: chatId,
+                senderId: senderId
+            }
+            const message = await createMessage(dataObj);
+        } catch (error) {
+            console.error('Error creating message on client:', error);
+        } finally {
+            setLoading(false);
+        }
     }
+
+    // have to add the image upload functionality
     return (
         <section className="flex justify-between gap-2 w-full py-2">
 
@@ -31,12 +49,12 @@ const SendMessageForm = () => {
                                 <FormControl>
                                     <div className="relative flex items-center w-full">
                                         <Button
-                                            className="absolute left-0 !bg-transparent hover:!bg-transparent"
+                                            className=" !bg-dark-3 hover:!bg-dark-3/90 relative left-2 !rounded-none"
                                         >
                                             <Image
-                                                src="/icons/send.svg"
-                                                width={24}
-                                                height={24}
+                                                src="/icons/attachment.svg"
+                                                width={20}
+                                                height={20}
                                                 alt="send"
                                                 className="opacity-70 hover:opacity-100 transition-opacity"
                                             />
@@ -46,23 +64,23 @@ const SendMessageForm = () => {
                                             {...field}
                                             className="!bg-dark-3 pr-10 focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0"
                                         />
-                                         <Button
-                                            
+                                        <Button
+                                            disabled={loading}
                                             type="submit"
                                             size={"icon"}
-                                            className=" !bg-yellow-primary hover:!bg-yellow-primary/90"
+                                            className=" !bg-yellow-primary hover:!bg-yellow-primary/90 !p-2"
                                         >
                                             <Image
                                                 src="/icons/arrow-black.svg"
-                                                width={24}
-                                                height={24}
+                                                width={20}
+                                                height={20}
                                                 alt="send"
                                                 className="opacity-70 hover:opacity-100 transition-opacity"
                                             />
                                         </Button>
 
                                     </div>
-                                    
+
                                 </FormControl>
                             </FormItem>
                         )}
