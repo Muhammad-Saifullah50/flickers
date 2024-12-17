@@ -1,4 +1,5 @@
-import { getDbUserById, getDbUserByIdWithDetails } from '@/actions/user.actions'
+import { getCurrentUserFromDb, getDbUserById, getDbUserByIdWithDetails } from '@/actions/user.actions'
+import MessageButton from '@/components/MessageButton';
 import PostTabs from '@/components/PostTabs';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
@@ -9,6 +10,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
     const id = await params.id;
 
     const user = await getDbUserByIdWithDetails(id)
+    const currentUser = await getCurrentUserFromDb();
     return (
         <main className='flex flex-col gap-4'>
             <section className='flex gap-4 py-4'>
@@ -26,7 +28,9 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                         <h2 className='font-semibold text-4xl'>{user?.name}</h2>
                         <div className='flex gap-4'>
                             <Button>Follow</Button>
-                           <Link href={`/chats/?userId=${user?.id}`}><Button>Message</Button></Link>
+                            <MessageButton 
+                            currentUserId={currentUser?.id!}
+                            otherUserId={user?.id!}/>
                         </div>
                     </div>
 
@@ -42,7 +46,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                             }
                         </p>
                         <p className='flex items-center gap-2 text-light-2'>
-                            <span className=' text-purple-primary text-xl font-medium'>{user?.following.length}</span> 
+                            <span className=' text-purple-primary text-xl font-medium'>{user?.following.length}</span>
                             {
                                 user?.following.length === 1 ? 'Following' : 'Following'}
                         </p>

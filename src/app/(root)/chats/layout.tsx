@@ -9,7 +9,7 @@ const ChatLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="flex ">
       <section className="flex flex-col gap-4 w-2/5">
-        <Heading text='Chats' icon='/icons/chats-white.svg' />
+        <Heading text='All Chats' icon='/icons/chats-white.svg' />
         <ChatsList chatList={chatList} />
       </section>
 
