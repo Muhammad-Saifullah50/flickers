@@ -10,15 +10,16 @@ export const getChatList = async () => {
 
         const user = await getCurrentUserFromDb();
 
-        const chatList = await prisma.user.findMany({
+        const chatList = await prisma.chat.findMany({
             where: {
-                email: user?.email
+                userIds: {
+                    has: user?.id
+                }
             },
-            select:{
-                chats: true
+            include: {
+                users: true
             }
-        });
-
+        })
         return chatList
     } catch (error) {
         console.error('Error fetching chat list on server:', error)
@@ -58,7 +59,7 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
         });
 
         //updating other user
-         await prisma.user.update({
+        await prisma.user.update({
             where: {
                 id: otherUserId
             },
@@ -76,4 +77,19 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
     revalidatePath('/chats')
     return redirect(`/chats/${existingChat.id}`)
 
+}
+
+export const getChatById = async (chatId: string) => {
+    try {
+        const chat = await prisma.chat.findUnique({
+            where: {
+                id: chatId
+            }
+        });
+
+        return chat
+
+    } catch (error) {
+        console.error('Error fetching chat by id on server:', error)
+    }
 }

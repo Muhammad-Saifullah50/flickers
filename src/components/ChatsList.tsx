@@ -1,18 +1,29 @@
-import { Chat } from "@prisma/client"
+import { Chat, User } from "@prisma/client"
 import ChatListItem from "./ChatListItem"
 
 const ChatsList = ({ chatList }: { chatList: [] }) => {
+
+  console.log(chatList)
   return (
     <section>
       <ul>
         {chatList.length === 0 ? (
           <p>No Chats to show</p>
         ) : (
-          chatList.map((chat) => {
-            // console.log(chat, 'chat')
+          chatList.map((chat: Chat & { users: User[] }) => {
             return (
-            <ChatListItem key={chat.id} chat={chat.chats} />
-          )})
+              <ChatListItem
+                key={chat.id}
+                chatName={chat.name!}
+                // the other users username
+                chatUsername={chat.users[1].username}
+                chatId={chat.id}
+                // the other users image
+                chatImage={chat.users[1].image}
+              />
+
+            )
+          })
         )}
       </ul>
     </section>

@@ -2,24 +2,34 @@ import { Chat, User } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
 
-const ChatListItem = ({ chat }: { chat: Chat & { users: User[] } }) => {
-    // the image of the second user in the user ids array
-    const otherUserImage = chat[1].image;
-
-    console.log(chat, 'chat list item')
+type ChatListItemProps = {
+    chatName: string;
+    chatUsername: string
+    chatId: string;
+    chatImage: string | null
+}
+const ChatListItem = ({ chatName, chatId, chatImage, chatUsername }: ChatListItemProps) => {
+    console.log(chatUsername)
     return (
         <li>
-            <Link href={`/chats/${chat.id}`}
-                className="flex items-start gap-4 p-4 hover:bg-dark-3 rounded-lg"
+            <Link href={`/chats/${chatId}`}
+                className="flex items-center justify-start gap-4 p-4 hover:bg-dark-3 rounded-lg"
             >
                 <Image
-                    src={otherUserImage || '/icons/dummyuser.svg'}
+                    src={chatImage || '/icons/dummyuser.svg'}
                     width={40}
                     height={40}
                     alt="profile photo"
+                    className="rounded-full"
                 />
 
-                <h4>{chat.name}</h4>
+                {/* // the other persons name and username */}
+                <div>
+                    <h4 className="line-clamp-1">{chatName}</h4>
+                    <p className="text-sm text-purple-secondary font-normal">{chatUsername}</p>
+                </div>
+
+                <span className="h-[14px] w-[14px] bg-dark-4 rounded-full"/>
             </Link>
         </li>
     )
