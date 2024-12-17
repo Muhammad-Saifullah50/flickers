@@ -42,6 +42,7 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
         const chat = await prisma.chat.create({
             data: {
                 name: otherUser?.name,
+                image: otherUser?.image || '/icons/dummyuser.svg',
                 userIds: [currUserId, otherUserId]
             }
         });
@@ -81,6 +82,7 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
 
 export const getChatById = async (chatId: string) => {
     try {
+
         const chat = await prisma.chat.findUnique({
             where: {
                 id: chatId
