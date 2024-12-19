@@ -34,3 +34,43 @@ export const formatTimeDifference = (date: Date | string) => {
   if (diffInMonths < 12) return `${diffInMonths}mo`;
   return `${diffInYears}y`;
 }
+
+
+// utils.ts
+export function formatMessageTime(localTime: Date | string): string {
+  const date = new Date(localTime);
+  
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    console.error("Invalid date:", localTime);
+    return "Invalid date";
+  }
+
+  const now = new Date();
+  
+  // Normalize both dates to midnight for comparison
+  const normalizedDate = new Date(date); // Create a copy for normalization
+  normalizedDate.setHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
+
+  const diffTime = now.getTime() - normalizedDate.getTime();
+  const diffDays = diffTime / (1000 * 3600 * 24); // Calculate difference in days
+
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+  
+  const timeString = date.toLocaleString('en-US', options); // Use original date for time formatting
+  
+  console.log(diffDays, 'diffDays'); // For debugging
+
+  if (diffDays === 0) {
+    return `Today, ${timeString}`;
+  } else if (diffDays === 1) {
+    return `Yesterday, ${timeString}`; // Include time for yesterday
+  } else {
+    return date.toLocaleString('en-US', { month: 'long', day: 'numeric' }) + `, ${timeString}`;
+  }
+}

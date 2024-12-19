@@ -50,9 +50,8 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
 
       <span className="w-full h-[1px] bg-dark-4" />
 
-      <section className="h-full">
-        {/* // have to add the messages */}
-        <Messages />
+      <section className=" overflow-y-scroll h-full">
+        <Messages messages={chat?.messages!}/>
       </section>
 
       <section>

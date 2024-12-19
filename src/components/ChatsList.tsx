@@ -19,7 +19,7 @@ const ChatsList = ({ chatList }: { chatList: [] }) => {
                 chatUsername={chat.users[1].username}
                 chatId={chat.id}
                 // the other users image
-                chatImage={chat.image}
+                chatImage={chat.users[1].image}
               />
 
             )

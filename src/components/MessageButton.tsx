@@ -8,7 +8,6 @@ import Loader from "./Loader";
 
 const MessageButton = ({ currentUserId, otherUserId }: { currentUserId: string, otherUserId: string }) => {
 
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     const handleCreateChat = async () => {

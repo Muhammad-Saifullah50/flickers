@@ -14,6 +14,9 @@ const SendMessageForm = ({ chatId, senderId }: { chatId: string, senderId: strin
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
+        defaultValues: {
+            message: '',
+        }
     });
 
     const [loading, setLoading] = useState(false);
@@ -21,7 +24,7 @@ const SendMessageForm = ({ chatId, senderId }: { chatId: string, senderId: strin
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         try {
             setLoading(true);
-            form.reset();
+            form.setValue('message', '');
             const dataObj = {
                 ...data,
                 chatId: chatId,
