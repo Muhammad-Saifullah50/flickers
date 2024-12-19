@@ -49,6 +49,16 @@ export const getDbUserById = async (id: string) => {
             }
         })
 
+        if (!user?.username) {
+            await prisma.user.update({
+                where: {
+                    id: user?.id
+                }, 
+                data:{
+                    username: `@${user?.name.toLowerCase().replace(' ', '')}`
+                }
+            })
+        }
         return user
     } catch (error) {
         console.error('Error fetching current user on server:', error);

@@ -66,7 +66,7 @@ const PostComment = ({ author, postId, isReply, parentCommentId, setisReplying }
     return (
         <section className="flex justify-between gap-2 w-full py-2">
             <Image
-                src={author.image || '/icons/dummyuser.svg'}
+                src={author.image}
                 width={40}
                 height={35}
                 alt="profile photo"

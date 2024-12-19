@@ -49,8 +49,8 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
 
         const chat = await prisma.chat.create({
             data: {
-                name: otherUser?.name,
-                image: otherUser?.image || '/icons/dummyuser.svg',
+                name: otherUser?.name!,
+                image: otherUser?.image || '/icons/dummyuser.png',
                 userIds: [currUserId, otherUserId],
                 creatorId: currUserId
             }
@@ -96,11 +96,12 @@ export const getChatById = async (chatId: string) => {
             where: {
                 id: chatId
             },
-            include:{
+            include: {
                 messages: true,
                 users: true
             }
         });
+
 
         return chat
 
@@ -120,6 +121,7 @@ export const createMessage = async (data: createMessageParams) => {
             }
         });
 
+        revalidatePath(`/chats`)
         revalidatePath(`/chats/${data.chatId}`)
         return message
     } catch (error) {

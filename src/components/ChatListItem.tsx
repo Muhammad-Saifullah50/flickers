@@ -9,14 +9,13 @@ type ChatListItemProps = {
     chatImage: string | null
 }
 const ChatListItem = ({ chatName, chatId, chatImage, chatUsername }: ChatListItemProps) => {
-    console.log(chatUsername)
     return (
         <li>
             <Link href={`/chats/${chatId}`}
                 className="flex items-center justify-start gap-4 p-4 hover:bg-dark-3 rounded-lg"
             >
                 <Image
-                    src={chatImage || '/icons/dummyuser.svg'}
+                    src={chatImage!}
                     width={40}
                     height={40}
                     alt="profile photo"

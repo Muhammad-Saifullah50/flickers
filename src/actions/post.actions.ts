@@ -30,6 +30,7 @@ export const createPost = async (data: createPostParams) => {
             }
         });
 
+        revalidatePath('/');
         return post
     } catch (error) {
         console.error('Error creating post on server:', error);

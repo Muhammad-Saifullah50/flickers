@@ -27,7 +27,7 @@ const UserCard = async ({ user }: { user: UserWithFollows }) => {
     return (
         <aside className="flex flex-col gap-4  border-[3px] border-dark-3 p-4 rounded-xl h-[320px] w-[320px] items-center justify-center">
             <Image
-                src={user.image || '/icons/dummyuser.svg'}
+                src={user.image!}
                 width={90}
                 height={90}
                 alt='profile photo'

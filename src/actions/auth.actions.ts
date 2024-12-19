@@ -52,6 +52,7 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
             username: username,
             email: formData.email,
             password: await bcrypt.hash(formData.password, 10),
+            image: '/icons/dummyuser.png'
         }
     });
 

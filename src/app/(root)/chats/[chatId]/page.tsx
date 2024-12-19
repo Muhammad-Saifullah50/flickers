@@ -15,7 +15,7 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
   const currentUser = await getCurrentUserFromDb();
 
   const otherUser = chat?.users.find((user) => user.id !== currentUser?.id);
-
+ 
   return (
     <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
 
@@ -23,7 +23,7 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
         <div className="flex gap-4 items-center">
           <div>
             <Image
-              src={otherUser?.image! || '/icons/dummyuser.svg'}
+              src={otherUser?.image!}
               width={50}
               height={50}
               alt="chat image"

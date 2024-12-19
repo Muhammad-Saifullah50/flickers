@@ -22,14 +22,14 @@ const LeftSidebar = async () => {
         </div>
       </Link>
 
-      <div className='flex items-center justify-start gap-4'>
+      {session?.user && <div className='flex items-center justify-start gap-4'>
         <Image src={session?.user?.image || '/icons/dummyuser.svg'}
           width={40}
           height={40}
           alt='profile photo'
           className='rounded-full ' />
         <p className='font-bold text-lg'>{session?.user?.name}</p>
-      </div>
+      </div>}
 
       <ul className='flex flex-col gap-4'>
         {sidebarLinks.map((item) => (

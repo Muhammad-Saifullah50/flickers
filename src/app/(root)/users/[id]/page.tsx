@@ -16,7 +16,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
             <section className='flex gap-4 py-4'>
                 <div className='flex justify-center items-start'>
                     <Image
-                        src={user?.image || '/icons/dummyuser.svg'}
+                        src={user?.image!}
                         width={150}
                         height={150}
                         alt='profile photo'

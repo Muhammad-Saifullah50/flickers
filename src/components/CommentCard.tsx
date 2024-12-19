@@ -22,7 +22,7 @@ const CommentCard = async ({ comment, isReply, replyCount }: CommentCardProps) =
         <div className={cn("flex gap-4", isReply && "ml-12")}>
             <div>
                 <Image
-                    src={commentAuthor?.image || '/icons/dummyuser.svg'}
+                    src={commentAuthor?.image!}
                     width={40}
                     height={40}
                     alt='profile photo'
