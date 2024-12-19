@@ -15,6 +15,8 @@ const signUpSchema = authSchema('signup');
 
 export const signInWithOAuthProvider = async (provider: Provider, callbackUrl: string) => {
     try {
+
+
         await signIn(provider.id, {
             redirectTo: callbackUrl ?? "/",
         })
@@ -40,6 +42,7 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
         throw new Error("User already exists")
     };
 
+    // have to correct this type errror
     const username = `@${formData.name.toLowerCase().replace('')}`;
 
     await prisma.user.create({

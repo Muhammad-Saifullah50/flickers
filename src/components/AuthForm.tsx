@@ -44,6 +44,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
             name: '',
             email: '',
             password: '',
+            username: '',
             confirmPassword: '',
         }
     })
@@ -96,7 +97,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
     const handleOAuthSubmit = async (provider: Provider) => {
         try {
             setloading(true)
-            const result = await signInWithOAuthProvider(provider, callbackUrl);
+             await signInWithOAuthProvider(provider, callbackUrl);
 
         } catch (error) {
             setloading(false);

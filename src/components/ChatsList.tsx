@@ -1,9 +1,10 @@
 import { Chat, User } from "@prisma/client"
 import ChatListItem from "./ChatListItem"
+import { getCurrentUserFromDb } from "@/actions/user.actions";
 
-const ChatsList = ({ chatList }: { chatList: [] }) => {
+const ChatsList = async ({ chatList }: { chatList: [] }) => {
 
-  console.log(chatList)
+  const currUser = await getCurrentUserFromDb();
   return (
     <section>
       <ul>
@@ -11,15 +12,18 @@ const ChatsList = ({ chatList }: { chatList: [] }) => {
           <p>No Chats to show</p>
         ) : (
           chatList.map((chat: Chat & { users: User[] }) => {
+
+            const otherUser = chat.users.find((user: User) => user.id !== currUser?.id);
+
             return (
               <ChatListItem
                 key={chat.id}
-                chatName={chat.name!}
+                chatName={otherUser?.name!}
                 // the other users username
-                chatUsername={chat.users[1].username}
+                chatUsername={otherUser?.username!}
                 chatId={chat.id}
                 // the other users image
-                chatImage={chat.users[1].image}
+                chatImage={otherUser?.image!}
               />
 
             )

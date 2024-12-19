@@ -10,7 +10,7 @@ generator client {
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  username      String
+  username      String?
   email         String    @unique
   emailVerified DateTime?
   image         String?
@@ -153,8 +153,11 @@ model Chat {
   messagesIds String[]  @db.ObjectId
   messages    Message[]
 
+  creatorId String @db.ObjectId
+
   userIds String[] @db.ObjectId
   users   User[]   @relation(fields: [userIds], references: [id])
+
 }
 
 model Message {

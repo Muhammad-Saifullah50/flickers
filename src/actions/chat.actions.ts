@@ -4,8 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { getCurrentUserFromDb, getDbUserById } from "./user.actions"
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-import { messageSchema } from "@/validations/messageSchema";
+
 
 type createMessageParams = {
     message?: string,
@@ -52,7 +51,8 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
             data: {
                 name: otherUser?.name,
                 image: otherUser?.image || '/icons/dummyuser.svg',
-                userIds: [currUserId, otherUserId]
+                userIds: [currUserId, otherUserId],
+                creatorId: currUserId
             }
         });
 
@@ -97,7 +97,8 @@ export const getChatById = async (chatId: string) => {
                 id: chatId
             },
             include:{
-                messages: true
+                messages: true,
+                users: true
             }
         });
 

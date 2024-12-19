@@ -1,4 +1,5 @@
 import { getChatById } from "@/actions/chat.actions";
+import { getCurrentUserFromDb } from "@/actions/user.actions";
 import Messages from "@/components/Messages";
 import SendMessageForm from "@/components/SendMessageForm";
 import Image from "next/image";
@@ -11,6 +12,10 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
 
   const chat = await getChatById(chatId);
 
+  const currentUser = await getCurrentUserFromDb();
+
+  const otherUser = chat?.users.find((user) => user.id !== currentUser?.id);
+
   return (
     <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
 
@@ -18,7 +23,7 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
         <div className="flex gap-4 items-center">
           <div>
             <Image
-              src={chat?.image!}
+              src={otherUser?.image! || '/icons/dummyuser.svg'}
               width={50}
               height={50}
               alt="chat image"
@@ -26,7 +31,7 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
             />
           </div>
           <div>
-            <h2>{chat?.name}</h2>
+            <h2>{otherUser?.name}</h2>
             <p className="text-sm text-purple-secondary">Online</p>
           </div>
 
@@ -55,7 +60,7 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
       </section>
 
       <section>
-        <SendMessageForm chatId={chatId} senderId={chat?.userIds[0]!} />
+        <SendMessageForm chatId={chatId} senderId={currentUser?.id!} />
       </section>
     </main>
   )
