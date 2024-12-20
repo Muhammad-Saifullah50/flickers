@@ -23,7 +23,7 @@ const UserCard = async ({ user }: { user: UserWithFollows }) => {
     const isFollowing = user.followedBy.some((follow) => follow.follower.id === currentUser?.id);
 
     const followId = user.followedBy.find((follow) => follow.follower.id === currentUser?.id)?.id
-    
+
     return (
         <aside className="flex flex-col gap-4  border-[3px] border-dark-3 p-4 rounded-xl h-[320px] w-[320px] items-center justify-center">
             <Image
@@ -35,9 +35,10 @@ const UserCard = async ({ user }: { user: UserWithFollows }) => {
             />
 
             <h3>{user.name}</h3>
+            <p className="text-purple-tertiary">{user.username}</p>
 
             <FollowButton
-                followerUserId={currentUser?.id}
+                followerUserId={currentUser?.id!}
                 userToFollowId={user.id}
                 isFollowing={isFollowing}
                 followId={followId}
