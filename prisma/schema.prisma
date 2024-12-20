@@ -30,6 +30,7 @@ model User {
   chats   Chat[]   @relation(fields: [chatIds], references: [id])
 
   messages Message[]
+  Reel     Reel[]
 }
 
 model Account {
@@ -115,6 +116,8 @@ model Like {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+  reel      Reel?    @relation("ReelLikes", fields: [reelId], references: [id])
+  reelId    String?  @db.ObjectId
 
   @@unique([postId, userId])
   @@index([userId])
@@ -157,7 +160,6 @@ model Chat {
 
   userIds String[] @db.ObjectId
   users   User[]   @relation(fields: [userIds], references: [id])
-
 }
 
 model Message {
@@ -166,10 +168,26 @@ model Message {
   image     String?
   createdAt DateTime @default(now())
 
-
   chatId String @db.ObjectId
   chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   senderId String @db.ObjectId
   sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Reel {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId  String   @db.ObjectId
+  caption   String
+  likes     Int      @default(0)
+  plays     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  videoUrl  String
+  altText   String
+  hashtags  String?
+  likedBy   Like[]   @relation("ReelLikes")
+
+  @@index([authorId])
 }
