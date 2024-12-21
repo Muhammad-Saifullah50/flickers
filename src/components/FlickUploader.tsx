@@ -2,31 +2,55 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Input } from './ui/input';
 import Image from 'next/image';
+import { toast } from '@/hooks/use-toast';
 
 interface FileUploaderProps {
-  file?: File; // File can be undefined initially
   onChange: (file: File) => void;
-  uploadedFile?: string; // Optional string for uploaded file
+  uploadedFile?: string;
   setUploadedFile: (fileUrl: string) => void;
-  existingFile?: string; // Optional existing file URL
+  existingFile?: string;
   onRemoveExisting?: (fileUrl: string) => void;
 }
 
-const ReelUploader = ({
-  file,
+const FlickUploader = ({
   onChange,
   setUploadedFile,
   uploadedFile,
   existingFile,
   onRemoveExisting,
 }: FileUploaderProps) => {
+
+  const validateVideoDuration = (file: File) => {
+    return new Promise<boolean>((resolve) => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => {
+        URL.revokeObjectURL(video.src); // Clean up the object URL
+        resolve(video.duration <= 15); // Validate video duration
+      };
+      video.src = URL.createObjectURL(file);
+    });
+  };
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles && acceptedFiles.length > 0) {
         const newFile = acceptedFiles[0];
+
+        const isValid = validateVideoDuration(newFile);
+
+        if (!isValid) {
+          toast({
+            variant: 'destructive',
+            description: 'Video duration should be less than or equal to 15 seconds',
+          });
+          return;
+        }
+
         onChange(newFile);
         const newObjectUrl = URL.createObjectURL(newFile);
         setUploadedFile(newObjectUrl);
+
       }
     },
     [onChange, setUploadedFile]
@@ -56,28 +80,18 @@ const ReelUploader = ({
   }, [uploadedFile]);
 
   const renderPreview = (fileUrl: string, isExisting: boolean = false) => {
-    const isVideo = fileUrl.match(/\.(mp4|webm|ogg)$/i);
-
     return (
       <div key={fileUrl} className="relative group">
-        {isVideo ? (
-          <div className="w-[200px] h-[200px] relative">
-            <video
-              src={fileUrl}
-              controls
-              preload="metadata"
-              className="absolute inset-0 w-full h-full object-cover rounded-lg"
-            />
-          </div>
-        ) : (
-          <Image
+
+        <div className="w-[200px] h-[200px] relative">
+          <video
             src={fileUrl}
-            alt={`${isExisting ? 'Existing' : 'Uploaded'} file`}
-            width={200}
-            height={200}
-            className="object-cover rounded-lg w-[200px] h-[200px]"
+            controls
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover rounded-lg"
           />
-        )}
+        </div>
+
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -87,7 +101,7 @@ const ReelUploader = ({
               removeFile();
             }
           }}
-          className="absolute top-2 right-5 bg-red-500 text-white p-2 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-14 bg-red-500 text-white p-2 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
         >
           ✕
         </button>
@@ -117,9 +131,8 @@ const ReelUploader = ({
         )}
 
         <div
-          className={`flex flex-col gap-2 p-8 items-center justify-center ${
-            uploadedFile || existingFile ? 'h-32' : 'h-60'
-          } bg-dark-3 rounded-lg border-2 border-dashed border-gray-500 cursor-pointer hover:bg-dark-4 transition mt-4`}
+          className={`flex flex-col gap-2 p-8 items-center justify-center ${uploadedFile || existingFile ? 'h-32' : 'h-60'
+            } bg-dark-3 rounded-lg border-2 border-dashed border-gray-500 cursor-pointer hover:bg-dark-4 transition mt-4`}
         >
           <Image
             src={'/icons/image.svg'}
@@ -133,11 +146,11 @@ const ReelUploader = ({
               ? 'Drop files here...'
               : 'Drag and drop files here or click to browse'}
           </p>
-          <p className="text-light-4 text-sm text-center">Supports images and videos</p>
+          <p className="text-light-4 text-sm text-center">Supports only videos</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default ReelUploader;
+export default FlickUploader;

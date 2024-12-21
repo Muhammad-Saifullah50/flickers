@@ -24,10 +24,10 @@ export const sidebarLinks = [
         label: 'Saved',
     },
     {
-        icon: '/icons/reels.svg',
-        whiteIcon: '/icons/reels-white.svg',
-        route: '/reels',
-        label: 'Reels',
+        icon: '/icons/flicks.svg',
+        whiteIcon: '/icons/flicks-white.svg',
+        route: '/flicks',
+        label: 'Flicks',
     },
     {
         icon: '/icons/chats.svg',

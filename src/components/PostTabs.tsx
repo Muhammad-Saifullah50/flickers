@@ -9,12 +9,12 @@ const PostTabs = ({ posts }: PostTabsProps) => {
         <Tabs defaultValue="posts" className="w-[400px]">
             <TabsList>
                 <TabsTrigger value="posts">Posts</TabsTrigger>
-                <TabsTrigger value="reels">Reels</TabsTrigger>
+                <TabsTrigger value="flicks">Flicks</TabsTrigger>
                 {/* <TabsTrigger value="tagged">Tagged</TabsTrigger> */}
             </TabsList>
 
             <TabsContent value="posts">Make changes to your account here.</TabsContent>
-            <TabsContent value="reels">Change your password here.</TabsContent>
+            <TabsContent value="flicks">Change your password here.</TabsContent>
             <TabsContent value="tagged">Change your password here.</TabsContent>
         </Tabs>
 

@@ -5,7 +5,7 @@ import PostForm from '@/components/PostForm'
 import Heading from '@/components/Heading'
 import { getCurrentUserFromDb } from '@/actions/user.actions'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import ReelForm from '@/components/ReelForm'
+import FlickForm from '@/components/FlickForm'
 
 export default async function CreatePost() {
 
@@ -18,15 +18,15 @@ export default async function CreatePost() {
       <Tabs defaultValue="post">
         <TabsList>
           <TabsTrigger value="post">Create Post</TabsTrigger>
-          <TabsTrigger value="reel">Create Reel</TabsTrigger>
+          <TabsTrigger value="flick">Create Flick</TabsTrigger>
         </TabsList>
 
         <TabsContent value="post">
           <PostForm user={user} />
         </TabsContent>
 
-        <TabsContent value="reel">
-          <ReelForm user={user}/>
+        <TabsContent value="flick">
+          <FlickForm user={user}/>
         </TabsContent>
       </Tabs>
 

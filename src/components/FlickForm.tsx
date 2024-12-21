@@ -4,44 +4,44 @@ import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from '
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import FileUploader from './FileUploader'
 import { useState } from 'react'
 import { Button } from './ui/button'
 import Loader from './Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
-import { Reel, User } from '@prisma/client'
-import { ReelEditingSchema, ReelSchema } from '@/validations/reelSchema'
-import { createReel, updateReel } from '@/actions/reel.actions'
-import ReelUploader from './ReelUploader'
+import { Flick, User } from '@prisma/client'
+import { FlickEditingSchema, FlickSchema } from '@/validations/flickSchema'
+import { createFlick, updateFlick } from '@/actions/flick.actions'
+import FlickUploader from './FlickUploader'
 
 interface PostFormProps {
     user: User
-    reel?: Reel
+    flick?: Flick
     isEditing?: boolean
 }
-const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
+const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
 
     const [uploadedFile, setUploadedFile] = useState<string>();
+    console.log(uploadedFile, 'uploadedFile');
     const [file, setFile] = useState<File>();
-    const [existingFile, setExistingFile] = useState<string>(reel?.videoUrl || '');
+    const [existingFile, setExistingFile] = useState<string>(flick?.videoUrl || '');
     const [isUploading, setIsUploading] = useState(false);
 
     const router = useRouter();
 
-    const schema = (!isEditing) ? ReelSchema : ReelEditingSchema
+    const schema = (!isEditing) ? FlickSchema : FlickEditingSchema
 
     const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
-            caption: reel?.caption || '',
-            altText: reel?.altText || '',
-            videoUrl: reel?.videoUrl || '',
-            hashtags: reel?.hashtags || ''
+            caption: flick?.caption || '',
+            altText: flick?.altText || '',
+            videoUrl: flick?.videoUrl || '',
+            hashtags: flick?.hashtags || ''
         }
     })
 
- 
+
 
     const handleRemoveExisting = (fileUrl: string) => {
         setExistingFile(fileUrl);
@@ -54,30 +54,30 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
 
             // Upload file to Cloudinary first
             let uploadedUrl: string = '';
-            
-                try {
-                    const formData = new FormData();
-                    formData.append("file", file!);
 
-                    const request = await fetch('/api/upload', {
-                        method: 'POST',
+            try {
+                const formData = new FormData();
+                formData.append("file", file!);
 
-                        body: formData,
-                    });
+                const request = await fetch('/api/upload', {
+                    method: 'POST',
 
-                    const url = await request.json();
-                    if (url) {
-                        //data field is returned by our upload api
-                        uploadedUrl = url.data;
-                    }
+                    body: formData,
+                });
 
-                } catch (error) {
-                    console.error('Error uploading file:', error);
-                    toast({
-                        description: `Error uploading file: ${file?.name}`,
-                        variant: 'destructive'
-                    });
+                const url = await request.json();
+                if (url) {
+                    //data field is returned by our upload api
+                    uploadedUrl = url.data;
                 }
+
+            } catch (error) {
+                console.error('Error uploading file:', error);
+                toast({
+                    description: `Error uploading file: ${file?.name}`,
+                    variant: 'destructive'
+                });
+            }
 
             // Update the form data with Cloudinary URLs
             const formData = {
@@ -88,31 +88,32 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                 hashtags: data.hashtags
             };
 
+            console.log(formData, 'formData');
 
-                if (isEditing) {
-                    const updatedReel = await updateReel(reel?.id!, formData)
-                    if (updatedReel) {
-                        toast({
-                            description: 'Post updated successfully',
-                            variant: 'default'
-                        })
-                        router.push(`/posts/${updatedReel.id}`);
-                    }
-                } else {
-                    const reel = await createReel(formData);
-                    if (reel) {
-                        toast({
-                            description: 'Reel created successfully',
-                            variant: 'default'
-                        })
-                        router.push(`/reels`);
-                    }
+            if (isEditing) {
+                const updatedflick = await updateFlick(flick?.id!, formData)
+                if (updatedflick) {
+                    toast({
+                        description: 'Post updated successfully',
+                        variant: 'default'
+                    })
+                    router.push(`/posts/${updatedflick.id}`);
+                }
+            } else {
+                const flick = await createFlick(formData);
+                if (flick) {
+                    toast({
+                        description: 'flick created successfully',
+                        variant: 'default'
+                    })
+                    router.push(`/flicks`);
+                }
             }
 
         } catch (error) {
-            console.error('Error creating reel:', error);
+            console.error('Error creating flick:', error);
             toast({
-                description: 'Error creating reel',
+                description: 'Error creating flick',
                 variant: 'destructive'
             })
         } finally {
@@ -148,13 +149,12 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                         <FormItem>
                             <FormLabel>Add a short video</FormLabel>
                             <FormControl>
-                                <ReelUploader
-                                    file={file!}
+                                <FlickUploader
                                     onChange={(file) => {
                                         setFile(file!);
                                         form.setValue('videoUrl', file, { shouldValidate: true });
                                     }}
-                                    uploadedFile={uploadedFile!}
+                                    uploadedFile={uploadedFile}
                                     setUploadedFile={setUploadedFile}
                                     existingFile={existingFile}
                                     onRemoveExisting={handleRemoveExisting}
@@ -200,7 +200,7 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                         type='submit'
                         disabled={isUploading}
                     >
-                        {isUploading ? <Loader variant='white' /> : isEditing ? 'Update Post' : 'Share Post'}
+                        {isUploading ? <Loader variant='white' /> : isEditing ? 'Update flick' : 'Create flick'}
                     </Button>
                 </div>
             </Form >
@@ -208,4 +208,4 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
     )
 }
 
-export default ReelForm
+export default flickForm

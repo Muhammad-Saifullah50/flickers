@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 
-interface createReelParams {
+interface createFlickParams {
     caption: string;
     altText: string;
     videoUrl: string;
@@ -10,9 +10,9 @@ interface createReelParams {
     hashtags?: string
 }
 
-export const createReel = async (data: createReelParams) => {
+export const createFlick = async (data: createFlickParams) => {
     try {
-        const reel = await prisma.reel.create({
+        const flick = await prisma.flick.create({
             data: {
                 caption: data.caption,
                 altText: data.altText,
@@ -26,17 +26,17 @@ export const createReel = async (data: createReelParams) => {
             }
         });
 
-        return reel
+        return flick
     } catch (error) {
-        console.error('Error creating reel on server:', error);
+        console.error('Error creating flick on server:', error);
     }
 }
 
-export const updateReel = async (reelId: string, data: createReelParams) => {
+export const updateFlick = async (flickId: string, data: createFlickParams) => {
     try {
-        const reel = await prisma.reel.update({
+        const flick = await prisma.flick.update({
             where: {
-                id: reelId
+                id: flickId
             },
             data: {
                 caption: data.caption,
@@ -46,8 +46,8 @@ export const updateReel = async (reelId: string, data: createReelParams) => {
             },
         })
 
-        return reel
+        return flick
     } catch (error) {
-        console.error('Error updating reel on server:', error);
+        console.error('Error updating flick on server:', error);
     }
 }
