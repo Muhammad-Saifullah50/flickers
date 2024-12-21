@@ -51,3 +51,28 @@ export const updateFlick = async (flickId: string, data: createFlickParams) => {
         console.error('Error updating flick on server:', error);
     }
 }
+
+
+export const getFlicks = async (query?: string) => {
+
+    try {
+        const flicks = await prisma.flick.findMany({
+            where: {
+                OR: [
+                    { caption: { contains: query } },
+                    { hashtags: { contains: query } },
+                    { author: { name: { contains: query } } },
+                    { author: { username: { contains: query } } }
+                ]
+            },
+            include: {
+                author: true,
+                likedBy: true
+            }
+        });
+
+        return flicks
+    } catch (error) {
+        console.error('Error getting flicks on server:', error);
+    }
+}
