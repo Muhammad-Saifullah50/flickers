@@ -4,7 +4,6 @@ import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from '
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { PostEditingSchema, PostSchema } from '@/validations/postSchema'
 import FileUploader from './FileUploader'
 import { useState } from 'react'
 import { Button } from './ui/button'
@@ -12,44 +11,40 @@ import Loader from './Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { createPost, updatePost } from '@/actions/post.actions'
-import { Post, User } from '@prisma/client'
+import { Post, Reel, User } from '@prisma/client'
+import { ReelEditingSchema, ReelSchema } from '@/validations/reelSchema'
+import { createReel, updateReel } from '@/actions/reel.actions'
 
 interface PostFormProps {
     user: User
-    reel?: Post
+    reel?: Reel
     isEditing?: boolean
 }
 const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
-    const [files, setFiles] = useState<File[]>([]);
-    const [existingFiles, setExistingFiles] = useState<string[]>(post?.assets || []);
+    const [file, setFile] = useState<File>();
+    const [existingFile, setExistingFile] = useState<string>(reel?.videoUrl || '');
     const [isUploading, setIsUploading] = useState(false);
 
     const router = useRouter();
 
-    const totalFiles = files.length + existingFiles.length;
-
-    const schema = (!isEditing || totalFiles === 0) ? PostSchema : PostEditingSchema
+    const schema = (!isEditing) ? ReelSchema : ReelEditingSchema
 
     const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
-            caption: post?.caption || '',
-            altText: post?.altText || '',
-            assets: post?.assets || [],
-            hashtags: post?.hashtags || ''
+            caption: reel?.caption || '',
+            altText: reel?.altText || '',
+            videoUrl: reel?.videoUrl || '',
+            hashtags: reel?.hashtags || ''
         }
     })
 
-    const handleFilesChange = (newFiles: File[]) => {
-        setFiles(newFiles);
-        form.setValue('assets', newFiles, { shouldValidate: true });
-
-    };
+ 
 
     const handleRemoveExisting = (fileUrl: string) => {
-        setExistingFiles(prev => prev.filter(f => f !== fileUrl));
+        setExistingFile(fileUrl);
     };
 
     const handleFormSubmit = async (data: z.infer<typeof schema>) => {
@@ -57,12 +52,12 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
         try {
             setIsUploading(true);
 
-            // Upload files to Cloudinary first
-            const uploadedUrls: string[] = [];
-            for (const file of files) {
+            // Upload file to Cloudinary first
+            let uploadedUrl: string = '';
+            
                 try {
                     const formData = new FormData();
-                    formData.append("file", file);
+                    formData.append("file", file!);
 
                     const request = await fetch('/api/upload', {
                         method: 'POST',
@@ -73,57 +68,55 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                     const url = await request.json();
                     if (url) {
                         //data field is returned by our upload api
-                        uploadedUrls.push(url.data);
+                        uploadedUrl = url.data;
                     }
 
                 } catch (error) {
                     console.error('Error uploading file:', error);
                     toast({
-                        description: `Error uploading file: ${file.name}`,
+                        description: `Error uploading file: ${file?.name}`,
                         variant: 'destructive'
                     });
                 }
-            }
 
             // Update the form data with Cloudinary URLs
             const formData = {
                 caption: data.caption,
                 altText: data.altText,
-                assets: [...uploadedUrls, ...existingFiles],
+                videoUrl: uploadedUrl,
                 authorId: user.id || '',
                 hashtags: data.hashtags
             };
 
-            if (uploadedUrls.length > 0 || existingFiles.length > 0) {
 
                 if (isEditing) {
-                    const updatedPost = await updatePost(post?.id!, formData)
-                    if (updatedPost) {
+                    const updatedReel = await updateReel(reel?.id!, formData)
+                    if (updatedReel) {
                         toast({
                             description: 'Post updated successfully',
                             variant: 'default'
                         })
-                        router.push(`/posts/${updatedPost.id}`);
+                        router.push(`/posts/${updatedReel.id}`);
                     }
                 } else {
-                    const post = await createPost(formData);
-                    if (post) {
+                    const reel = await createReel(formData);
+                    if (reel) {
                         toast({
-                            description: 'Post created successfully',
+                            description: 'Reel created successfully',
                             variant: 'default'
                         })
-                        router.push(`/posts/${post.id}`);
+                        router.push(`/reels`);
                     }
-                }
+                
 
 
 
             }
 
         } catch (error) {
-            console.error('Error creating post:', error);
+            console.error('Error creating reel:', error);
             toast({
-                description: 'Error creating post',
+                description: 'Error creating reel',
                 variant: 'destructive'
             })
         } finally {
@@ -154,20 +147,21 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
 
                 <FormField
                     control={form.control}
-                    name="assets"
+                    name="videoUrl"
                     render={() => (
                         <FormItem>
-                            <FormLabel>Add Photos/Videos</FormLabel>
+                            <FormLabel>Add a short video</FormLabel>
                             <FormControl>
                                 <FileUploader
-                                    files={files}
-                                    onChange={(files) => {
-                                        setFiles(files);
-                                        form.setValue('assets', files, { shouldValidate: true });
+                                    files={file!}
+                                    onChange={(file) => {
+                                        setFile(file!);
+                                        form.setValue('videoUrl', file, { shouldValidate: true });
                                     }}
+                                    isReel={true}
                                     uploadedFiles={uploadedFiles}
                                     setUploadedFiles={setUploadedFiles}
-                                    existingFiles={existingFiles}
+                                    existingFiles={existingFile}
                                     onRemoveExisting={handleRemoveExisting}
                                 />
                             </FormControl>
@@ -181,7 +175,7 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                     name="altText"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Photo/Video Alt Text</FormLabel>
+                            <FormLabel>Video Alt Text</FormLabel>
                             <FormControl>
                                 <Textarea
                                     className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
