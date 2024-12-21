@@ -10,10 +10,10 @@ import { Button } from './ui/button'
 import Loader from './Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
-import { createPost, updatePost } from '@/actions/post.actions'
-import { Post, Reel, User } from '@prisma/client'
+import { Reel, User } from '@prisma/client'
 import { ReelEditingSchema, ReelSchema } from '@/validations/reelSchema'
 import { createReel, updateReel } from '@/actions/reel.actions'
+import ReelUploader from './ReelUploader'
 
 interface PostFormProps {
     user: User
@@ -22,7 +22,7 @@ interface PostFormProps {
 }
 const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
 
-    const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+    const [uploadedFile, setUploadedFile] = useState<string>();
     const [file, setFile] = useState<File>();
     const [existingFile, setExistingFile] = useState<string>(reel?.videoUrl || '');
     const [isUploading, setIsUploading] = useState(false);
@@ -107,10 +107,6 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                         })
                         router.push(`/reels`);
                     }
-                
-
-
-
             }
 
         } catch (error) {
@@ -152,16 +148,15 @@ const ReelForm = ({ user, reel, isEditing }: PostFormProps) => {
                         <FormItem>
                             <FormLabel>Add a short video</FormLabel>
                             <FormControl>
-                                <FileUploader
-                                    files={file!}
+                                <ReelUploader
+                                    file={file!}
                                     onChange={(file) => {
                                         setFile(file!);
                                         form.setValue('videoUrl', file, { shouldValidate: true });
                                     }}
-                                    isReel={true}
-                                    uploadedFiles={uploadedFiles}
-                                    setUploadedFiles={setUploadedFiles}
-                                    existingFiles={existingFile}
+                                    uploadedFile={uploadedFile!}
+                                    setUploadedFile={setUploadedFile}
+                                    existingFile={existingFile}
                                     onRemoveExisting={handleRemoveExisting}
                                 />
                             </FormControl>
