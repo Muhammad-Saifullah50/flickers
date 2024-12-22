@@ -8,7 +8,7 @@ type FlickCardProps = {
 }
 const FlickCard = ({ flick, classNames }:  FlickCardProps) => {
   return (
-    <aside className={`group relative ${classNames}`}>
+    <aside className={`group relative ${classNames} `}>
       <Link href={`/flicks/${flick.id}`}>
         <video
           src={flick.videoUrl}
@@ -36,8 +36,8 @@ const FlickCard = ({ flick, classNames }:  FlickCardProps) => {
             <div className="flex items-center gap-1">
               <Image
                 src={'/icons/heart.svg'}
-                width={30}
-                height={30}
+                width={20}
+                height={20}
                 alt="heart"
                 className=""
               />
@@ -47,8 +47,8 @@ const FlickCard = ({ flick, classNames }:  FlickCardProps) => {
             <div className="flex items-center gap-1">
               <Image
                 src={'/icons/play.svg'}
-                width={30}
-                height={30}
+                width={20}
+                height={20}
                 alt="heart"
                 className=""
               />
