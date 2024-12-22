@@ -103,7 +103,7 @@ const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
                 const flick = await createFlick(formData);
                 if (flick) {
                     toast({
-                        description: 'flick created successfully',
+                        description: 'Flick created successfully',
                         variant: 'default'
                     })
                     router.push(`/flicks`);

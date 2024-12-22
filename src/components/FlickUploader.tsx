@@ -101,7 +101,7 @@ const FlickUploader = ({
               removeFile();
             }
           }}
-          className="absolute top-2 right-14 bg-red-500 text-white p-2 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-2 right-6 bg-red-500 text-white p-2 px-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
         >
           ✕
         </button>

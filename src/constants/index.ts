@@ -38,8 +38,8 @@ export const sidebarLinks = [
     {
         icon: '/icons/create.svg',
         whiteIcon: '/icons/create-white.svg',
-        route: '/create-post',
-        label: 'Create Post',
+        route: '/create',
+        label: 'Create',
     }
 
 ]

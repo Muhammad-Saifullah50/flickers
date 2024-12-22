@@ -1,16 +1,12 @@
-import { getFlicks } from '@/actions/flick.actions';
 import Flicks from '@/components/Flicks';
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import QueryForm from '@/components/QueryForm'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import React from 'react'
 
 const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: string } }) => {
 
     const usableParams = await searchParams;
-
-    const flicks = await getFlicks(usableParams.flicks_query);          
 
     return (
         <main className=''>
@@ -31,8 +27,8 @@ const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: stri
                 </div>
             </section>
 
-            <section className='pt-10'>
-               <Flicks flicks={flicks}/>
+            <section className='pt-10 flex flex-wrap gap-8'>
+               <Flicks query={usableParams.flicks_query}/>
             </section>
         </main>
     )

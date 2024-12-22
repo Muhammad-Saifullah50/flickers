@@ -6,6 +6,7 @@ import Heading from '@/components/Heading'
 import { getCurrentUserFromDb } from '@/actions/user.actions'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import FlickForm from '@/components/FlickForm'
+import Image from 'next/image'
 
 export default async function CreatePost() {
 
@@ -15,10 +16,27 @@ export default async function CreatePost() {
     <section>
       <Heading text='Create a Post' icon='/icons/create-white.svg' />
 
-      <Tabs defaultValue="post">
+      <Tabs defaultValue="post" className='mt-4'>
         <TabsList>
-          <TabsTrigger value="post">Create Post</TabsTrigger>
-          <TabsTrigger value="flick">Create Flick</TabsTrigger>
+          <TabsTrigger value="post">
+            <Image
+              src={'/icons/create.svg'}
+              width={20}
+              height={20}
+              alt="Create Post"
+              className='pr-2'
+            />
+            Create Post
+          </TabsTrigger>
+          <TabsTrigger value="flick">
+            <Image
+              src={'/icons/flicks.svg'}
+              width={20}
+              height={20}
+              alt="Create Post"
+              className='pr-2'
+            />
+            Create Flick</TabsTrigger>
         </TabsList>
 
         <TabsContent value="post">
@@ -26,7 +44,7 @@ export default async function CreatePost() {
         </TabsContent>
 
         <TabsContent value="flick">
-          <FlickForm user={user}/>
+          <FlickForm user={user} />
         </TabsContent>
       </Tabs>
 

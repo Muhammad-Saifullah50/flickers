@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
+import { getCurrentUserFromDb } from "./user.actions";
 
 interface createFlickParams {
     caption: string;
@@ -53,7 +54,7 @@ export const updateFlick = async (flickId: string, data: createFlickParams) => {
 }
 
 
-export const getFlicks = async (query?: string) => {
+export const getFlicksByQuery = async (query?: string) => {
 
     try {
         const flicks = await prisma.flick.findMany({
@@ -74,5 +75,86 @@ export const getFlicks = async (query?: string) => {
         return flicks
     } catch (error) {
         console.error('Error getting flicks on server:', error);
+    }
+}
+
+export const getAllFlicks = async () => {
+    try {
+        const flicks = await prisma.flick.findMany({
+            include: {
+                author: true,
+                likedBy: true
+            }
+        });
+
+        return flicks
+    } catch (error) {
+        console.error('Error getting all flicks on server:', error);
+    }
+}
+
+export const getfollowingFlicks = async () => {
+    try {
+        const currrUser = await getCurrentUserFromDb();
+
+        const flicks = await prisma.flick.findMany({
+            where: {
+                authorId: {
+                    in: currrUser?.following.map((user) => user.id)
+                }
+            }
+        });
+
+        return flicks
+    } catch (error) {
+        console.error('Error getting following flicks on server:', error);
+    }
+}
+
+export const getPopularFlicks = async () => {
+    try {
+        const flicks = await prisma.flick.findMany({
+            orderBy: {
+                likes: 'desc'
+            },
+            take: 10
+
+        });
+
+        return flicks
+    } catch (error) {
+        console.error('Error getting popular flicks on server:', error);
+    }
+}
+export const getMostViewedFlicks = async () => {
+    try {
+        const flicks = await prisma.flick.findMany({
+            orderBy: {
+                plays: 'desc',
+            },
+            take: 10
+        });
+
+        return flicks
+    } catch (error) {
+        console.error('Error getting popular flicks on server:', error);
+    }
+}
+
+export const getFlickById = async (flickId: string) => {
+    try {
+        const flick = await prisma.flick.findUnique({
+            where: {
+                id: flickId
+            },
+            include: {
+                author: true,
+            }
+        });
+
+
+        return flick
+    } catch (error) {
+        console.error('Error getting flick by id on server:', error);
     }
 }
