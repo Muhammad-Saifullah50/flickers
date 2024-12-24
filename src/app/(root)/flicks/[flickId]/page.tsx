@@ -1,4 +1,4 @@
-import { getAllFlicks, getFlickById } from "@/actions/flick.actions";
+import { getAllFlicks, getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
 import FlickCarousel from "@/components/FlickCarousel";
 
 const FlickIdPage = async ({ params }: { params: { flickId: string } }) => {
@@ -7,7 +7,13 @@ const FlickIdPage = async ({ params }: { params: { flickId: string } }) => {
 
     const currFlick = await getFlickById(flickId);
 
-    const flickList = await getAllFlicks().then((res) => res?.map((flick) => flick.id));
+    const flickList = await getPrevAndNextFlicks(flickId);
+
+    
+    const prevFlick = flickList?.[0];
+    const nextFlick = flickList?.[1];
+
+// dimagh lagana hai
     return (
        <FlickCarousel currFlick={currFlick!} flickList={flickList!}/>
 

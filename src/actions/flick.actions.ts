@@ -158,3 +158,28 @@ export const getFlickById = async (flickId: string) => {
         console.error('Error getting flick by id on server:', error);
     }
 }
+
+export const getPrevAndNextFlicks = async (flickId: string) => {
+    try {
+
+        const prevFlick = await prisma.flick.findFirst({
+            where: {
+                id: {
+                    lt: flickId
+                }
+            }
+        });
+
+        const nextFlick = await prisma.flick.findFirst({
+            where: {
+                id: {
+                    gt: flickId
+                }
+            }
+        });
+
+        return [prevFlick, nextFlick]
+    } catch (error) {
+        console.error('Error getting prev and next flicks on server:', error);
+    }
+}
