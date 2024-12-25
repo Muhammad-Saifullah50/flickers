@@ -15,10 +15,11 @@ const FlickIdPage = async ({ params }: { params: { flickId: string } }) => {
     return (
 
 
-            <FlickCarousel
-                currFlick={currFlick!}
-                prevFlick={prevFlick!}
-                nextFlick={nextFlick!} />
+        <FlickCarousel
+            currFlick={currFlick!}
+            prevFlick={prevFlick!}
+            nextFlick={nextFlick!}
+        />
     )
 }
 
