@@ -1,62 +1,94 @@
+'use client'
 import { Flick, User } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
+import Loader from "./Loader"
+import { useEffect, useState } from "react"
+import { getFlickById } from "@/actions/flick.actions"
 
 type FlickCardProps = {
   flick: Flick & { author: User } | null
-  classNames?:string
+  classNames?: string
+  loading?: boolean
+  flickId?: string
 }
-const FlickCard = ({ flick, classNames }:  FlickCardProps) => {
+const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
+
+  const [flickToUse, setFlickToUse] = useState(flick)
+
+  useEffect(() => {
+    if (!flick && flickId) {
+      const getFlick = async () => {
+        const fetchedFlick = await getFlickById(flickId!)
+
+        setFlickToUse(fetchedFlick)
+      }
+
+      getFlick()
+    }
+
+  }, [flickId])
+
+  
+
   return (
-    <aside className={`group relative ${classNames} `}>
-      <Link href={`/flicks/${flick?.id}` || ''}>
-        <video
+    <aside className={`group relative ${classNames} ${loading && 'bg-dark-2'}`}>
+      <Link href={loading ? '' : ` /flicks/${flickToUse?.id}`}>
+        {loading ? (
+          <Loader variant="purple" />
+        ) : (<video
           src={flick?.videoUrl}
           controls={false}
           autoPlay={false}
           className={`${classNames} rounded-lg object-fill`}
-        />
+        />)}
       </Link>
-      <div className="flex flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
-        <h3 className="text-sm">{flick?.caption}</h3>
-        <p className="text-sm text-purple-secondary">{flick?.hashtags}</p>
-        <div className="flex justify-between w-full text-sm">
-          <div className="flex items-center gap-2">
-            <Link href={`/users/${flick?.author?.id}`} className="flex items-center gap-1">
-              <Image
-                src={flick?.author?.image || '/icons/dummyuser.svg'}
-                width={30}
-                height={30}
-                alt="profile"
-                className="rounded-full" />
-              <h4 className=" line-clamp-1">{flick?.author?.name}</h4>
-            </Link>
-          </div>
-          <div className="flex gap-2">
-            <div className="flex items-center gap-1">
-              <Image
-                src={'/icons/heart.svg'}
-                width={20}
-                height={20}
-                alt="heart"
-                className=""
-              />
-              <span>{flick?.likes}</span>
-            </div>
 
-            <div className="flex items-center gap-1">
-              <Image
-                src={'/icons/play.svg'}
-                width={20}
-                height={20}
-                alt="heart"
-                className=""
-              />
-              <span>{flick?.plays}</span>
+      {loading ? (
+        <Loader variant="purple" />
+      ) : (
+        <div className="flex flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
+          <h3 className="text-sm">{flickToUse?.caption}</h3>
+          <p className="text-sm text-purple-secondary">{flickToUse?.hashtags}</p>
+          <div className="flex justify-between w-full text-sm">
+            <div className="flex items-center gap-2">
+              <Link href={`/users/${flickToUse?.author?.id}`} className="flex items-center gap-1">
+                <Image
+                  src={flickToUse?.author?.image || '/icons/dummyuser.png'}
+                  width={30}
+                  height={30}
+                  alt="profile"
+                  className="rounded-full" />
+                <h4 className=" line-clamp-1">{flickToUse?.author?.name}</h4>
+              </Link>
+            </div>
+            <div className="flex gap-2">
+              <div className="flex items-center gap-1">
+                <Image
+                  src={'/icons/heart.svg'}
+                  width={20}
+                  height={20}
+                  alt="heart"
+                  className=""
+                />
+                <span>{flickToUse?.likes}</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <Image
+                  src={'/icons/play.svg'}
+                  width={20}
+                  height={20}
+                  alt="heart"
+                  className=""
+                />
+                <span>{flickToUse?.plays}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
     </aside>
   )
 }
