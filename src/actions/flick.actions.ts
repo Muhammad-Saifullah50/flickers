@@ -167,6 +167,9 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
                 id: {
                     lt: flickId
                 }
+            },
+            include: {
+                author: true
             }
         });
 
@@ -175,6 +178,9 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
                 id: {
                     gt: flickId
                 }
+            },
+            include: {
+                author: true
             }
         });
 

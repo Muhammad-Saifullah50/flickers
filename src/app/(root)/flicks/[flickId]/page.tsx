@@ -9,14 +9,16 @@ const FlickIdPage = async ({ params }: { params: { flickId: string } }) => {
 
     const flickList = await getPrevAndNextFlicks(flickId);
 
-    
     const prevFlick = flickList?.[0];
     const nextFlick = flickList?.[1];
 
-// dimagh lagana hai
     return (
-       <FlickCarousel currFlick={currFlick!} flickList={flickList!}/>
 
+
+            <FlickCarousel
+                currFlick={currFlick!}
+                prevFlick={prevFlick!}
+                nextFlick={nextFlick!} />
     )
 }
 
