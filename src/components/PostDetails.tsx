@@ -7,9 +7,10 @@ import { cn } from '@/lib/utils'
 interface PostDetailsProps {
   post: Post & { author: User, comments: Comment[] },
   isHomeCard?: boolean
+  userId:string
 }
 
-const PostDetails = ({ post, isHomeCard }: PostDetailsProps) => {
+const PostDetails = ({ post, isHomeCard,userId }: PostDetailsProps) => {
   return (
     <section className="flex w-full h-full">
       <div className={cn("flex flex-1 w-1/2", {
@@ -19,7 +20,10 @@ const PostDetails = ({ post, isHomeCard }: PostDetailsProps) => {
       </div>
 
       <div className="flex flex-1 w-1/2">
-        <PostInfoCard post={post} isHomeCard={isHomeCard} />
+        <PostInfoCard
+          post={post}
+          isHomeCard={isHomeCard}
+          userId={ userId} />
       </div>
     </section>
   )

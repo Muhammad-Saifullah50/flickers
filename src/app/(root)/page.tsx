@@ -28,7 +28,11 @@ export default async function HomePage() {
       <section className="flex flex-col gap-6 py-9">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
-            <PostDetails key={post.id} post={post} isHomeCard={true}/>
+            <PostDetails
+              key={post.id}
+              post={post}
+              isHomeCard={true}
+              userId={ currentUser?.id} />
           ))
           ) : (
           <div className="text-white text-center mt-10">

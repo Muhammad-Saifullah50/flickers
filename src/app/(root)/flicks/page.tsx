@@ -27,7 +27,7 @@ const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: stri
                 </div>
             </section>
 
-            <section className='pt-10 flex flex-wrap gap-8'>
+            <section className='pt-10  gap-8 '>
                <Flicks query={usableParams.flicks_query}/>
             </section>
         </main>

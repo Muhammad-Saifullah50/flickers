@@ -31,27 +31,27 @@ const Flicks = async ({ query }: { query: string }) => {
 
             </TabsList>
 
-            <TabsContent value="foryou" className="flex gap-8 py-8">
+            <TabsContent value="foryou" className="grid grid-cols-2 xl:grid-cols-3 gap-4  w-full place-items-center py-8">
                 {flicks.map((flick) => (
                     <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />
                 ))}
             </TabsContent>
-            <TabsContent value="following" className="flex gap-8 py-8">
+            <TabsContent value="following" >
                 {followingFlicks?.length === 0 ? (
                     <p className="h-full flex items-center justify-center">No following flicks found</p>
                 ) : (
-                    <div>
+                    <div className="grid grid-cols-2 xl:grid-cols-3 gap-4  w-full place-items-center py-8">
                         {popularFlicks?.map((flick) => (
                             <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
                     </div>
                 )}
             </TabsContent>
-            <TabsContent value="popular" className="flex gap-8 py-8">
+            <TabsContent value="popular"  >
                 {
                     popularFlicks?.length === 0 ? (
                         <p className="h-full flex items-center justify-center">No popular flicks found</p>
                     ) : (
-                        <div>
+                        <div className="grid grid-cols-2 xl:grid-cols-3 gap-4 w-full place-items-center">
                             {popularFlicks?.map((flick) => (
                                 <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
                         </div>
@@ -59,13 +59,13 @@ const Flicks = async ({ query }: { query: string }) => {
                 }
 
             </TabsContent>
-            <TabsContent value="mostviewed" className="flex gap-8 py-8">
+            <TabsContent value="mostviewed" >
                 {
                     mostViewedFlicks?.length === 0 ? (
                         <p className="h-full flex items-center justify-center">No most viewed flicks found</p>
                     ) : (
-                        <div>
-                            {popularFlicks?.map((flick) => (
+                        <div  className="grid grid-cols-2 xl:grid-cols-3 gap-4  w-full place-items-center py-8">
+                            {mostViewedFlicks?.map((flick) => (
                                 <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
                         </div>
                     )

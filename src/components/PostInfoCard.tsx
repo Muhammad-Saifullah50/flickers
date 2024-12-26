@@ -7,8 +7,9 @@ import CommentCard from "./CommentCard"
 import PostCarousel from "./PostCarousel"
 import Link from "next/link"
 import DeletePost from "./DeletePost"
+import SavePostBtn from "./SavePostBtn"
 
-const PostInfoCard = async ({ post, isHomeCard }: { post: Post & { author: User, comments: Comment[] }, isHomeCard?: boolean }) => {
+const PostInfoCard = async ({ post, isHomeCard, userId }: { post: Post & { author: User, comments: Comment[], userId:string }, isHomeCard?: boolean }) => {
     const session = await auth();
 
     const isOwner = session?.user?.email === post.author?.email;
@@ -118,7 +119,7 @@ const PostInfoCard = async ({ post, isHomeCard }: { post: Post & { author: User,
                                     alt='like'
                                     className='cursor-pointer'
                                 />
-                                <span>{post.comments?.length}</span>
+                                <span>{post?.comments?.length}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Image
@@ -132,12 +133,11 @@ const PostInfoCard = async ({ post, isHomeCard }: { post: Post & { author: User,
                             </div>
 
                         </div>
-                        <div>
-                            <Image
-                                src={'/icons/bookmark.svg'}
-                                width={20}
-                                height={20}
-                                alt="bookmark"
+                        <div className="">
+                            <SavePostBtn
+                                isHomeCard={isHomeCard}
+                                userId={userId }
+                                postId={post.id}
                             />
                         </div>
                     </section>
