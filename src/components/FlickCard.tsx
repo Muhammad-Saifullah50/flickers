@@ -11,8 +11,9 @@ type FlickCardProps = {
   classNames?: string
   loading?: boolean
   flickId?: string
+  flickIcon?: boolean
 }
-const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
+const FlickCard = ({ flickIcon, flick, classNames, loading, flickId }: FlickCardProps) => {
 
   const [flickToUse, setFlickToUse] = useState(flick)
 
@@ -29,7 +30,7 @@ const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
 
   }, [flickId])
 
-  
+
 
   return (
     <aside className={`group relative ${classNames} ${loading && 'bg-dark-2'}`}>
@@ -47,7 +48,15 @@ const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
       {loading ? (
         <Loader variant="purple" />
       ) : (
-        <div className="flex flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
+          <>
+            <Image
+              src={'/icons/flicks-white.svg'}
+              width={15}
+              height={15}
+              className="absolute right-5 top-5"
+              alt="flick"
+            />
+        <div className="group-hover:flex hidden flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
           <h3 className="text-sm">{flickToUse?.caption}</h3>
           <p className="text-sm text-purple-secondary">{flickToUse?.hashtags}</p>
           <div className="flex justify-between w-full text-sm">
@@ -87,7 +96,7 @@ const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
             </div>
           </div>
         </div>
-      )}
+        </> )}
 
     </aside>
   )

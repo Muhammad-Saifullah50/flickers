@@ -143,3 +143,32 @@ export const deletePost = async (postId: string) => {
         console.error('Error deleting post on server:', error);
     }
 }
+
+export const getPopularTodayPostsAndFlicks = async () => {
+    try {
+
+        const posts = await prisma.post.findMany({
+            orderBy: {
+                likes: 'desc'
+            },
+            include: {
+                author: true
+            },
+            take: 5
+        });
+
+        const flicks = await prisma.flick.findMany({
+            orderBy: {
+                likes: 'desc'
+            },
+            include: {
+                author: true
+            },
+            take: 5
+        })
+
+        return [...posts, ...flicks];
+    } catch (error) {
+        console.error('error getting popuklar posts and reels', error)
+    }
+}

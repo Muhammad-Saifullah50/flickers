@@ -1,3 +1,4 @@
+import { getPopularTodayPostsAndFlicks } from '@/actions/post.actions';
 import Flicks from '@/components/Flicks';
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
@@ -7,12 +8,9 @@ import React from 'react'
 
 const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
 
-  const usableParams = await searchParams;
-  
-  let posts;
+    const usableParams = await searchParams;
 
-   posts = await getPopularTodayPosts() 
-
+    const items = await getPopularTodayPostsAndFlicks();
 
     return (
         <main className=''>
@@ -33,8 +31,10 @@ const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: st
                 </div>
             </section>
 
-            <section className='pt-10 flex flex-wrap gap-8'>
-          <PostsGrid posts={posts} />
+            <Heading text='Most Popular' className='pt-4 !text-xl font-semibold'/>
+
+            <section className='pt-10'>
+                <PostsGrid items={items} />
             </section>
         </main>
     )
