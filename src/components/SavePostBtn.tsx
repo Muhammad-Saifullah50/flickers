@@ -5,31 +5,28 @@ import Image from "next/image";
 import { useState } from "react";
 import Loader from "./Loader";
 import { usePathname } from "next/navigation";
+import { Save } from "@prisma/client";
 
 type SavePostBtn = {
     isHomeCard?: boolean
     userId: string
     postId: string
+    isSaved: boolean
 }
 
-const SavePostBtn = ({ isHomeCard, userId, postId }: SavePostBtn) => {
+const SavePostBtn = ({ isHomeCard, userId, postId, isSaved }: SavePostBtn) => {
 
     if (!userId) return;
-
 
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
 
     const isHomePage = pathname === '/';
 
-    let isSaved = false;
-
     const handleClick = async () => {
         try {
             setLoading(true);
-            const save = await savePost(userId, postId, isHomePage && isHomePage)
-
-            if (save?.postId === postId) isSaved = true
+             await savePost(userId, postId, isHomePage && isHomePage)
 
         } catch (error) {
             console.error(error)
@@ -52,7 +49,8 @@ const SavePostBtn = ({ isHomeCard, userId, postId }: SavePostBtn) => {
                     (homeAndSaved && '/icons/bookmark-red.svg') || (homeAndNotSaved && '/icons/bookmark.svg') ||
                     (notHomeAndSaved && '/icons/save-red.svg') ||
                     (notHomeAndNotSaved && '/icons/save.svg')
-                }
+                    }
+                    
                 width={20}
                 height={20}
                 alt="savebtn"

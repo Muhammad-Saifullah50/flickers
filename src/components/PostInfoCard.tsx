@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth"
 import { cn, formatDateTime } from "@/lib/utils"
-import { Comment, Post, User } from "@prisma/client"
+import { Comment, Like, Post, Save, User } from "@prisma/client"
 import Image from "next/image"
 import PostComment from "./PostComment"
 import CommentCard from "./CommentCard"
@@ -9,10 +9,23 @@ import Link from "next/link"
 import DeletePost from "./DeletePost"
 import SavePostBtn from "./SavePostBtn"
 
-const PostInfoCard = async ({ post, isHomeCard, userId }: { post: Post & { author: User, comments: Comment[], userId:string }, isHomeCard?: boolean }) => {
+type PostInfoCardProps = {
+    post: Post & {
+        author: User,
+        comments: Comment[],
+        saves: Save[],
+        likes: Like[]
+    },
+    isHomeCard?: boolean
+    userId: string
+}
+
+const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => {
     const session = await auth();
 
     const isOwner = session?.user?.email === post.author?.email;
+
+    const isSaved = post.saves.some((save) => save.postId === post.id )
     return (
         <aside className={cn("flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full",
             'rounded-3xl', isHomeCard
@@ -31,7 +44,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: { post: Post & { autho
                         </div>
                         <div>
                             <Link href={`/users/${post.author?.id}`}>
-                            <h2 className="font-semibold text-lg text-white">{post.author?.name}</h2>
+                                <h2 className="font-semibold text-lg text-white">{post.author?.name}</h2>
                             </Link>
                             <p className="text-sm text-purple-secondary font-medium">{formatDateTime(post.createdAt)}</p>
                         </div>
@@ -97,7 +110,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: { post: Post & { autho
             </section>
 
 
-            <section className={"flex flex-col gap-4"}>
+         { userId && <section className={"flex flex-col gap-4"}>
                 <Link href={`/posts/${post.id}`}>
                     <section className="flex items-center justify-between ">
                         <div className="flex items-center justify-start gap-4">
@@ -109,7 +122,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: { post: Post & { autho
                                     alt='like'
                                     className='cursor-pointer'
                                 />
-                                <span>{post.likes}</span>
+                                <span>{post?.likes?.length}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Image
@@ -136,14 +149,15 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: { post: Post & { autho
                         <div className="">
                             <SavePostBtn
                                 isHomeCard={isHomeCard}
-                                userId={userId }
+                                userId={userId}
                                 postId={post.id}
+                                isSaved={isSaved}
                             />
                         </div>
                     </section>
                 </Link>
                 <PostComment postId={post.id} author={post.author} />
-            </section>
+            </section>}
 
         </aside >
     )

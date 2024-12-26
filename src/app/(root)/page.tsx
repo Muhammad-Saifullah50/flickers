@@ -32,7 +32,7 @@ export default async function HomePage() {
               key={post.id}
               post={post}
               isHomeCard={true}
-              userId={ currentUser?.id} />
+              userId={currentUser?.id} />
           ))
           ) : (
           <div className="text-white text-center mt-10">

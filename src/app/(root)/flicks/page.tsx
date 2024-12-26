@@ -9,7 +9,7 @@ const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: stri
     const usableParams = await searchParams;
 
     return (
-        <main className=''>
+        <main >
             <section>
                 <Heading icon='/icons/flicks-white.svg' text='Search Flicks' className={'justify-center'} />
 

@@ -23,14 +23,14 @@ model User {
   comments      Comment[]
   followedBy    Follows[] @relation("following")
   following     Follows[] @relation("follower")
-  Like          Like[]
-  Save          Save[]
+  likes         Like[]
+  saves         Save[]
 
   chatIds String[] @db.ObjectId
   chats   Chat[]   @relation(fields: [chatIds], references: [id])
 
   messages Message[]
-  flick     Flick[]
+  flick    Flick[]
 }
 
 model Account {
@@ -79,7 +79,6 @@ model Post {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   authorId  String    @db.ObjectId
   caption   String
-  likes     Int       @default(0)
   comments  Comment[]
   shares    Int       @default(0)
   createdAt DateTime  @default(now())
@@ -88,8 +87,8 @@ model Post {
   assets    String[]
   altText   String
   hashtags  String?
-  savedBy   Save[]    @relation("PostSaves")
-  likedBy   Like[]    @relation("PostLikes")
+  saves     Save[]    @relation("PostSaves")
+  likes     Like[]    @relation("PostLikes")
 
   @@index([authorId])
 }
@@ -116,8 +115,8 @@ model Like {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
-  flick      Flick?    @relation("FlickLikes", fields: [flickId], references: [id])
-  flickId    String?  @db.ObjectId
+  flick     Flick?   @relation("FlickLikes", fields: [flickId], references: [id])
+  flickId   String?  @db.ObjectId
 
   @@unique([postId, userId])
   @@index([userId])
@@ -130,6 +129,8 @@ model Save {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation("PostSaves", fields: [postId], references: [id], onDelete: Cascade)
+  flickId   String?  @db.ObjectId
+  flick     Flick?   @relation(fields: [flickId], references: [id])
 
   @@unique([postId, userId])
   @@index([userId])
@@ -179,7 +180,6 @@ model Flick {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   authorId  String   @db.ObjectId
   caption   String
-  likes     Int      @default(0)
   plays     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -187,7 +187,8 @@ model Flick {
   videoUrl  String
   altText   String
   hashtags  String?
-  likedBy   Like[]   @relation("FlickLikes")
+  likes     Like[]   @relation("FlickLikes")
+  saves     Save[]
 
   @@index([authorId])
 }

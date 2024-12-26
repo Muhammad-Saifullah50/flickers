@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache";
+import { getCurrentUserFromDb } from "./user.actions";
 
 export const savePost = async (userId: string, postId: string, isHomePage?: boolean) => {
     try {
@@ -29,4 +30,20 @@ export const savePost = async (userId: string, postId: string, isHomePage?: bool
     } catch (error) {
         console.error('error saving post on server', error)
     }
-} 
+}
+
+export const getSavedItems = async () => {
+    try {
+        const user = await getCurrentUserFromDb();
+
+        const savedItems = await prisma.save.findMany({
+            where: {
+                userId: user?.id
+            },
+        });
+
+        return savedItems
+    } catch (error) {
+
+    }
+}

@@ -19,7 +19,6 @@ export const createPost = async (data: createPostParams) => {
             data: {
                 caption: data.caption,
                 altText: data.altText,
-                likes: 0,
                 shares: 0,
                 assets: data.assets,
                 authorId: data.authorId,
@@ -85,7 +84,9 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
                 },
                 include: {
                     author: true,
-                    comments: true
+                    comments: true,
+                    saves: true,
+                    likes: true
                 }
             });
 
@@ -98,7 +99,10 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
                     createdAt: 'desc'
                 },
                 include: {
-                    author: true
+                    author: true,
+                    saves: true,
+                    likes: true,
+                    comments: true
                 }
             });
 
@@ -149,7 +153,9 @@ export const getPopularTodayPostsAndFlicks = async () => {
 
         const posts = await prisma.post.findMany({
             orderBy: {
-                likes: 'desc'
+                likes: {
+                    _count: 'desc'
+                }
             },
             include: {
                 author: true
@@ -159,7 +165,9 @@ export const getPopularTodayPostsAndFlicks = async () => {
 
         const flicks = await prisma.flick.findMany({
             orderBy: {
-                likes: 'desc'
+                likes: {
+                    _count: 'desc'
+                }
             },
             include: {
                 author: true

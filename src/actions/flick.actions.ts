@@ -17,7 +17,6 @@ export const createFlick = async (data: createFlickParams) => {
             data: {
                 caption: data.caption,
                 altText: data.altText,
-                likes: 0,
                 videoUrl: data.videoUrl,
                 authorId: data.authorId,
                 hashtags: data.hashtags || ''
@@ -68,7 +67,7 @@ export const getFlicksByQuery = async (query?: string) => {
             },
             include: {
                 author: true,
-                likedBy: true
+                likes: true
             }
         });
 
@@ -83,7 +82,7 @@ export const getAllFlicks = async () => {
         const flicks = await prisma.flick.findMany({
             include: {
                 author: true,
-                likedBy: true
+                likes: true
             }
         });
 
@@ -115,7 +114,9 @@ export const getPopularFlicks = async () => {
     try {
         const flicks = await prisma.flick.findMany({
             orderBy: {
-                likes: 'desc'
+                likes: {
+                    _count: 'desc'
+                }
             },
             take: 10
 
