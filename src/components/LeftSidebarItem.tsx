@@ -23,8 +23,9 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
     const isLogoutLink = link === '/logout';
 
     return (
-        <>
-            {isActive && <span className="bg-purple-primary w-4 h-[63px] rounded-r-full absolute -left-2" />}
+        <div className="relative">
+            {isActive && 
+            <span className="bg-purple-primary w-4 h-[63px] rounded-r-full absolute -left-8" />}
             <Link
                 href={isLogoutLink ? '#' : link}
                 onClick={() => {
@@ -47,7 +48,7 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
                     <h2 className={cn("text-lg font-medium", { 'font-bold': isActive })}>{label}</h2>
                 </li>
             </Link>
-        </>)
+        </div>)
 }
 
 export default LeftSidebarItem

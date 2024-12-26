@@ -40,7 +40,7 @@ const SavedPage = async () => {
                     </TabsList>
 
                     <TabsContent value="post">
-                        <PostsGrid items={ } />
+                        {/* <PostsGrid it /> */}
                     </TabsContent>
 
                     <TabsContent value="flick">

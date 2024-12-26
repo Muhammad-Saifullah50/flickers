@@ -4,12 +4,13 @@ import Image from 'next/image'
 import React from 'react'
 import LeftSidebarItem from './LeftSidebarItem';
 import Link from 'next/link';
+import { getCurrentUserFromDb } from '@/actions/user.actions';
 
 const LeftSidebar = async () => {
 
-  const session = await auth();
+  const user = await getCurrentUserFromDb();
   return (
-    <aside className='w-[270px] bg-dark-2 px-6 pt-8 pb-8 flex flex-col gap-12 overflow-y-scroll relative border-dark-4'>
+    <aside className='max-sm:hidden w-[270px] bg-dark-2 px-6 pt-8 pb-8 flex flex-col gap-12 overflow-y-scroll relative border-dark-4'>
       <Link href={'/'}>
         <div className="flex justify-start items-center gap-2">
           <Image
@@ -22,14 +23,16 @@ const LeftSidebar = async () => {
         </div>
       </Link>
 
-      {session?.user && <div className='flex items-center justify-start gap-4'>
-        <Image src={session?.user?.image || '/icons/dummyuser.svg'}
-          width={40}
-          height={40}
-          alt='profile photo'
-          className='rounded-full ' />
-        <p className='font-bold text-lg'>{session?.user?.name}</p>
-      </div>}
+      {user &&
+        <Link href={`/users/${user.id}`} className='flex items-center justify-start gap-4'>
+          <Image src={user?.image || '/icons/dummyuser.svg'}
+            width={40}
+            height={40}
+            alt='profile photo'
+            className='rounded-full ' />
+          <p className='font-bold text-lg'>{user?.name}</p>
+        </Link>
+      }
 
       <ul className='flex flex-col gap-4'>
         {sidebarLinks.map((item) => (
