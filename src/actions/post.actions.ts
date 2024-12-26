@@ -172,3 +172,37 @@ export const getPopularTodayPostsAndFlicks = async () => {
         console.error('error getting popuklar posts and reels', error)
     }
 }
+
+export const getPostsandFlicksByHashtags = async (query: string) => {
+    try {
+
+
+        const posts = await prisma.post.findMany({
+            where: {
+                hashtags: {
+                    contains: query
+                }
+            },
+            include: {
+                author: true
+            },
+
+        });
+
+        const flicks = await prisma.flick.findMany({
+            where: {
+                hashtags: {
+                    contains: query
+                }
+            },
+            include: {
+                author: true
+            },
+            take: 5
+        });
+
+        return [...posts, ...flicks]
+    } catch (error) {
+        console.error('error fetching by hashtags', error)
+    }
+}

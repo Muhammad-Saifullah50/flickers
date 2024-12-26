@@ -20,7 +20,7 @@ const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: st
                 <QueryForm
                     name={'hashtag_query'}
                     query={usableParams.hashtag_query}
-                    action='/flicks'
+                    action='/explore'
                     icon='/icons/search.svg' />
 
                 <div className='flex justify-center gap-4'>
@@ -31,10 +31,10 @@ const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: st
                 </div>
             </section>
 
-            <Heading text='Most Popular' className='pt-4 !text-xl font-semibold'/>
+            <Heading text='Most Popular' className='pt-4 !text-xl font-semibold' />
 
             <section className='pt-10'>
-                <PostsGrid items={items} />
+                <PostsGrid items={items} query={usableParams.hashtag_query} />
             </section>
         </main>
     )
