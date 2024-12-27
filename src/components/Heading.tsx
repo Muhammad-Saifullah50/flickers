@@ -13,8 +13,9 @@ const Heading = ({ icon, text, className }: HeadingProps) => {
                 alt="icon"
                 width={32}
                 height={32}
+                className="max-md:w-[20px] max-md:h-[20px]"
             />}
-            <h2 className="font-bold text-3xl">{text}</h2>
+            <h2 className="font-semibold lg:font-bold text-lg md:text-xl lg:text-3xl">{text}</h2>
         </div>
     )
 }

@@ -21,7 +21,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
                             {isVideo ? (
                                 <video
                                     src={item}
-                                    className="w-full object-fill h-[580px] rounded-l-lg"
+                                    className="max-sm:w-[300px] max-sm:h-[300px] w-full object-fill h-[580px] rounded-l-lg"
                                     autoPlay
                                     muted
                                     loop
@@ -34,7 +34,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
                                     alt={item}
                                     width={500}
                                     height={500}
-                                    className="w-full object-fill h-[580px] rounded-l-lg"
+                                    className="w-full object-fill h-[580px] rounded-l-lg max-sm:w-[300px] max-sm:h-[300px]"
                                 />
                             )}
                         </CarouselItem>
