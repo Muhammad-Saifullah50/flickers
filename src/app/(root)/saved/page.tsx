@@ -1,7 +1,9 @@
 import { getSavedItems } from "@/actions/save.actions"
+import FlickCard from "@/components/FlickCard"
 import Heading from "@/components/Heading"
 import PostCard from "@/components/PostCard"
 import PostsGrid from "@/components/PostsGrid"
+import SavedPostFlickCard from "@/components/SavedPostFlickCard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
 
@@ -9,13 +11,10 @@ const SavedPage = async () => {
 
     const savedItems = await getSavedItems();
 
-    // have to move on from here tomorrow
-
-
     return (
         <main className="flex flex-col gap-4">
             <section>
-                <Heading text="Saved Posts and Reels" icon="/icons/saved-white.svg" />
+                <Heading text="Saved Posts and Flicks" icon="/icons/saved-white.svg" />
             </section>
             <section>
                 <Tabs defaultValue="post" className='mt-4'>
@@ -39,12 +38,28 @@ const SavedPage = async () => {
                             Flicks</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="post">
-                        {/* <PostsGrid it /> */}
+                    <TabsContent value="posts" className="grid grid-cols-3 mt-4">
+                        {savedItems?.map((item) => {
+                            if (!item.flickId)
+                                return (
+                                    <SavedPostFlickCard
+                                        postId={item.postId}
+                                        key={item.id}
+                                    />
+                                )
+                        })}
                     </TabsContent>
 
-                    <TabsContent value="flick">
-
+                    <TabsContent value="flicks" className="grid grid-cols-3 mt-4">
+                        {savedItems?.map((item) => {
+                            if (!item.postId)
+                                return (
+                                    <SavedPostFlickCard
+                                        key={item.id}
+                                        flickId={item.flickId!}
+                                        isFlick={true} />
+                                )
+                        })}
                     </TabsContent>
                 </Tabs>
             </section>

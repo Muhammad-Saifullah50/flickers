@@ -49,6 +49,7 @@ const FlickCard = ({ flickIcon, flick, classNames, loading, flickId }: FlickCard
         <Loader variant="purple" />
       ) : (
           <>
+          
             <Image
               src={'/icons/flicks-white.svg'}
               width={15}
