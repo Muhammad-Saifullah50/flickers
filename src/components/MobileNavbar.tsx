@@ -18,7 +18,7 @@ const MobileNavbar = async () => {
     const user = await getCurrentUserFromDb();
 
     return (
-        <nav className="sm:hidden flex sticky top-0 z-50 bg-dark-2 border-b border-dark-4 p-4 max-h-[64px] items-center justify-between">
+        <nav className="sm:hidden flex sticky top-0 z-50 bg-dark-2 border-b border-dark-4 p-4 h-[64px] items-center justify-between">
             <div>
                 <Link href={'/'}>
                     <div className="flex justify-start items-center gap-2">

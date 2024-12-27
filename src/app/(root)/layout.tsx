@@ -1,4 +1,5 @@
 import LeftSidebar from "@/components/LeftSidebar"
+import MobileFooter from "@/components/MobileFooter"
 import MobileNavbar from "@/components/MobileNavbar"
 import RightSidebar from "@/components/RightSidebar"
 import { Inter } from "next/font/google"
@@ -20,8 +21,8 @@ const rootlayout = ({ children }: { children: React.ReactNode }) => {
             </div>
             <div className="hidden xl:flex fixed right-0 top-0">
                 <RightSidebar />
-                <MobileFooter />
             </div>
+            <MobileFooter />
         </main>
     )
 }
