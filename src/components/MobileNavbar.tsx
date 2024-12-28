@@ -4,6 +4,7 @@ import Link from "next/link"
 
 import {
     Sheet,
+    SheetClose,
     SheetContent,
     SheetDescription,
     SheetHeader,
@@ -55,6 +56,7 @@ const MobileNavbar = async () => {
                     </SheetTrigger>
                     <SheetContent side={'top'} className="flex flex-col gap-6 !bg-dark-3 !bg-opacity-95 !rounded-[10px] !border-none">
                         <Link href={'/explore'} className="flex justify-start gap-4">
+                        <SheetClose asChild>
                             <Image
                                 src={'/icons/explore.svg'}
                                 width={20}
@@ -63,8 +65,9 @@ const MobileNavbar = async () => {
                                 alt="explore"
                             />
                             Explore
-                        </Link>
-                        <Link href={'/notifications'} className="flex justify-start gap-4">
+                            </SheetClose>
+                            </Link>
+                        <Link href={'/notifications'} className="flex justify-start gap-4" >
                             <Image
                                 src={'/icons/notifications.svg'}
                                 width={20}

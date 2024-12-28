@@ -19,7 +19,7 @@ const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: stri
                     action='/flicks'
                     icon='/icons/search.svg' />
 
-                <div className='flex justify-center gap-4'>
+                <div className='flex justify-center flex-wrap gap-4'>
                     <HashtagBox text='webdevelopment' />
                     <HashtagBox text='mountains' />
                     <HashtagBox text='sunrise' />
