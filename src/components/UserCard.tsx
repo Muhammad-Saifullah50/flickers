@@ -1,11 +1,7 @@
 import { Follows, User } from "@prisma/client"
 import Image from "next/image"
-import { Button } from "./ui/button"
-import { followUser } from "@/actions/follow.actions"
 import FollowButton from "./FollowButton"
-import { auth } from "@/lib/auth"
 import { getCurrentUserFromDb } from "@/actions/user.actions"
-import { redirect } from "next/navigation"
 
 type UserWithFollows = User & {
     followedBy: (Follows & {

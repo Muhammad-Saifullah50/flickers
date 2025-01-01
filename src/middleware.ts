@@ -8,11 +8,14 @@ export async function middleware(request: NextRequest) {
 
   const session = await auth();
 
+  const headers = new Headers(request.headers);
+  headers.set('x-current-path', request.nextUrl.pathname)
+
   if (!session?.user) {
     return NextResponse.redirect(new URL('/signin', url))
   }
  
-  return NextResponse.next();
+  return NextResponse.next({headers});
 }
  
 export const config = {
