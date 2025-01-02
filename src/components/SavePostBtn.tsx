@@ -15,12 +15,14 @@ type SavePostBtn = {
 
 const SavePostBtn = ({ isHomeCard, userId, postId, isSaved }: SavePostBtn) => {
 
-    if (!userId) return;
-
+    
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
-
+    
+    if (!userId) return;
+    
     const isHomePage = pathname === '/';
+    
 
     const handleClick = async () => {
         try {

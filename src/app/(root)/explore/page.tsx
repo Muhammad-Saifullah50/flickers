@@ -1,5 +1,4 @@
 import { getPopularTodayPostsAndFlicks } from '@/actions/post.actions';
-import Flicks from '@/components/Flicks';
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import PostsGrid from '@/components/PostsGrid';

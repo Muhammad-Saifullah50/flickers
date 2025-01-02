@@ -88,7 +88,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
         return () => {
             window.removeEventListener('wheel', handleGlobalScroll)
         }
-    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning,currFlick, ])
+    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning,currFlick,router ])
 
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
