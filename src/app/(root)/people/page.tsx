@@ -16,7 +16,7 @@ const PeoplePage = async () => {
             <Heading text='All Users' icon='/icons/people-white.svg' />
 
             <div className='flex flex-wrap gap-4 py-9'>
-                {allUsers && allUsers.filter((user) => user.id !== currentUser.id).map((user) => (
+                {allUsers && allUsers.filter((user) => user.id !== currentUser?.id).map((user) => (
                     <UserCard key={user.id} user={user} />
                 ))}
             </div>

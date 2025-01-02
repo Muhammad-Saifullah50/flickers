@@ -17,7 +17,7 @@ type PostInfoCardProps = {
         likes: Like[]
     },
     isHomeCard?: boolean
-    userId: string
+    userId?: string
 }
 
 const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => {
@@ -25,7 +25,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
 
     const isOwner = session?.user?.email === post.author?.email;
 
-    const isSaved = post.saves.some((save) => save.postId === post.id )
+    const isSaved = post.saves?.some((save) => save.postId === post.id )
     return (
         <aside className={cn("flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full",
             'rounded-3xl', isHomeCard

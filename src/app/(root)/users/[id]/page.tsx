@@ -1,9 +1,8 @@
-import { getCurrentUserFromDb, getDbUserById, getDbUserByIdWithDetails } from '@/actions/user.actions'
+import { getCurrentUserFromDb, getDbUserByIdWithDetails } from '@/actions/user.actions'
 import MessageButton from '@/components/MessageButton';
 import PostTabs from '@/components/PostTabs';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 

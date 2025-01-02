@@ -1,5 +1,4 @@
-import { auth } from '@/lib/auth'
-import { redirect } from 'next/navigation'
+
 import React from 'react'
 import PostForm from '@/components/PostForm'
 import Heading from '@/components/Heading'
@@ -40,11 +39,11 @@ export default async function CreatePost() {
         </TabsList>
 
         <TabsContent value="post">
-          <PostForm user={user} />
+          <PostForm user={user!} />
         </TabsContent>
 
         <TabsContent value="flick">
-          <FlickForm user={user} />
+          <FlickForm user={user!} />
         </TabsContent>
       </Tabs>
 

@@ -1,25 +1,30 @@
 import React from 'react'
 import PostCarousel from './PostCarousel'
 import PostInfoCard from './PostInfoCard'
-import { Post, User, Comment } from '@prisma/client'
+import { Post, User, Comment, Save, Like } from '@prisma/client'
 import { cn } from '@/lib/utils'
 
 interface PostDetailsProps {
-  post: Post & { author: User, comments: Comment[] },
+   post: Post & {
+         author: User,
+         comments: Comment[],
+         saves: Save[],
+         likes: Like[]
+     },
   isHomeCard?: boolean
-  userId:string
+  userId?:string
 }
 
 const PostDetails = ({ post, isHomeCard,userId }: PostDetailsProps) => {
   return (
-    <section className="flex w-full h-full">
-      <div className={cn("flex flex-1 w-1/2", {
+    <section className="max-md:flex-col-reverse flex w-full h-full">
+      <div className={cn("flex flex-1 max-md:w-full w-1/2", {
         'hidden': isHomeCard
       })}>
         <PostCarousel items={post.assets} />
       </div>
 
-      <div className="flex flex-1 w-1/2">
+      <div className="flex flex-1 max-md:w-full w-1/2">
         <PostInfoCard
           post={post}
           isHomeCard={isHomeCard}

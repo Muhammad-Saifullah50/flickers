@@ -55,8 +55,11 @@ export const getPostById = async (id: string) => {
                                 createdAt: 'desc'
                             }
                         }
+                        
                     }
                 },
+                saves: true,
+                likes: true
             }
         })
 

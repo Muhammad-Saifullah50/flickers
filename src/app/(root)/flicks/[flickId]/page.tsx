@@ -8,14 +8,11 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 import Loader from "@/components/Loader";
 
-type FlickWithAuthor = {
-    flick: Flick & { author: User }
-}
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
     const router = useRouter();
-    const [currFlick, setCurrFlick] = useState<FlickWithAuthor | null>(null);
+    const [currFlick, setCurrFlick] = useState<Flick & { author: User } | null>();
     const [prevFlickId, setPrevFlickId] = useState<string | null>(null);
     const [nextFlickId, setNextFlickId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false)

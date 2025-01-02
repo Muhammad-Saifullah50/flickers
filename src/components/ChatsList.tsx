@@ -2,16 +2,21 @@ import { Chat, User } from "@prisma/client"
 import ChatListItem from "./ChatListItem"
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 
-const ChatsList = async ({ chatList }: { chatList: [] }) => {
+
+type ChatListProps = {
+  chatList: (Chat & { users: User[] })[] | undefined
+}
+
+const ChatsList = async ({ chatList }: ChatListProps) => {
 
   const currUser = await getCurrentUserFromDb();
   return (
     <section>
       <ul>
-        {chatList.length === 0 ? (
+        {chatList?.length === 0 ? (
           <p>No Chats to show</p>
         ) : (
-          chatList.map((chat: Chat & { users: User[] }) => {
+          chatList?.map((chat) => {
 
             const otherUser = chat.users.find((user: User) => user.id !== currUser?.id);
 
