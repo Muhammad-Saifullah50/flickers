@@ -3,13 +3,18 @@ import MobileFooter from "@/components/MobileFooter"
 import MobileNavbar from "@/components/MobileNavbar"
 import RightSidebar from "@/components/RightSidebar"
 import { Inter } from "next/font/google"
+import { headers } from "next/headers"
 
 const inter = Inter({
     weight: ['300', '400', '500', '600', '700'],
     variable: "--font-inter",
 })
 
-const rootlayout = ({ children }: { children: React.ReactNode }) => {
+const rootlayout = async ({ children }: { children: React.ReactNode }) => {
+
+    const pathname = await (await headers()).get('x-current-path');
+
+console.log(pathname , 'pathname')
     return (
         <main className={`${inter.className} bg-dark-1 flex flex-col sm:flex-row justify-between min-h-screen`}>
             <MobileNavbar />
@@ -20,7 +25,7 @@ const rootlayout = ({ children }: { children: React.ReactNode }) => {
                 {children}
             </div>
             <div className="hidden xl:flex fixed right-0 top-0">
-                <RightSidebar />
+                <RightSidebar pathname={pathname}/>
             </div>
             <MobileFooter />
         </main>

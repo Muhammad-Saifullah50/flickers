@@ -9,7 +9,8 @@ export async function middleware(request: NextRequest) {
   const session = await auth();
 
   const headers = new Headers(request.headers);
-  headers.set('x-current-path', request.nextUrl.pathname)
+   headers.set('x-current-path', request.nextUrl.pathname);
+
 
   if (!session?.user) {
     return NextResponse.redirect(new URL('/signin', url))
@@ -19,5 +20,5 @@ export async function middleware(request: NextRequest) {
 }
  
 export const config = {
-  matcher: ['/posts/:path*','/people', '/users/:path*','/saved', '/explore', '/flicks', '/chats', '/create-post',  ]
+  matcher: ['/posts/:path*','/people', '/users/:path*','/saved', '/explore', '/flicks', '/chats', '/create',  ]
 }
