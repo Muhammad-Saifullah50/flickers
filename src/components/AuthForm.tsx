@@ -87,7 +87,6 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
             }
         } catch (error) {
             setloading(false);
-            console.log(error);
             // TODO: Handle error
         } finally {
             setloading(false);

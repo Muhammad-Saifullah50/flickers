@@ -7,7 +7,6 @@ const Messages = ({ messages, currUser }: { messages: Message[], currUser: User 
   return (
     <div className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10 ">
       {messages.map((message: Message) => {
-        console.log(message.createdAt)
         const isOwner = message.senderId === currUser?.id
         return (
 

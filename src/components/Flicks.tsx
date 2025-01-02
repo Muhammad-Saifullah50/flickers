@@ -11,7 +11,6 @@ const Flicks = async ({ query }: { query: string }) => {
         flicks = await getFlicksByQuery(query);
     } else {
         flicks = await getAllFlicks();
-        console.log(flicks, 'flicks')
     };
 
     const followingFlicks = await getfollowingFlicks();

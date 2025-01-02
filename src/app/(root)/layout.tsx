@@ -2,6 +2,7 @@ import LeftSidebar from "@/components/LeftSidebar"
 import MobileFooter from "@/components/MobileFooter"
 import MobileNavbar from "@/components/MobileNavbar"
 import RightSidebar from "@/components/RightSidebar"
+import { Headset } from "lucide-react"
 import { Inter } from "next/font/google"
 import { headers } from "next/headers"
 
@@ -10,12 +11,15 @@ const inter = Inter({
     variable: "--font-inter",
 })
 
-const rootlayout = async ({ children }: { children: React.ReactNode }) => {
+const homeLayout = async ({ children }: { children: React.ReactNode }) => {
+    console.log('root layout runnubgn')
 
-    const pathname = await (await headers()).get('x-current-path');
+    const headersList = await headers()
+    const pathname = headersList.get('x-current-path')
+    console.log('pathname', pathname)
+    console.log('headersList', headersList)
 
-console.log(pathname , 'pathname')
-    return (
+return (
         <main className={`${inter.className} bg-dark-1 flex flex-col sm:flex-row justify-between min-h-screen`}>
             <MobileNavbar />
             <div className="fixed left-0 top-0 h-screen overflow-y-auto">
@@ -32,4 +36,4 @@ console.log(pathname , 'pathname')
     )
 }
 
-export default rootlayout
+export default homeLayout

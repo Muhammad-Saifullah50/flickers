@@ -64,8 +64,6 @@ export function formatMessageTime(localTime: Date | string): string {
   
   const timeString = date.toLocaleString('en-US', options); // Use original date for time formatting
   
-  console.log(diffDays, 'diffDays'); // For debugging
-
   if (diffDays === 0) {
     return `Today, ${timeString}`;
   } else if (diffDays === 1) {

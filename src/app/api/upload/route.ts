@@ -4,7 +4,6 @@ export const POST = async (request: NextRequest) => {
 
 
     const body = await request.formData();
-console.log(body, 'body')
     const formData = new FormData();
    formData.append("file", body.get("file") as Blob);
     formData.append(
@@ -25,7 +24,6 @@ console.log(body, 'body')
         }
 
         const data = await response.json(); 
-        console.log(data.secure_url, 'data')       
         return NextResponse.json({ message: 'File uploaded successfully', data: data.secure_url, status: 200 })
     } catch (error) {
         console.error('Error uploading to Cloudinary:', error);

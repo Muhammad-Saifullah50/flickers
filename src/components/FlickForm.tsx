@@ -22,7 +22,6 @@ interface PostFormProps {
 const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
 
     const [uploadedFile, setUploadedFile] = useState<string>();
-    console.log(uploadedFile, 'uploadedFile');
     const [file, setFile] = useState<File>();
     const [existingFile, setExistingFile] = useState<string>(flick?.videoUrl || '');
     const [isUploading, setIsUploading] = useState(false);
@@ -88,7 +87,6 @@ const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
                 hashtags: data.hashtags
             };
 
-            console.log(formData, 'formData');
 
             if (isEditing) {
                 const updatedflick = await updateFlick(flick?.id!, formData)
