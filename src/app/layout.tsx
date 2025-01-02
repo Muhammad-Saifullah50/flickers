@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({
   weight: ['300', '400', '500', '600', '700'],
   variable: "--font-inter",
+  subsets: ["latin"],
 })
 export const metadata: Metadata = {
   title: "Create Next App",
