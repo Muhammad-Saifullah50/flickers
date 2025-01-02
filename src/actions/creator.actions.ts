@@ -31,6 +31,6 @@ export const getTopCreators = async () => {
         
         return topCreators
     } catch (error) {
-        console.error('error fetching top creators on server')
+        console.error('error fetching top creators on server', error)
     }
 }

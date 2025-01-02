@@ -16,7 +16,7 @@ const providers: Provider[] = [
     async authorize(credentials) {
 
       try {
-        
+
         if (!credentials.email || !credentials.password) {
           throw new Error("Email and password are required")
         };
@@ -36,7 +36,7 @@ const providers: Provider[] = [
         if (!passwordMatches) {
           throw new Error("Incorrect password")
         }
-        
+
         if (existingUser) {
           return existingUser
         } else {
@@ -44,7 +44,7 @@ const providers: Provider[] = [
 
         }
       } catch (error) {
-        //@ts-ignore
+        //@ts-expect-error
         throw new Error(error.message || "Failed to sign in")
       }
 

@@ -9,7 +9,6 @@ import { z } from "zod"
 import bcrypt from "bcryptjs"
 import { redirect } from "next/navigation"
 
-const signInSchema = authSchema('signin');
 const signUpSchema = authSchema('signup');
 
 
@@ -43,11 +42,12 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
     };
 
     // have to correct this type errror
-    const username = `@${formData.name.toLowerCase().replace('')}`;
+    //@ts-expect-error
+    const username = `@${formData?.name?.toLowerCase().replace('')}`;
 
     await prisma.user.create({
         data: {
-            //@ts-ignore
+            //@ts-expect-error
             name: formData.name,
             username: username,
             email: formData.email,

@@ -1,6 +1,5 @@
 'use server'
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserFromDb } from "./user.actions";
 import { revalidatePath } from "next/cache";
@@ -79,7 +78,7 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
             const posts = await prisma.post.findMany({
                 where: {
                     // correct typeerror
-                    //@ts-ignore
+                    //@ts-expect-error
                     authorId: currUser.following.id
                 },
                 orderBy: {

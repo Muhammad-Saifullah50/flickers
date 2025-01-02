@@ -17,7 +17,8 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
   return (
     <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
 
-    <MessageBox chatId={chat?.id!} currentUser={currentUser!} otherUser={otherUser!} />
+{/*@ts-expect-error */}
+    <MessageBox chatId={chat?.id} currentUser={currentUser!} otherUser={otherUser!} />
     </main>
   )
 }
