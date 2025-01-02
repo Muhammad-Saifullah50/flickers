@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useState } from "react";
 import Loader from "./Loader";
 import { usePathname } from "next/navigation";
-import { Save } from "@prisma/client";
 
 type SavePostBtn = {
     isHomeCard?: boolean
@@ -45,6 +44,7 @@ const SavePostBtn = ({ isHomeCard, userId, postId, isSaved }: SavePostBtn) => {
             <Loader variant="white" />
         ) : (
             <Image
+            //@ts-ignore
                 src={
                     (homeAndSaved && '/icons/bookmark-red.svg') || (homeAndNotSaved && '/icons/bookmark.svg') ||
                     (notHomeAndSaved && '/icons/save-red.svg') ||

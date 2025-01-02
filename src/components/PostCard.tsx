@@ -1,11 +1,11 @@
 'use client'
-import { Post, User } from '@prisma/client'
+import { Like, Post, User } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const PostCard = ({ post }: { post: Post & { author: User } }) => {
+const PostCard = ({ post }: { post: Post & { author: User, likes: Like[] } }) => {
 
     const router = useRouter();
 
@@ -54,7 +54,7 @@ const PostCard = ({ post }: { post: Post & { author: User } }) => {
                             alt="heart"
                             className=""
                         />
-                        <span>{post?.likes}</span>
+                        <span>{post?.likes.length}</span>
                     </div>
 
                 </div>

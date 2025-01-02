@@ -101,6 +101,10 @@ export const getfollowingFlicks = async () => {
                 authorId: {
                     in: currrUser?.following.map((user) => user.id)
                 }
+            },
+            include:{
+                author: true,
+                likes: true
             }
         });
 
@@ -118,7 +122,11 @@ export const getPopularFlicks = async () => {
                     _count: 'desc'
                 }
             },
-            take: 10
+            take: 10,
+            include:{
+                author: true,
+                likes: true
+            }
 
         });
 
@@ -133,7 +141,11 @@ export const getMostViewedFlicks = async () => {
             orderBy: {
                 plays: 'desc',
             },
-            take: 10
+            take: 10,
+            include:{
+                author: true,
+                likes: true
+            }
         });
 
         return flicks

@@ -1,7 +1,6 @@
 'use client'
 
 import { signoutOnServer } from "@/actions/auth.actions";
-import { signOut } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";

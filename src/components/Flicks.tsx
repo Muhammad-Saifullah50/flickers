@@ -5,7 +5,7 @@ import { getAllFlicks, getFlicksByQuery, getfollowingFlicks, getMostViewedFlicks
 
 const Flicks = async ({ query }: { query: string }) => {
 
-    let flicks: Flick[] = [];
+    let flicks: (Flick & {author: User})[] | undefined = [];
 
     if (query) {
         flicks = await getFlicksByQuery(query);
@@ -31,7 +31,7 @@ const Flicks = async ({ query }: { query: string }) => {
             </TabsList>
 
             <TabsContent value="foryou" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 w-full place-items-center py-8">
-                {flicks.map((flick) => (
+                {flicks?.map((flick) => (
                     <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />
                 ))}
             </TabsContent>

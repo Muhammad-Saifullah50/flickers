@@ -1,5 +1,5 @@
 'use client'
-import { Flick, User } from "@prisma/client"
+import { Flick, Like, User } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
 import Loader from "./Loader"
@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { getFlickById } from "@/actions/flick.actions"
 
 type FlickCardProps = {
-  flick: Flick & { author: User } | null
+  flick: Flick & { author: User, likes?: Like[] } | null
   classNames?: string
   loading?: boolean
   flickId?: string
@@ -22,7 +22,7 @@ const FlickCard = ({ flickIcon, flick, classNames, loading, flickId }: FlickCard
       const getFlick = async () => {
         const fetchedFlick = await getFlickById(flickId!)
 
-        setFlickToUse(fetchedFlick)
+        setFlickToUse(fetchedFlick!)
       }
 
       getFlick()
@@ -81,7 +81,7 @@ const FlickCard = ({ flickIcon, flick, classNames, loading, flickId }: FlickCard
                   alt="heart"
                   className=""
                 />
-                <span>{flickToUse?.likes}</span>
+                <span>{flickToUse?.likes?.length}</span>
               </div>
 
               <div className="flex items-center gap-1">
