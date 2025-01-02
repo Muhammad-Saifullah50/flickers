@@ -36,7 +36,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                     <div className="flex items-center gap-2">
                         <div>
                             <Image
-                                src={post.author?.image!}
+                                src={post.author?.image || '/icons/dummyuser.svg'}
                                 width={40}
                                 height={40}
                                 alt='profile photo'

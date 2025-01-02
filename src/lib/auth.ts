@@ -44,7 +44,7 @@ const providers: Provider[] = [
 
         }
       } catch (error) {
-        //@ts-expect-error
+        //@ts-expect-error have to correct this 
         throw new Error(error.message || "Failed to sign in")
       }
 

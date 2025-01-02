@@ -49,8 +49,8 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
 
         const chat = await prisma.chat.create({
             data: {
-                //@ts-expect-error
-                name: otherUser.name!,
+        //@ts-expect-error have to correct this 
+        name: otherUser.name!,
                 image: otherUser?.image || '/icons/dummyuser.png',
                 userIds: [currUserId, otherUserId],
                 creatorId: currUserId

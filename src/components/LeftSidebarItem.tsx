@@ -38,8 +38,8 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
                 })}>
 
                     <Image
-                        //@ts-expect-error
-                        src={isActive ? whiteIcon : icon}
+        //@ts-expect-error have to correct this 
+        src={isActive ? whiteIcon : icon}
                         width={20}
                         height={20}
                         alt="icon"

@@ -28,7 +28,7 @@ const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
       getFlick()
     }
 
-  }, [flickId])
+  }, [flickId, flick])
 
 
 

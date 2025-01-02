@@ -39,10 +39,10 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
                 setCurrFlick(currentFlick)
 
-                //@ts-expect-error
-                setPrevFlickId(prevFlick?.id)
-                //@ts-expect-error
-                setNextFlickId(nextFlick?.id)
+        //@ts-expect-error have to correct this 
+        setPrevFlickId(prevFlick?.id)
+        //@ts-expect-error have to correct this 
+        setNextFlickId(nextFlick?.id)
 
             } catch (error) {
                 console.error('errror fetching flicks', error)
@@ -55,40 +55,40 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
     }, [params, nextFlickId,router])
 
 
-    const handleGlobalScroll = (e: WheelEvent) => {
-        if (transitioning) return
-
-
-        if (e.deltaY > 0 && nextFlickId) {
-            setTransitioning(true)
-            setDirection('next')
-            setLoading(true)
-            router.push(`/flicks/${nextFlickId}`)
-            setLoading(false)
-
-        }
-        if (e.deltaY < 0 && prevFlickId) {
-            setTransitioning(true)
-            setDirection('prev')
-            setLoading(true)
-            router.push(`/flicks/${prevFlickId}`)
-            setLoading(false)
-
-        }
-
-        setTimeout(() => {
-            setTransitioning(false)
-        }, 200);
-    }
-
+    
     useEffect(() => {
+        const handleGlobalScroll = (e: WheelEvent) => {
+        if (transitioning) return
+    
+    
+            if (e.deltaY > 0 && nextFlickId) {
+                setTransitioning(true)
+                setDirection('next')
+                setLoading(true)
+                router.push(`/flicks/${nextFlickId}`)
+                setLoading(false)
+    
+            }
+            if (e.deltaY < 0 && prevFlickId) {
+                setTransitioning(true)
+                setDirection('prev')
+                setLoading(true)
+                router.push(`/flicks/${prevFlickId}`)
+                setLoading(false)
+    
+            }
+    
+            setTimeout(() => {
+                setTransitioning(false)
+            }, 200);
+        }
         if (currFlick) {
             window.addEventListener('wheel', handleGlobalScroll, { passive: true })
         }
         return () => {
             window.removeEventListener('wheel', handleGlobalScroll)
         }
-    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning,currFlick, handleGlobalScroll])
+    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning,currFlick, ])
 
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

@@ -1,10 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Post, User } from "@prisma/client"
+import { Post } from "@prisma/client"
 
 interface PostTabsProps { 
     posts: Post[]  | undefined
 }
-const PostTabs = ({ posts }: PostTabsProps) => {
+const PostTabs = () => {
     return (
         <Tabs defaultValue="posts" className="w-[400px]">
             <TabsList>

@@ -42,12 +42,6 @@ const PostForm = ({ user, post, isEditing }: PostFormProps) => {
         }
     })
 
-    const handleFilesChange = (newFiles: File[]) => {
-        setFiles(newFiles);
-        form.setValue('assets', newFiles, { shouldValidate: true });
-
-    };
-
     const handleRemoveExisting = (fileUrl: string) => {
         setExistingFiles(prev => prev.filter(f => f !== fileUrl));
     };
@@ -96,8 +90,8 @@ const PostForm = ({ user, post, isEditing }: PostFormProps) => {
 
             if (uploadedUrls.length > 0 || existingFiles.length > 0) {
 
-                if (isEditing) {
-                    const updatedPost = await updatePost(post?.id!, formData)
+                if (isEditing && post) {
+                    const updatedPost = await updatePost(post?.id, formData)
                     if (updatedPost) {
                         toast({
                             description: 'Post updated successfully',

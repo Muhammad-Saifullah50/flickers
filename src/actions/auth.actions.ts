@@ -42,13 +42,13 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
     };
 
     // have to correct this type errror
-    //@ts-expect-error
-    const username = `@${formData?.name?.toLowerCase().replace('')}`;
+        //@ts-expect-error have to correct this 
+        const username = `@${formData?.name?.toLowerCase().replace('')}`;
 
     await prisma.user.create({
         data: {
-            //@ts-expect-error
-            name: formData.name,
+        //@ts-expect-error have to correct this 
+        name: formData.name,
             username: username,
             email: formData.email,
             password: await bcrypt.hash(formData.password, 10),

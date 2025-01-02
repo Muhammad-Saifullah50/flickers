@@ -78,8 +78,8 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
             const posts = await prisma.post.findMany({
                 where: {
                     // correct typeerror
-                    //@ts-expect-error
-                    authorId: currUser.following.id
+        //@ts-expect-error have to correct this 
+        authorId: currUser.following.id
                 },
                 orderBy: {
                     createdAt: 'desc'

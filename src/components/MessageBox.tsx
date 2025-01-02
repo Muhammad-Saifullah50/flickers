@@ -28,7 +28,7 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
                 <div className="flex gap-4 items-center">
                     <div>
                         <Image
-                            src={otherUser?.image!}
+                            src={otherUser?.image as string}
                             width={50}
                             height={50}
                             alt="chat image"
@@ -71,7 +71,8 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
             </section>
 
             <section>
-                <SendMessageForm chatId={chatId} senderId={currentUser?.id!} />
+                
+                <SendMessageForm chatId={chatId} senderId={currentUser?.id} />
             </section>
         </>
     )

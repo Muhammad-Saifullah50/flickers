@@ -44,8 +44,8 @@ const SavePostBtn = ({ isHomeCard, userId, postId, isSaved }: SavePostBtn) => {
             <Loader variant="white" />
         ) : (
             <Image
-            //@ts-ignore
-                src={
+        //@ts-expect-error have to correct this 
+        src={
                     (homeAndSaved && '/icons/bookmark-red.svg') || (homeAndNotSaved && '/icons/bookmark.svg') ||
                     (notHomeAndSaved && '/icons/save-red.svg') ||
                     (notHomeAndNotSaved && '/icons/save.svg')

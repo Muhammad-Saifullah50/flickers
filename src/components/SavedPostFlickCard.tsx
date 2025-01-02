@@ -8,7 +8,7 @@ type SavedPostFlickCardProps = {
     isFlick?: boolean;
 };
 
-const SavedPostCard = async ({ postId,flickId, isFlick }: SavedPostFlickCardProps) => {
+const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
 
     const post = await getPostById(postId!);
 
@@ -19,6 +19,7 @@ const SavedPostCard = async ({ postId,flickId, isFlick }: SavedPostFlickCardProp
         item.endsWith(".ogg")
     );
 
+    if (!post)   return null;
     return (
         <>
             {isVideo ? (
@@ -33,10 +34,10 @@ const SavedPostCard = async ({ postId,flickId, isFlick }: SavedPostFlickCardProp
             ) : (
                 <Link href={`/posts/${post?.id}`}>
                     <Image
-                        src={post?.assets[0]!}
+                        src={post?.assets[0]}
                         width={500}
                         height={500}
-                        alt={post?.altText!}
+                        alt={post?.altText}
                         className="rounded-3xl w-[200px] h-[200px]"
                     />
                 </Link>

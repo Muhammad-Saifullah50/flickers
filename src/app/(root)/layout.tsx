@@ -9,8 +9,8 @@ import { headers } from "next/headers"
 const homeLayout = async ({ children }: { children: React.ReactNode }) => {
     console.log('root layout runnubgn')
 
-    //@ts-expect-error
-    const pathname = await headers().get('x-current-path')
+        //@ts-expect-error have to correct this 
+        const pathname = await headers().get('x-current-path')
 
 return (
         <main className={` bg-dark-1 flex flex-col sm:flex-row justify-between min-h-screen`}>

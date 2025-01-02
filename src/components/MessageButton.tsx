@@ -2,7 +2,6 @@
 
 import { createChat } from "@/actions/chat.actions";
 import { Button } from "./ui/button"
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loader from "./Loader";
 

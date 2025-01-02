@@ -2,13 +2,12 @@
 import { User } from "next-auth"
 import Image from "next/image"
 import { Input } from "./ui/input"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { Form, FormControl, FormField, FormItem } from "./ui/form"
 import { Button } from "./ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { commentSchema } from "@/validations/commentSchema"
 import { z } from "zod"
-import { useState } from "react"
 import { createCommentOrReply } from "@/actions/comments.actons"
 import { useSession } from "next-auth/react"
 
@@ -60,7 +59,7 @@ const PostComment = ({ author, postId, isReply, parentCommentId, setisReplying }
             console.error('error creating comment', error);
         } finally {
             form.reset();
-            setisReplying && setisReplying(false);
+            if (setisReplying) setisReplying(false);
         }
     }
     return (

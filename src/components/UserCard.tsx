@@ -33,12 +33,12 @@ const UserCard = async ({ user }: { user: UserWithFollows }) => {
             <h3>{user.name}</h3>
             <p className="text-purple-tertiary">{user.username}</p>
 
-            <FollowButton
-                followerUserId={currentUser?.id!}
+           {currentUser && <FollowButton
+                followerUserId={currentUser?.id}
                 userToFollowId={user.id}
                 isFollowing={isFollowing}
                 followId={followId}
-            />
+            />}
         </aside>
     )
 }
