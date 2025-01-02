@@ -19,7 +19,7 @@ interface PostFormProps {
     flick?: Flick
     isEditing?: boolean
 }
-const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
+const FlickForm = ({ user, flick, isEditing }: PostFormProps) => {
 
     const [uploadedFile, setUploadedFile] = useState<string>();
     const [file, setFile] = useState<File>();
@@ -88,8 +88,8 @@ const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
             };
 
 
-            if (isEditing) {
-                const updatedflick = await updateFlick(flick?.id!, formData)
+            if (isEditing && flick) {
+                const updatedflick = await updateFlick( flick?.id, formData)
                 if (updatedflick) {
                     toast({
                         description: 'Post updated successfully',
@@ -206,4 +206,4 @@ const flickForm = ({ user, flick, isEditing }: PostFormProps) => {
     )
 }
 
-export default flickForm
+export default FlickForm

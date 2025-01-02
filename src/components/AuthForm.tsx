@@ -88,6 +88,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
         } catch (error) {
             setloading(false);
             // TODO: Handle error
+            console.error(error);
         } finally {
             setloading(false);
         }
@@ -100,6 +101,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
 
         } catch (error) {
             setloading(false);
+            console.error(error);
             throw new Error('Failed to sign in')
             // TODO: Handle error
         }

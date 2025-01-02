@@ -1,4 +1,3 @@
-import { Chat, User } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
 

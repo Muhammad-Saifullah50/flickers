@@ -38,7 +38,7 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
                 })}>
 
                     <Image
-                        //@ts-ignore
+                        //@ts-expect-error
                         src={isActive ? whiteIcon : icon}
                         width={20}
                         height={20}

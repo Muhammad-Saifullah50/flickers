@@ -16,12 +16,12 @@ import { usePathname, useRouter } from "next/navigation";
 
 const DeletePost = ({ postId }: { postId: string }) => {
     const router = useRouter();
-const pathname = usePathname();
+    const pathname = usePathname();
 
     const handleDelete = async () => {
         await deletePost(postId);
-      pathname !== '/' &&  router.push('/')
-         
+        if (pathname !== '/') router.push('/')
+
     }
     return (
         <AlertDialog>
@@ -42,9 +42,9 @@ const pathname = usePathname();
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
-                    onClick={handleDelete}
-                    className="!bg-red-500 hover:!bg-red-500/90">Continue</AlertDialogAction>
+                    <AlertDialogAction
+                        onClick={handleDelete}
+                        className="!bg-red-500 hover:!bg-red-500/90">Continue</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

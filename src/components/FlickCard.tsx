@@ -13,7 +13,7 @@ type FlickCardProps = {
   flickId?: string
   flickIcon?: boolean
 }
-const FlickCard = ({ flickIcon, flick, classNames, loading, flickId }: FlickCardProps) => {
+const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
 
   const [flickToUse, setFlickToUse] = useState(flick)
 

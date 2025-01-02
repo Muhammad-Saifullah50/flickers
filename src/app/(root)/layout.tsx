@@ -9,7 +9,7 @@ import { headers } from "next/headers"
 const homeLayout = async ({ children }: { children: React.ReactNode }) => {
     console.log('root layout runnubgn')
 
-    //@ts-ignore
+    //@ts-expect-error
     const pathname = await headers().get('x-current-path')
 
 return (

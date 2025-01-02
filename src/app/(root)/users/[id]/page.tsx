@@ -15,7 +15,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
             <section className='flex gap-4 py-4'>
                 <div className='flex justify-center items-start'>
                     <Image
-                        src={user?.image!}
+                        src={user?.image || '/icons/dummyuser.png'}
                         width={150}
                         height={150}
                         alt='profile photo'
@@ -27,9 +27,11 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                         <h2 className='font-semibold text-4xl'>{user?.name}</h2>
                         <div className='flex gap-4'>
                             <Button>Follow</Button>
-                            <MessageButton 
-                            currentUserId={currentUser?.id!}
-                            otherUserId={user?.id!}/>
+                            {currentUser && user && (
+                                <MessageButton 
+                                currentUserId={currentUser?.id}
+                                otherUserId={user?.id}/>
+                            )}
                         </div>
                     </div>
 

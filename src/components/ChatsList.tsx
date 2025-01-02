@@ -20,15 +20,16 @@ const ChatsList = async ({ chatList }: ChatListProps) => {
 
             const otherUser = chat.users.find((user: User) => user.id !== currUser?.id);
 
-            return (
+            if (!otherUser) return null;
+            return (   
               <ChatListItem
                 key={chat.id}
-                chatName={otherUser?.name!}
-                // the other users username
-                chatUsername={otherUser?.username!}
+                chatName={otherUser?.name}
+                //info the other users username
+                chatUsername={otherUser?.username || `@${otherUser?.name.toLowerCase().replace(' ', '')}`}
                 chatId={chat.id}
-                // the other users image
-                chatImage={otherUser?.image!}
+                //info the other users image
+                chatImage={otherUser?.image}
               />
 
             )

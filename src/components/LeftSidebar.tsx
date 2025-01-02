@@ -1,5 +1,4 @@
 import { bottombarLinks, sidebarLinks } from '@/constants';
-import { auth } from '@/lib/auth'
 import Image from 'next/image'
 import React from 'react'
 import LeftSidebarItem from './LeftSidebarItem';

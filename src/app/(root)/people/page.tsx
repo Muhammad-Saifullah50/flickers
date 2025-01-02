@@ -1,9 +1,6 @@
 import { getAllUsers, getCurrentUserFromDb } from '@/actions/user.actions';
 import Heading from '@/components/Heading'
 import UserCard from '@/components/UserCard';
-import { auth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
-import React from 'react'
 
 const PeoplePage = async () => {
     

@@ -3,8 +3,6 @@ import { cn, formatTimeDifference } from "@/lib/utils"
 import { Comment } from "@prisma/client"
 import Image from "next/image";
 import ReplyButton from "./ReplyButton";
-import { auth } from "@/lib/auth";
-
 interface CommentCardProps {
     comment: Comment
     isReply?: boolean
@@ -22,7 +20,7 @@ const CommentCard = async ({ comment, isReply, replyCount }: CommentCardProps) =
         <div className={cn("flex gap-4", isReply && "ml-12")}>
             <div>
                 <Image
-                    src={commentAuthor?.image!}
+                    src={commentAuthor?.image as string}
                     width={40}
                     height={40}
                     alt='profile photo'

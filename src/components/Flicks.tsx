@@ -1,4 +1,4 @@
-import { Flick, Like, User } from "@prisma/client"
+import { Flick, User } from "@prisma/client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import FlickCard from "./FlickCard"
 import { getAllFlicks, getFlicksByQuery, getfollowingFlicks, getMostViewedFlicks, getPopularFlicks } from "@/actions/flick.actions";

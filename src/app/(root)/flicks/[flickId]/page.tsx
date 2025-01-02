@@ -38,8 +38,11 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
 
                 setCurrFlick(currentFlick)
-                setPrevFlickId(prevFlick?.id!)
-                setNextFlickId(nextFlick?.id!)
+
+                //@ts-expect-error
+                setPrevFlickId(prevFlick?.id)
+                //@ts-expect-error
+                setNextFlickId(nextFlick?.id)
 
             } catch (error) {
                 console.error('errror fetching flicks', error)
@@ -49,7 +52,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
         };
 
         fetchData();
-    }, [params])
+    }, [params, nextFlickId,router])
 
 
     const handleGlobalScroll = (e: WheelEvent) => {
@@ -85,7 +88,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
         return () => {
             window.removeEventListener('wheel', handleGlobalScroll)
         }
-    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning])
+    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning,currFlick, handleGlobalScroll])
 
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {

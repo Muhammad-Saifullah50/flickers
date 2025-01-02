@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Input } from './ui/input';
 import Image from 'next/image';

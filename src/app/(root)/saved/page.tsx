@@ -1,8 +1,5 @@
 import { getSavedItems } from "@/actions/save.actions"
-import FlickCard from "@/components/FlickCard"
 import Heading from "@/components/Heading"
-import PostCard from "@/components/PostCard"
-import PostsGrid from "@/components/PostsGrid"
 import SavedPostFlickCard from "@/components/SavedPostFlickCard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
