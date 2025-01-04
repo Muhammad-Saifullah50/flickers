@@ -2,6 +2,10 @@ import { getFeedPosts } from "@/actions/post.actions";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import Heading from "@/components/Heading";
 import PostDetails from "@/components/PostDetails";
+import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
+import { Suspense } from "react";
+
+export const experimental_ppr = true
 
 export default async function HomePage() {
 
@@ -25,21 +29,23 @@ export default async function HomePage() {
     <main>
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
+      <Suspense fallback={<HomeFeedSkeleton />}>
       <section className="flex flex-col gap-6 py-9">
-        {posts && posts.length > 0 ? (
-          posts.map((post) => (
-            <PostDetails
-              key={post.id}
-              post={post}
-              isHomeCard={true}
-              userId={currentUser?.id} />
-          ))
+          {posts && posts.length > 0 ? (
+            posts.map((post) => (
+              <PostDetails
+                key={post.id}
+                post={post}
+                isHomeCard={true}
+                userId={currentUser?.id} />
+            ))
           ) : (
-          <div className="text-white text-center mt-10">
-            <h2>No posts to show</h2>
-          </div>
-        )}
-      </section>
+            <div className="text-white text-center mt-10">
+              <h2>No posts to show</h2>
+            </div>
+          )}
+        </section>
+      </Suspense>
     </main>
   )
 }

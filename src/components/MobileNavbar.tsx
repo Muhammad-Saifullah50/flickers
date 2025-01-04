@@ -1,16 +1,8 @@
 import { getCurrentUserFromDb } from "@/actions/user.actions"
 import Image from "next/image"
 import Link from "next/link"
-
-import {
-    Sheet,
-    SheetClose,
-    SheetContent,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet"
-import SignoutBtn from "./SignoutBtn"
 import MobileNavSheet from "./MobileNavSheet"
+
 
 
 const MobileNavbar = async () => {
@@ -33,18 +25,17 @@ const MobileNavbar = async () => {
                 </Link>
             </div>
             <div className="flex gap-4 ">
-                {user && (
-                    <Image
-                        src={user.image!}
-                        width={30}
-                        height={30}
-                        className="rounded-full"
-                        alt='profile photo'
-                    />
-                )}
 
-
-                <MobileNavSheet/>
+                    {user && (
+                        <Image
+                            src={user.image!}
+                            width={30}
+                            height={30}
+                            className="rounded-full"
+                            alt='profile photo'
+                        />
+                    )}
+                <MobileNavSheet />
             </div>
         </nav>
     )

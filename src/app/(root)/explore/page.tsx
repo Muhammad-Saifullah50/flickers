@@ -3,7 +3,10 @@ import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import PostsGrid from '@/components/PostsGrid';
 import QueryForm from '@/components/QueryForm'
-import React from 'react'
+import GridSkeleton from '@/components/skeletons/GridSkeleton';
+import { Suspense } from 'react';
+
+export const experimental_ppr = true;
 
 const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
 
@@ -33,7 +36,9 @@ const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: st
             <Heading text='Most Popular' className='pt-4 !text-xl font-semibold' />
 
             <section className='pt-10'>
-                <PostsGrid items={items} query={usableParams.hashtag_query} />
+                <Suspense fallback={<GridSkeleton />}>
+                    <PostsGrid items={items} query={usableParams.hashtag_query} />
+                </Suspense>
             </section>
         </main>
     )

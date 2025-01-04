@@ -1,8 +1,9 @@
 import { Flick, Post, User } from '@prisma/client'
-import React from 'react'
+import React, { Suspense } from 'react'
 import FlickCard from './FlickCard';
 import PostCard from './PostCard';
 import { getPostsandFlicksByHashtags } from '@/actions/post.actions';
+import FlickCardSkeleton from './skeletons/GridSkeleton';
 
 type Item = (Post & { author: User }) | (Flick & { author: User })
 
@@ -27,6 +28,7 @@ const PostsGrid = async ({ items: data, query }: PostsGridParams) => {
 
         if ('videoUrl' in item) {
           return (
+
             <FlickCard
               flick={item}
               key={item.id}
