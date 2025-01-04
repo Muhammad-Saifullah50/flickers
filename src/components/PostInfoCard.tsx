@@ -73,6 +73,11 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                 </Link>
                 {!isHomeCard && <hr className="border-dark-4" />}
 
+                <div className="md:hidden">
+                <PostCarousel items={post.assets} />
+                </div>
+                    
+
                 {isHomeCard && (
 
                     <PostCarousel items={post.assets} />

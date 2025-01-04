@@ -9,15 +9,15 @@ import Image from "next/image";
 
 const PostCarousel = ({ items }: { items: string[] }) => {
     return (
-        <Carousel>
-            <CarouselContent>
+        <Carousel >
+            <CarouselContent className="flex justify-center items-center  w-full ">
                 {items.map((item) => {
                     const isVideo = [".mp4", ".webm", ".mov", ".avi", ".mkv"].some(
                         (ext) => item.toLowerCase().endsWith(ext)
                     );
 
                     return (
-                        <CarouselItem key={item}>
+                        <CarouselItem key={item} className="w-full flex justify-center">
                             {isVideo ? (
                                 <video
                                     src={item}
@@ -32,9 +32,9 @@ const PostCarousel = ({ items }: { items: string[] }) => {
                                 <Image
                                     src={item}
                                     alt={item}
-                                    width={500}
-                                    height={500}
-                                    className="w-full object-fill h-[580px] rounded-l-lg max-sm:w-[300px] max-sm:h-[300px]"
+                                    width={700}
+                                    height={700}
+                                    className="w-full object-fill h-[580px] rounded-lg max-sm:h-[400px] self-center "
                                 />
                             )}
                         </CarouselItem>
