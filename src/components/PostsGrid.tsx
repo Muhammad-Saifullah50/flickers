@@ -1,5 +1,5 @@
 import { Flick, Post, User } from '@prisma/client'
-import React, { Suspense } from 'react'
+import React, { Suspense, use } from 'react'
 import FlickCard from './FlickCard';
 import PostCard from './PostCard';
 import { getPostsandFlicksByHashtags } from '@/actions/post.actions';
@@ -11,15 +11,9 @@ type PostsGridParams = {
   items?: Item[] | undefined
   query?: string
 }
-const PostsGrid = async ({ items: data, query }: PostsGridParams) => {
+const PostsGrid =  ({ items: data, query }: PostsGridParams) => {
 
-  let items;
-
-  if (query) {
-    items = await getPostsandFlicksByHashtags(query)
-  } else {
-    items = data
-  }
+  const items = query ? use(getPostsandFlicksByHashtags(query)) : data
 
   return (
 
