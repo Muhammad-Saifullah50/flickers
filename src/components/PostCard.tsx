@@ -29,7 +29,7 @@ const PostCard = ({ post }: { post: Post & { author: User, likes: Like[] } }) =>
             />
         )}
 
-
+        {/* overlay */}
         <div className="group-hover:flex flex-col absolute hidden p-4 gap-3 bottom-0 w-full bg-black/20">
             <h3 className="text-sm line-clamp-1">{post?.caption}</h3>
             <p className="text-sm text-purple-secondary line-clamp-1">{post?.hashtags}</p>
@@ -54,7 +54,7 @@ const PostCard = ({ post }: { post: Post & { author: User, likes: Like[] } }) =>
                             alt="heart"
                             className=""
                         />
-                        <span>{post?.likes.length}</span>
+                        <span>{post?.likes?.length}</span>
                     </div>
 
                 </div>

@@ -15,7 +15,10 @@ const nextConfig: NextConfig = {
       protocol: 'https',
     }
   ]
- }
+ },
+ experimental: {
+  ppr: 'incremental',
+},
 };
 
 export default nextConfig;

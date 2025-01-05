@@ -37,7 +37,8 @@ const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
       <Link href={loading ? '' : ` /flicks/${flickToUse?.id}`}>
         {loading ? (
           <Loader variant="purple" />
-        ) : (<video
+        ) : (
+        <video
           src={flick?.videoUrl}
           controls={false}
           autoPlay={false}

@@ -1,15 +1,23 @@
-import { getPopularTodayPostsAndFlicks } from '@/actions/post.actions';
+import { getPopularTodayPostsAndFlicks, getPostsandFlicksByHashtags } from '@/actions/post.actions';
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import PostsGrid from '@/components/PostsGrid';
 import QueryForm from '@/components/QueryForm'
-import React from 'react'
+import GridSkeleton from '@/components/skeletons/GridSkeleton';
+import { Suspense } from 'react';
 
-const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
 
-    const usableParams = await searchParams;
+const ExplorePage =  ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
 
-    const items = await getPopularTodayPostsAndFlicks();
+    const usableParams =  searchParams;
+
+    let itemsPromise;
+
+    if (usableParams.hashtag_query) {
+        itemsPromise = getPostsandFlicksByHashtags(usableParams.hashtag_query);
+    } else {
+        itemsPromise = getPopularTodayPostsAndFlicks()
+    }
 
     return (
         <main className=''>
@@ -32,9 +40,11 @@ const ExplorePage = async ({ searchParams }: { searchParams: { hashtag_query: st
 
             <Heading text='Most Popular' className='pt-4 !text-xl font-semibold' />
 
-            <section className='pt-10'>
-                <PostsGrid items={items} query={usableParams.hashtag_query} />
-            </section>
+            <Suspense fallback={<GridSkeleton />}>
+                <section className='pt-10'>
+                    <PostsGrid itemsPromise={itemsPromise}/>
+                </section>
+            </Suspense>
         </main>
     )
 }

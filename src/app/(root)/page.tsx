@@ -1,7 +1,11 @@
 import { getFeedPosts } from "@/actions/post.actions";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
+import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
-import PostDetails from "@/components/PostDetails";
+import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
+import { Suspense } from "react";
+
+export const experimental_ppr = true
 
 export default async function HomePage() {
 
@@ -11,34 +15,32 @@ export default async function HomePage() {
 
   if (!currentUser) {
     userhasFollowed = false
-  } else if (currentUser && currentUser.following.length === 0) {
+  } else if (currentUser && currentUser?.following?.length === 0) {
     userhasFollowed = false
-  } else if (currentUser && currentUser.following.length > 0) {
+  } else if (currentUser && currentUser?.following?.length > 0) {
     userhasFollowed = true
   } else {
     userhasFollowed = false
   }
 
-  const posts = await getFeedPosts(userhasFollowed);
+  const postsPromise = getFeedPosts(userhasFollowed);
 
   return (
     <main>
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
       <section className="flex flex-col gap-6 py-9">
-        {posts && posts.length > 0 ? (
-          posts.map((post) => (
-            <PostDetails
-              key={post.id}
-              post={post}
-              isHomeCard={true}
-              userId={currentUser?.id} />
-          ))
-          ) : (
-          <div className="text-white text-center mt-10">
-            <h2>No posts to show</h2>
+        <Suspense fallback={
+          <div>
+            {Array.from({ length: 2 }).map((_, index) => (
+              <HomeFeedSkeleton key={index} />
+            ))}
           </div>
-        )}
+        }>
+
+          <FeedList postsPromise={postsPromise} currentUser={currentUser}/>
+
+        </Suspense>
       </section>
     </main>
   )
