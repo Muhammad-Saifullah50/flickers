@@ -17,7 +17,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
                     );
 
                     return (
-                        <CarouselItem key={item} className="w-full h-full">
+                        <CarouselItem key={item} className="w-full flex justify-center">
 
                             {isVideo ? (
                                 <video

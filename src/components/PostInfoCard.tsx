@@ -25,7 +25,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
 
     const isOwner = session?.user?.email === post.author?.email;
 
-    const isSaved = post.saves?.some((save) => save.postId === post.id )
+    const isSaved = post.saves?.some((save) => save.postId === post.id)
     return (
         <aside className={cn("flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full",
             'rounded-3xl', isHomeCard
@@ -73,13 +73,12 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                 </Link>
                 {!isHomeCard && <hr className="border-dark-4" />}
 
-                <div className="md:hidden">
-                <PostCarousel items={post.assets} />
-                </div>
-                    
+                {!isHomeCard && <div className="">
+                    <PostCarousel items={post.assets} />
+                </div>}
+
 
                 {isHomeCard && (
-
                     <PostCarousel items={post.assets} />
                 )}
 
@@ -115,7 +114,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
             </section>
 
 
-         { userId && <section className={"flex flex-col gap-4"}>
+            {userId && <section className={"flex flex-col gap-4"}>
                 <Link href={`/posts/${post.id}`}>
                     <section className="flex items-center justify-between ">
                         <div className="flex items-center justify-start gap-4">

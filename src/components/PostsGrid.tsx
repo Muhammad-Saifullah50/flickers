@@ -1,24 +1,21 @@
 import { Flick, Post, User } from '@prisma/client'
-import React, { Suspense, use } from 'react'
+import { use } from 'react'
 import FlickCard from './FlickCard';
 import PostCard from './PostCard';
-import { getPostsandFlicksByHashtags } from '@/actions/post.actions';
-import FlickCardSkeleton from './skeletons/GridSkeleton';
 
 type Item = (Post & { author: User }) | (Flick & { author: User })
 
 type PostsGridParams = {
-  items?: Item[] | undefined
-  query?: string
+  itemsPromise: Promise<Item[]>
 }
-const PostsGrid =  ({ items: data, query }: PostsGridParams) => {
+const PostsGrid =  ({ itemsPromise }: PostsGridParams) => {
 
-  const items = query ? use(getPostsandFlicksByHashtags(query)) : data
+  const items = use(itemsPromise)
 
   return (
 
     <section className='columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 mx-auto p-5 space-y-5'>
-      {items && items.map((item) => {
+      {items?.map((item) => {
 
         if ('videoUrl' in item) {
           return (
