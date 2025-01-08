@@ -9,7 +9,8 @@ import Image from "next/image";
 
 const PostCarousel = ({ items }: { items: string[] }) => {
     return (
-        <Carousel >
+        <Carousel 
+        >
             <CarouselContent className="flex justify-center items-center  w-full ">
                 {items.map((item) => {
                     const isVideo = [".mp4", ".webm", ".mov", ".avi", ".mkv"].some(
@@ -17,7 +18,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
                     );
 
                     return (
-                        <CarouselItem key={item} className="w-full flex justify-center">
+                        <CarouselItem key={item} className="w-full flex justify-center ">
 
                             {isVideo ? (
                                 <video

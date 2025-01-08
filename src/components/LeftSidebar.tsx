@@ -9,7 +9,7 @@ const LeftSidebar = async () => {
 
   const user = await getCurrentUserFromDb();
   return (
-    <aside className='max-sm:hidden w-[270px] bg-dark-2 px-6 pt-8 pb-8 flex flex-col gap-12 overflow-y-scroll relative border-dark-4'>
+    <aside className='max-sm:hidden w-[270px] bg-dark-2 px-6 pt-8 pb-8 flex flex-col gap-12 overflow-y-scroll min-h-screen relative border-dark-4'>
       <Link href={'/'}>
         <div className="flex justify-start items-center gap-2">
           <Image
@@ -18,7 +18,8 @@ const LeftSidebar = async () => {
             height={25}
             alt="logo" />
 
-          <h1 className="font-bold text-2xl">Flickers</h1>
+          <h1 className="font-bold text-2xl text-white
+          ">Flickers</h1>
         </div>
       </Link>
 
@@ -29,7 +30,7 @@ const LeftSidebar = async () => {
             height={40}
             alt='profile photo'
             className='rounded-full ' />
-          <p className='font-bold text-lg'>{user?.name}</p>
+          <p className='font-bold text-lg text-white'>{user?.name}</p>
         </Link>
       }
 

@@ -8,7 +8,7 @@ const PeoplePage = () => {
 
     const currentUserPromise =  getCurrentUserFromDb();
     const allUsersPromise =  getAllUsers();
-
+// somethings wriong in producxtiion here
     return (
         <section >
             <Heading text='All Users' icon='/icons/people-white.svg' />

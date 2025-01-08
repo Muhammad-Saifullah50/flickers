@@ -7,7 +7,7 @@ type HeadingProps = {
 }
 const Heading = ({ icon, text, className }: HeadingProps) => {
     return (
-        <div className={`flex items-center justify-start gap-2 ${className}`}>
+        <div className={`flex items-center justify-start gap-2 text-white ${className}`}>
             {icon && <Image
                 src={icon}
                 alt="icon"
@@ -15,7 +15,7 @@ const Heading = ({ icon, text, className }: HeadingProps) => {
                 height={32}
                 className="max-md:w-[20px] max-md:h-[20px]"
             />}
-            <h2 className="font-semibold lg:font-bold text-lg md:text-xl lg:text-3xl">{text}</h2>
+            <h2 className="font-semibold lg:font-bold text-lg md:text-xl lg:text-3xl text-white">{text}</h2>
         </div>
     )
 }

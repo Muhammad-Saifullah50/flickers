@@ -17,7 +17,7 @@ const homeLayout = async ({ children }: { children: React.ReactNode }) => {
             <div className="fixed left-0 top-0 h-screen overflow-y-auto">
                 <LeftSidebar />
             </div>
-            <div className="w-full flex-1 sm:ml-[272px] xl:mr-[465px] p-4 sm:p-6 md:p-8 lg:p-10 relative z-10">
+            <div className="w-full flex-1 sm:ml-[272px] xl:mr-[465px] p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 ">
                 {children}
             </div>
             <div className="hidden xl:flex fixed right-0 top-0">

@@ -111,7 +111,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
 
             <div className="flex justify-center items-center gap-2">
                 <Image
@@ -120,10 +120,10 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                     height={25}
                     alt="logo" />
 
-                <h1 className="font-bold text-2xl">Flickers</h1>
+                <h1 className="font-bold text-2xl text-white">Flickers</h1>
             </div>
 
-            <div className="p-3 flex flex-col items-center justify-center">
+            <div className="p-3b text-white flex flex-col items-center justify-center gap-2">
                 <h3 className="text-3xl font-bold">{type === 'signin' ? 'Log in to your account' : 'Create a new account'}</h3>
                 <p className="text-purple-secondary font-normal text-base">{type === 'signin' ? 'Welcome back! ' : ' To use Flickers,'} Please enter your details.</p>
             </div>
@@ -206,7 +206,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                         disabled={loading}
                         className="rounded-lg font-semibold !bg-purple-primary hover:!bg-purple-primary/95 !text-light-1" type="submit">
                         {
-                            loading ? <Loader variant="white" /> : <p>
+                              <p>
                                 {type === 'signin' ? 'Log In' : 'Sign Up'}
                             </p>
                         }
@@ -228,9 +228,8 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                             variant={'white'}
                             type="submit"
                             className="rounded-lg ">
-                            {loading
-                                ? (<Loader variant="purple" />)
-                                : <span className="flex gap-2 items-center justify-center font-semibold text-dark-4">
+                            { 
+                                 <span className="flex gap-2 items-center justify-center font-semibold text-dark-4">
                                     <Image
                                         src={provider.icon!}
                                         width={20}
@@ -243,7 +242,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                 ))}
             </div>
 
-            <div className="text-sm w-full flex items-center justify-center mt-4">
+            <div className="text-sm w-full flex items-center justify-center mt-4 text-white">
 
                 {type === 'signin' && (
                     <p>

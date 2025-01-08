@@ -146,7 +146,7 @@ const FlickUploader = ({
               ? 'Drop files here...'
               : 'Drag and drop files here or click to browse'}
           </p>
-          <p className="text-light-4 text-sm text-center">Supports only videos</p>
+          <p className="text-light-2 text-sm text-center">Supports only videos</p>
         </div>
       </div>
     </div>

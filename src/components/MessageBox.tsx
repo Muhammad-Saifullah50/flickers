@@ -36,7 +36,7 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
                         />
                     </div>
                     <div>
-                        <h2>{otherUser?.name}</h2>
+                        <h2 className='text-white'>{otherUser?.name}</h2>
                         <p className="text-sm text-purple-secondary">Online</p>
                     </div>
 

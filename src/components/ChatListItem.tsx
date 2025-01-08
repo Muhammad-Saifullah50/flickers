@@ -22,7 +22,7 @@ const ChatListItem = ({ chatName, chatId, chatImage, chatUsername }: ChatListIte
                 />
 
                 {/* // the other persons name and username */}
-                <div>
+                <div className="text-white">
                     <h4 className="line-clamp-1">{chatName}</h4>
                     <p className="text-sm text-purple-secondary font-normal">{chatUsername}</p>
                 </div>

@@ -66,16 +66,12 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
 
                 <Link href={`/posts/${post.id}`}>
                     <section className="flex flex-col">
-                        <p className="text-base">{post.caption}</p>
+                        <p className="text-base text-white">{post.caption}</p>
                         <span>&nbsp; &nbsp;</span>
                         <p className="text-base text-purple-secondary">{post.hashtags}</p>
                     </section>
                 </Link>
                 {!isHomeCard && <hr className="border-dark-4" />}
-
-                {!isHomeCard && <div className="">
-                    <PostCarousel items={post.assets} />
-                </div>}
 
 
                 {isHomeCard && (
@@ -126,7 +122,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                                     alt='like'
                                     className='cursor-pointer'
                                 />
-                                <span>{post?.likes?.length}</span>
+                                <span className="text-white">{post?.likes?.length}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Image
@@ -136,7 +132,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                                     alt='like'
                                     className='cursor-pointer'
                                 />
-                                <span>{post?.comments?.length}</span>
+                                <span className="text-white">{post?.comments?.length}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Image
@@ -146,7 +142,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                                     alt='like'
                                     className='cursor-pointer'
                                 />
-                                <span>{post.shares}</span>
+                                <span className="text-white">{post.shares}</span>
                             </div>
 
                         </div>
