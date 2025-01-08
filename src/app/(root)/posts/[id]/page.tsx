@@ -14,7 +14,8 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
     if (!post) return notFound();
     return (
         <main className="w-full">
-            <PostDetails post={post} />
+            <PostDetails post={post} 
+            isHomeCard={false}/>
         </main>
     )
 }

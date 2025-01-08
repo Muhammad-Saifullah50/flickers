@@ -30,7 +30,7 @@ const CommentCard = async ({ comment, isReply, replyCount }: CommentCardProps) =
             <div className="flex flex-col justify-between items-start w-full overflow-x-hidden">
                 <div className="flex flex-col gap-2 w-full overflow-x-hidden">
                     <span className="text-sm text-purple-secondary">{commentAuthor?.name}</span>
-                    <p className=" break-all  w-full"> {comment.content}</p>
+                    <p className=" break-all text-white w-full"> {comment.content}</p>
                 </div>
                 <div className="flex gap-2 flex-col">
                     <div className="flex gap-4">

@@ -16,7 +16,7 @@ const Messages = ({ messages, currUser }: { messages: Message[], currUser: User 
               isOwner && "self-end"
             )}>
             <div
-              className={cn("flex justify-start bg-dark-4 rounded-lg ml-2 p-3 text-base",
+              className={cn("flex justify-start bg-dark-4 rounded-lg ml-2 p-3 text-base text-light-2",
                 isOwner && " bg-purple-primary mr-2")}
             >
               <Image

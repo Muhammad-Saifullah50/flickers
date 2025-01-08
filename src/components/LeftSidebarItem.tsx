@@ -34,7 +34,7 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
                 }}
             >
                 <li className={cn("w-full rounded-lg p-4  flex items-center justify-start gap-6", {
-                    'bg-purple-primary': isActive
+                    'bg-purple-primary text-white': isActive
                 })}>
 
                     <Image
@@ -44,7 +44,7 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
                         height={20}
                         alt="icon"
                     />
-                    <h2 className={cn("text-lg font-medium", { 'font-bold': isActive })}>{label}</h2>
+                    <h2 className={cn("text-lg text-white font-medium", { 'font-bold': isActive })}>{label}</h2>
                 </li>
             </Link>
         </div>)

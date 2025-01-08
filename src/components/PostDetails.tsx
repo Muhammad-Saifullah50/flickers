@@ -17,7 +17,7 @@ interface PostDetailsProps {
 
 const PostDetails = ({ post, isHomeCard,userId }: PostDetailsProps) => {
   return (
-    <section className="max-md:flex-col flex w-full h-full">
+    <section className="max-md:flex-col flex  w-full h-full">
       <div className={cn("flex flex-1 max-md:hidden w-1/2 ", {
         'hidden': isHomeCard
       })}>

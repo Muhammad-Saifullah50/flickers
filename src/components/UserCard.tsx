@@ -30,7 +30,7 @@ const UserCard = async ({ user }: { user: UserWithFollows }) => {
                 className='rounded-full'
             />
 
-            <h3>{user.name}</h3>
+            <h3 className="text-white">{user.name}</h3>
             <p className="text-purple-tertiary">{user.username}</p>
 
            {currentUser && <FollowButton
