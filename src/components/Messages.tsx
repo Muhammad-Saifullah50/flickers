@@ -1,16 +1,25 @@
 import { cn, formatMessageTime } from "@/lib/utils"
 import { Message, User } from "@prisma/client"
 import Image from "next/image"
+import { useEffect, useRef } from "react"
 
 const Messages = ({ messages, currUser }: { messages: Message[], currUser: User }) => {
 
+  const msgref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+if ( msgref.current) msgref.current.scrollIntoView({behavior: 'instant'})
+  }, [messages])
+  
   return (
     <div className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10 ">
-      {messages.map((message: Message) => {
-        const isOwner = message.senderId === currUser?.id
+      {messages.map((message: Message, index) => {
+        const isOwner = message.senderId === currUser?.id;
+        const isLastMessage = index === messages.length - 1
         return (
 
           <div
+            ref={isLastMessage ? msgref : null}
             key={message.id}
             className={cn("flex flex-col  max-w-fit self-start",
               isOwner && "self-end"

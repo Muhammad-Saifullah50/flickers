@@ -17,7 +17,7 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
 
     const pathname = usePathname();
 
-    const isActive = pathname === `${link}`;
+    const isActive = pathname === `${link}`
 
     const isLogoutLink = link === '/logout';
 

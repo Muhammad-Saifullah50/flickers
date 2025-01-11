@@ -21,7 +21,7 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
         return chat?.messages
     }
 
-    const { data: messages, isLoading, error,  } = useSWR('chatId', fetcher, {revalidateIfStale: true, refreshInterval: 10});
+    const { data: messages, isLoading, error,  } = useSWR('chatId', fetcher, {revalidateIfStale: true, refreshInterval: 5});
     return (
         <>
             <section className="flex justify-between items-center pb-4">

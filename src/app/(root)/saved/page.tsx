@@ -7,6 +7,7 @@ import Image from "next/image"
 const SavedPage = async () => {
 
     const savedItems = await getSavedItems();
+    
 
     return (
         <main className="flex flex-col gap-4">
@@ -14,7 +15,7 @@ const SavedPage = async () => {
                 <Heading text="Saved Posts and Flicks" icon="/icons/saved-white.svg" />
             </section>
             <section>
-                <Tabs defaultValue="post" className='mt-4'>
+                <Tabs defaultValue="posts" className='mt-4'>
                     <TabsList>
                         <TabsTrigger value="posts" className="w-[170px] flex items-center gap-4">
                             <Image
@@ -35,7 +36,7 @@ const SavedPage = async () => {
                             Flicks</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="posts" className="grid grid-cols-3 mt-4">
+                    <TabsContent value="posts" className="flex gap-6">
                         {savedItems?.map((item) => {
                             if (!item.flickId)
                                 return (
