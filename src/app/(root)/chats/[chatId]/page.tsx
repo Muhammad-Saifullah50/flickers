@@ -22,6 +22,7 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
         chatId={chat?.id}
         currentUser={currentUser!}
         otherUser={otherUser!}
+        key={chatId}
       />
     </main>
   )

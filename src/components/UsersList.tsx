@@ -11,9 +11,10 @@ const UsersList = ({ currentUserPromise, allUsersPromise }: UsersListProps) => {
 
     const currentUser = use(currentUserPromise)
     const allUsers = use(allUsersPromise)
+    const usersToDisplay = allUsers?.filter((user) => user.id !== currentUser?.id)
     return (
         <div className='flex flex-wrap gap-4 py-9'>
-            {allUsers && allUsers.filter((user) => user.id !== currentUser?.id).map((user) => (
+            {usersToDisplay && usersToDisplay.map((user) => (
                 <UserCard key={user.id} user={user} />
             ))}
         </div>

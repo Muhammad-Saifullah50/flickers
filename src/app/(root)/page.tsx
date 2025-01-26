@@ -1,5 +1,3 @@
-import { getFeedPosts } from "@/actions/post.actions";
-import { getCurrentUserFromDb } from "@/actions/user.actions";
 import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
 import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";

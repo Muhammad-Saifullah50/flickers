@@ -7,7 +7,7 @@ import Image from "next/image"
 const SavedPage = async () => {
 
     const savedItems = await getSavedItems();
-    
+
 
     return (
         <main className="flex flex-col gap-4">
@@ -37,7 +37,7 @@ const SavedPage = async () => {
                     </TabsList>
 
                     <TabsContent value="posts" className="flex gap-6">
-                        {savedItems?.map((item) => {
+                        {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
                             if (!item.flickId)
                                 return (
                                     <SavedPostFlickCard
@@ -45,11 +45,16 @@ const SavedPage = async () => {
                                         key={item.id}
                                     />
                                 )
-                        })}
+                        }) : (
+                            <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
+                                <p>No saved posts yet</p>
+                            </div>
+
+                        )}
                     </TabsContent>
 
-                    <TabsContent value="flicks" className="grid grid-cols-3 mt-4">
-                        {savedItems?.map((item) => {
+                    <TabsContent value="flicks" className="flex gap-6">
+                        {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
                             if (!item.postId)
                                 return (
                                     <SavedPostFlickCard
@@ -57,7 +62,11 @@ const SavedPage = async () => {
                                         flickId={item.flickId!}
                                         isFlick={true} />
                                 )
-                        })}
+                        }) : (
+                            <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
+                                <p>No saved flicks yet</p>
+                            </div>
+                        )}
                     </TabsContent>
                 </Tabs>
             </section>
