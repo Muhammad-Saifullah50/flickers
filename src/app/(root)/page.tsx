@@ -7,23 +7,8 @@ import { Suspense } from "react";
 
 export const experimental_ppr = true
 
-export default async function HomePage() {
+export default  function HomePage() {
 
-  const currentUser = await getCurrentUserFromDb();
-
-  let userhasFollowed;
-
-  if (!currentUser) {
-    userhasFollowed = false
-  } else if (currentUser && currentUser?.following?.length === 0) {
-    userhasFollowed = false
-  } else if (currentUser && currentUser?.following?.length > 0) {
-    userhasFollowed = true
-  } else {
-    userhasFollowed = false
-  }
-
-  const postsPromise = getFeedPosts(userhasFollowed);
 
   return (
     <main>
@@ -38,7 +23,7 @@ export default async function HomePage() {
           </div>
         }>
 
-          <FeedList postsPromise={postsPromise} currentUser={currentUser}/>
+          <FeedList/>
 
         </Suspense>
       </section>
