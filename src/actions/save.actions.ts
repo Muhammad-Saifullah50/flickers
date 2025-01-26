@@ -44,6 +44,17 @@ export const getSavedItems = async () => {
 
         return savedItems
     } catch (error) {
-console.error('error fetching saved items on server', error)    
+        console.error('error fetching saved items on server', error)
     }
+}
+
+export const UnsavePostAndFlick = async (saveId: string) => {
+
+    await prisma.save.delete({
+        where: {
+            id: saveId
+        }
+    });
+
+    revalidatePath('/saved')
 }

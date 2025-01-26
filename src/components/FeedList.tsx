@@ -1,20 +1,28 @@
-import { Comment, Like, Post, Save, User } from '@prisma/client'
-import { use } from 'react'
+import { getCurrentUserFromDb } from '@/actions/user.actions';
 import PostDetails from './PostDetails';
+import { getFeedPosts } from '@/actions/post.actions';
 
+const FeedList = async () => {
 
-type FeedListProps = {
-    postsPromise: Promise<(Post & { author: User, comments: Comment[], saves: Save[], likes: Like[] })[]>
+    const currentUser = await getCurrentUserFromDb();
 
-    currentUser: User | undefined
-}
-const FeedList = ({ postsPromise, currentUser }: FeedListProps) => {
+    let userhasFollowed;
 
-    const posts = use(postsPromise);
+    if (!currentUser) {
+        userhasFollowed = false
+    } else if (currentUser && currentUser?.following?.length === 0) {
+        userhasFollowed = false
+    } else if (currentUser && currentUser?.following?.length > 0) {
+        userhasFollowed = true
+    } else {
+        userhasFollowed = false
+    }
+
+    const posts = await getFeedPosts(userhasFollowed);
 
     return (
         <div>
-            {posts.length > 0 ?
+            {posts && posts?.length > 0 ?
                 (posts.map((post) => (
                     <PostDetails
                         key={post.id}

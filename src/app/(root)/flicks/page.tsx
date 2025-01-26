@@ -2,7 +2,8 @@ import Flicks from '@/components/Flicks';
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import QueryForm from '@/components/QueryForm'
-import React from 'react'
+import FlickSkeleton from '@/components/skeletons/FlickSkeleton';
+import React, { Suspense } from 'react'
 
 const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: string } }) => {
 
@@ -28,7 +29,12 @@ const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: stri
             </section>
 
             <section className='pt-10  gap-8 '>
-               <Flicks query={usableParams.flicks_query}/>
+                <Suspense fallback={
+                    <FlickSkeleton />
+                }>
+                    <Flicks query={usableParams.flicks_query} />
+                </Suspense>
+
             </section>
         </main>
     )

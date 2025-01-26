@@ -1,15 +1,18 @@
 import { Chat, User } from "@prisma/client"
 import ChatListItem from "./ChatListItem"
 import { getCurrentUserFromDb } from "@/actions/user.actions";
+import { use } from "react";
 
 
 type ChatListProps = {
-  chatList: (Chat & { users: User[] })[] | undefined
+  chatListPromise: Promise<(Chat & { users: User[] })[]>
+  currentUserPromise: Promise<User & {followedBy: User, following: User}>
 }
 
-const ChatsList = async ({ chatList }: ChatListProps) => {
+const ChatsList = ({ chatListPromise, currentUserPromise }: ChatListProps) => {
 
-  const currUser = await getCurrentUserFromDb();
+  const chatList = use(chatListPromise)
+  const currUser = use(currentUserPromise)
   return (
     <section>
       <ul>

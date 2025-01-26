@@ -30,7 +30,7 @@ const Flicks = async ({ query }: { query: string }) => {
 
             </TabsList>
 
-            <TabsContent value="foryou" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 w-full place-items-center py-8">
+            <TabsContent value="foryou" className="flex gap-10 flex-wrap py-8">
                 {flicks?.map((flick) => (
                     <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />
                 ))}
@@ -39,7 +39,7 @@ const Flicks = async ({ query }: { query: string }) => {
                 {followingFlicks?.length === 0 ? (
                     <p className="h-full flex items-center justify-center">No following flicks found</p>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 w-full place-items-center py-8">
+                    <div className="flex gap-10 flex-wrap py-8">
                         {popularFlicks?.map((flick) => (
                             <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
                     </div>
@@ -50,7 +50,7 @@ const Flicks = async ({ query }: { query: string }) => {
                     popularFlicks?.length === 0 ? (
                         <p className="h-full flex items-center justify-center">No popular flicks found</p>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 w-full place-items-center py-8">
+                        <div className="flex gap-10 flex-wrap py-8">
                             {popularFlicks?.map((flick) => (
                                 <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
                         </div>
@@ -63,7 +63,7 @@ const Flicks = async ({ query }: { query: string }) => {
                     mostViewedFlicks?.length === 0 ? (
                         <p className="h-full flex items-center justify-center">No most viewed flicks found</p>
                     ) : (
-                        <div  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-4 w-full place-items-center py-8">
+                        <div  className="flex gap-10 flex-wrap py-8">
                             {mostViewedFlicks?.map((flick) => (
                                 <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
                         </div>

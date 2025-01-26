@@ -8,13 +8,14 @@ const SavedPage = async () => {
 
     const savedItems = await getSavedItems();
 
+
     return (
         <main className="flex flex-col gap-4">
             <section>
                 <Heading text="Saved Posts and Flicks" icon="/icons/saved-white.svg" />
             </section>
             <section>
-                <Tabs defaultValue="post" className='mt-4'>
+                <Tabs defaultValue="posts" className='mt-4'>
                     <TabsList>
                         <TabsTrigger value="posts" className="w-[170px] flex items-center gap-4">
                             <Image
@@ -35,8 +36,8 @@ const SavedPage = async () => {
                             Flicks</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="posts" className="grid grid-cols-3 mt-4">
-                        {savedItems?.map((item) => {
+                    <TabsContent value="posts" className="flex gap-6">
+                        {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
                             if (!item.flickId)
                                 return (
                                     <SavedPostFlickCard
@@ -44,11 +45,16 @@ const SavedPage = async () => {
                                         key={item.id}
                                     />
                                 )
-                        })}
+                        }) : (
+                            <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
+                                <p>No saved posts yet</p>
+                            </div>
+
+                        )}
                     </TabsContent>
 
-                    <TabsContent value="flicks" className="grid grid-cols-3 mt-4">
-                        {savedItems?.map((item) => {
+                    <TabsContent value="flicks" className="flex gap-6">
+                        {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
                             if (!item.postId)
                                 return (
                                     <SavedPostFlickCard
@@ -56,7 +62,11 @@ const SavedPage = async () => {
                                         flickId={item.flickId!}
                                         isFlick={true} />
                                 )
-                        })}
+                        }) : (
+                            <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
+                                <p>No saved flicks yet</p>
+                            </div>
+                        )}
                     </TabsContent>
                 </Tabs>
             </section>
