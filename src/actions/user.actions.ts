@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
+import { revalidatePath } from "next/cache";
 
 export const getCurrentUserFromDb = async () => {
     try {
@@ -53,8 +54,8 @@ export const getDbUserById = async (id: string) => {
             await prisma.user.update({
                 where: {
                     id: user?.id
-                }, 
-                data:{
+                },
+                data: {
                     username: `@${user?.name.toLowerCase().replace(' ', '')}`
                 }
             })
@@ -108,3 +109,32 @@ export const getAllUsers = async () => {
     }
 }
 
+type updateProfileParams = {
+    name: string;
+    username: string;
+    email: string;
+    bio: string | undefined;
+    image: string | null;
+}
+export const updateProfile = async (data: updateProfileParams, userId: string) => {
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                name: data.name,
+                username: data.username,
+                email: data.email,
+                bio: data.bio,
+                image: data.image
+            }
+        });
+        revalidatePath('/settings')
+        return user;
+
+    } catch (error) {
+        console.error('Error updating profile:', error);
+
+    }
+}

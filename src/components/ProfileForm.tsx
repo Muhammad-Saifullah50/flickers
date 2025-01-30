@@ -14,6 +14,7 @@ import Loader from './Loader'
 import { Input } from './ui/input'
 import Image from 'next/image'
 import { Label } from './ui/label'
+import { updateProfile } from '@/actions/user.actions'
 
 interface ProfileFormProps {
     user: User
@@ -77,11 +78,17 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
             };
             console.log(dataToUpload, 'data')
 
-            await updateProfile(dataToUpload);
+           const updatedUser = await updateProfile(dataToUpload, user.id);
+            if (updatedUser) {
+                toast({
+                    description: 'Profile updated successfully',
+                    variant: 'default'
+                });
+            }
 
         }
 
-        
+
         catch (error) {
             console.error('Error creating post:', error);
             toast({
@@ -202,7 +209,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
                         type='submit'
                         disabled={loading}
                     >
-                        {loading ? <Loader variant='white' /> : 'Update Post'}
+                        {loading ? <Loader variant='white' /> : 'Update Profile'}
                     </Button>
                 </div>
             </form>
