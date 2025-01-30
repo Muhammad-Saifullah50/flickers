@@ -11,7 +11,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
     return (
         <Carousel 
         >
-            <CarouselContent className="flex justify-center items-center  w-full ">
+            <CarouselContent className="flex w-full ">
                 {items.map((item) => {
                     const isVideo = [".mp4", ".webm", ".mov", ".avi", ".mkv"].some(
                         (ext) => item.toLowerCase().endsWith(ext)
@@ -36,7 +36,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
                                     alt={item}
                                     width={700}
                                     height={700}
-                                    className="w-full object-fill h-[580px] rounded-lg max-sm:h-[400px] self-center "
+                                    className="max-sm:w-[300px] max-sm:h-[300px]  w-full object-fill h-[580px] rounded-l-lg"
                                 />
                             )}
                         </CarouselItem>

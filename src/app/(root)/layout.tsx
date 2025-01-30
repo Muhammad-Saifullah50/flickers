@@ -2,14 +2,10 @@ import LeftSidebar from "@/components/LeftSidebar"
 import MobileFooter from "@/components/MobileFooter"
 import MobileNavbar from "@/components/MobileNavbar"
 import RightSidebar from "@/components/RightSidebar"
-import { headers } from "next/headers"
 
 export const experimental_ppr = true;
 
 const homeLayout = async ({ children }: { children: React.ReactNode }) => {
-
-    //@ts-expect-error have to correct this 
-    const pathname = await headers().get('x-current-path')
 
     return (
         <main className={` bg-dark-1 flex flex-col sm:flex-row justify-between min-h-screen`}>
@@ -21,7 +17,7 @@ const homeLayout = async ({ children }: { children: React.ReactNode }) => {
                 {children}
             </div>
             <div className="hidden xl:flex fixed right-0 top-0">
-                <RightSidebar pathname={pathname} />
+                <RightSidebar />
             </div>
             <MobileFooter />
         </main>

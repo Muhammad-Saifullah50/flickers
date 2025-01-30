@@ -1,25 +1,11 @@
-import { getCurrentUserFromDb } from '@/actions/user.actions';
 import PostDetails from './PostDetails';
-import { getFeedPosts } from '@/actions/post.actions';
+import { use } from 'react';
+import { Post, User } from '@prisma/client';
 
-const FeedList = async () => {
+const FeedList = ({postsPromise, currentUser}: {postsPromise: Promise<Post[]>, currentUser: User | undefined}) => {
 
-    const currentUser = await getCurrentUserFromDb();
-
-    let userhasFollowed;
-
-    if (!currentUser) {
-        userhasFollowed = false
-    } else if (currentUser && currentUser?.following?.length === 0) {
-        userhasFollowed = false
-    } else if (currentUser && currentUser?.following?.length > 0) {
-        userhasFollowed = true
-    } else {
-        userhasFollowed = false
-    }
-
-    const posts = await getFeedPosts(userhasFollowed);
-
+  
+const posts = use(postsPromise)
     return (
         <div>
             {posts && posts?.length > 0 ?

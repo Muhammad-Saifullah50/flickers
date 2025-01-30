@@ -1,3 +1,5 @@
+import { getFeedPosts } from "@/actions/post.actions";
+import { getCurrentUserFromDb } from "@/actions/user.actions";
 import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
 import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
@@ -5,8 +7,23 @@ import { Suspense } from "react";
 
 export const experimental_ppr = true
 
-export default  function HomePage() {
+export default async function HomePage() {
 
+  const currentUser = await getCurrentUserFromDb();
+
+    let userhasFollowed;
+
+    if (!currentUser) {
+        userhasFollowed = false
+    } else if (currentUser && currentUser?.following?.length === 0) {
+        userhasFollowed = false
+    } else if (currentUser && currentUser?.following?.length > 0) {
+        userhasFollowed = true
+    } else {
+        userhasFollowed = false
+    }
+
+    const postsPromise = getFeedPosts(userhasFollowed);
 
   return (
     <main>
@@ -21,7 +38,7 @@ export default  function HomePage() {
           </div>
         }>
 
-          <FeedList/>
+          <FeedList postsPromise={postsPromise} currentUser={currentUser}/>
 
         </Suspense>
       </section>

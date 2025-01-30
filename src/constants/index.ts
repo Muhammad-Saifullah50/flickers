@@ -49,11 +49,13 @@ export const bottombarLinks = [
         icon: '/icons/settings.svg',
         route: '/settings',
         label: 'Settings',
+        whiteIcon: '/icons/settings-white.svg'
     },
     {
         icon: '/icons/logout.svg',
         route: '/logout',
         label: 'Logout',
+        whiteIcon: '/icons/logout.svg'
     }
 ]
 

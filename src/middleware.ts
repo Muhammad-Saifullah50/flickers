@@ -15,7 +15,6 @@ export async function middleware(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  response.headers.set('x-current-path', request.nextUrl.pathname)
 
   return response
 }

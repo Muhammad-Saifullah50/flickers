@@ -53,6 +53,8 @@ const LeftSidebar = async () => {
             link={item.route}
             label={item.label}
             icon={item.icon}
+            whiteIcon={item.whiteIcon}
+
           />
         ))}
       </ul>

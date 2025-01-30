@@ -23,13 +23,13 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
 
     return (
         <div className="relative">
-            {isActive && 
-            <span className="bg-purple-primary w-4 h-[63px] rounded-r-full absolute -left-8" />}
+            {isActive &&
+                <span className="bg-purple-primary w-4 h-[63px] rounded-r-full absolute -left-8" />}
             <Link
                 href={isLogoutLink ? '#' : link}
                 onClick={() => {
                     if (isLogoutLink) {
-                       signoutOnServer();
+                        signoutOnServer();
                     }
                 }}
             >
@@ -39,7 +39,7 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
 
                     <Image
         //@ts-expect-error have to correct this 
-        src={isActive ? whiteIcon : icon}
+        src={isActive ? whiteIcon : icon }
                         width={20}
                         height={20}
                         alt="icon"
