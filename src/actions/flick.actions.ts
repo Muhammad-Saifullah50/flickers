@@ -169,6 +169,8 @@ export const getFlickById = async (flickId: string) => {
         return flick
     } catch (error) {
         console.error('Error getting flick by id on server:', error);
+        throw error
+
     }
 }
 
@@ -200,5 +202,7 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
         return [prevFlick, nextFlick]
     } catch (error) {
         console.error('Error getting prev and next flicks on server:', error);
+        throw error
+
     }
 }

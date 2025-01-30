@@ -31,6 +31,7 @@ export const getChatList = async () => {
         return chatList
     } catch (error) {
         console.error('Error fetching chat list on server:', error)
+        throw error
     }
 }
 
@@ -108,6 +109,8 @@ export const getChatById = async (chatId: string) => {
 
     } catch (error) {
         console.error('Error fetching chat by id on server:', error)
+        throw error
+
     }
 }
 

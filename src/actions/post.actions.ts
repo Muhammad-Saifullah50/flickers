@@ -114,6 +114,8 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
 
     } catch (error) {
         console.error('Error fetching post feed on server:', error);
+        throw error
+
     }
 }
 
