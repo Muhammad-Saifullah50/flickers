@@ -8,7 +8,6 @@ const SavedPage = async () => {
 
     const savedItems = await getSavedItems();
 
-
     return (
         <main className="flex flex-col gap-4">
             <section>

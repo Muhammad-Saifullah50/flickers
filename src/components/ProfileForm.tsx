@@ -23,17 +23,17 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
 
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const [image, setImage] = useState<string | null>(user.image || '/icons/dummy-user.png');
+    const [image, setImage] = useState<string | null>(user?.image || '/icons/dummy-user.png');
     const [imageFile, setImageFile] = useState<File | null>(null);
 
     const form = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            name: user.name,
-            username: user.username || '',
-            email: user.email || '',
-            bio: user.bio || '',
-            image: user.image || '',
+            name: user?.name,
+            username: user?.username || '',
+            email: user?.email || '',
+            bio: user?.bio || '',
+            image: user?.image || '',
         }
     })
 
@@ -43,7 +43,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
             setLoading(true);
 
             // Upload file to Cloudinary first
-            let uploadedUrl = user.image;
+            let uploadedUrl = user?.image;
 
 
             if (imageFile) {
