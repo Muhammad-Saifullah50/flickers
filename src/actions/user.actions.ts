@@ -38,6 +38,7 @@ export const getCurrentUserFromDb = async () => {
         return user;
     } catch (error) {
         console.error('Error fetching current user:', error);
+        throw error
     }
 }
 
@@ -82,6 +83,8 @@ export const getDbUserByIdWithDetails = async (id: string) => {
         return user
     } catch (error) {
         console.error('Error fetching current user on server:', error);
+        throw error
+
     }
 }
 
@@ -105,6 +108,7 @@ export const getAllUsers = async () => {
         return users;
     } catch (error) {
         console.error('Error fetching all users:', error);
+        throw error
 
     }
 }

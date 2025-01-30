@@ -65,6 +65,7 @@ export const getPostById = async (id: string) => {
         return post
     } catch (error) {
         console.error('Error fetching post:', error);
+        throw error
 
     }
 }
@@ -180,6 +181,8 @@ export const getPopularTodayPostsAndFlicks = async () => {
         return [...posts, ...flicks];
     } catch (error) {
         console.error('error getting popuklar posts and reels', error)
+        throw error
+
     }
 }
 
@@ -214,5 +217,7 @@ export const getPostsandFlicksByHashtags = async (query: string) => {
         return [...posts, ...flicks]
     } catch (error) {
         console.error('error fetching by hashtags', error)
+        throw error
+
     }
 }

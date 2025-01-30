@@ -45,6 +45,7 @@ export const getSavedItems = async () => {
         return savedItems
     } catch (error) {
         console.error('error fetching saved items on server', error)
+        throw error
     }
 }
 

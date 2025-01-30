@@ -113,7 +113,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
                                 <div className='flex items-center gap-4'>
                                     <Image
                                         src={image!}
-                                        alt={user.name}
+                                        alt={user?.name}
                                         className='w-20 h-20 rounded-full'
                                         width={80}
                                         height={80}
