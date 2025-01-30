@@ -5,7 +5,7 @@ const profileSchema = z.object({
     username: z.string().min(1, "Username is required"),
     email: z.string().email("Invalid email address"),
     bio: z.string().optional(),
-    image: z.string().url("Invalid URL").optional(),
+    image: z.string().or(z.custom<File>()).optional(),
 });
 
 export default profileSchema;

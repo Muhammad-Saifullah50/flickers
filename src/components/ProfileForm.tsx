@@ -13,6 +13,7 @@ import { Button } from './ui/button'
 import Loader from './Loader'
 import { Input } from './ui/input'
 import Image from 'next/image'
+import { Label } from './ui/label'
 
 interface ProfileFormProps {
     user: User
@@ -21,6 +22,8 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
 
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [image, setImage] = useState<string | null>(user.image || '/icons/dummy-user.png');
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const form = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
@@ -35,42 +38,50 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
 
 
     const handleFormSubmit = async (data: z.infer<typeof profileSchema>) => {
-
         try {
             setLoading(true);
 
             // Upload file to Cloudinary first
             let uploadedUrl = user.image;
-            try {
+
+
+            if (imageFile) {
                 const formData = new FormData();
+                formData.append('file', imageFile);
+                try {
 
-                const request = await fetch('/api/upload', {
-                    method: 'POST',
+                    const request = await fetch('/api/upload', {
+                        method: 'POST',
 
-                    body: formData,
-                });
+                        body: formData,
+                    });
 
-                const url = await request.json();
-                uploadedUrl = url.data
-
-            } catch (error) {
-                console.error('Error uploading file:', error);
-                toast({
-                    description: `Error uploading file`,
-                    variant: 'destructive'
-                });
+                    const url = await request.json();
+                    uploadedUrl = url.data
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                    toast({
+                        description: `Error uploading file`,
+                        variant: 'destructive'
+                    });
+                }
             }
 
             // Update the form data with Cloudinary URLs
-            const formData = {
+            const dataToUpload = {
                 name: data.name,
                 username: data.username,
                 email: data.email,
                 bio: data.bio,
                 image: uploadedUrl
             };
+            console.log(dataToUpload, 'data')
+
+            await updateProfile(dataToUpload);
+
         }
-        // update profile
+
+        
         catch (error) {
             console.error('Error creating post:', error);
             toast({
@@ -92,13 +103,34 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
                     render={({ field }) => (
                         <FormItem>
                             <FormControl>
-                                <Image
-                                    src={user.image || '/icons/dummyuser.png'} alt={user.name}
-                                    className='w-20 h-20 rounded-full' />
-                                <Input
-                                    className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
-                                !bg-dark-3" {...field}
-                                    type='file' />
+                                <div className='flex items-center gap-4'>
+                                    <Image
+                                        src={image!}
+                                        alt={user.name}
+                                        className='w-20 h-20 rounded-full'
+                                        width={80}
+                                        height={80}
+                                    />
+                                    <Label htmlFor='upload' className='text-[#0095F6] cursor-pointer'>Change Profile Photo</Label>
+                                    <Input
+                                        id='upload'
+                                        className="hidden"
+                                        type='file'
+                                        accept='image/*'
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const previewUrl = URL.createObjectURL(file);
+                                                setImage(previewUrl);
+                                                setImageFile(file);
+
+                                                field.onChange(file);
+                                                form.setValue('image', file);
+
+                                                return () => URL.revokeObjectURL(previewUrl);
+                                            }
+                                        }} />
+                                </div>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
