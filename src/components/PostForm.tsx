@@ -84,6 +84,7 @@ const PostForm = ({ user, post, isEditing }: PostFormProps) => {
                 caption: data.caption,
                 altText: data.altText,
                 assets: [...uploadedUrls, ...existingFiles],
+            // have to remove this authorif field from here and add it in the backend server action, so that i can test the ppr 
                 authorId: user.id || '',
                 hashtags: data.hashtags
             };
