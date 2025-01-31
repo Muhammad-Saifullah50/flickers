@@ -7,16 +7,12 @@ export async function middleware(request: NextRequest) {
 
   const url = request.nextUrl.clone()
 
-  // const session = await auth();
+  const session = await auth();
 
-  // if (!session?.user) {
-  //   return NextResponse.redirect(new URL('/signin', url))
-  // }
-   const user = await getCurrentUserFromDb();
-
-  if (!user) {
+  if (!session?.user) {
     return NextResponse.redirect(new URL('/signin', url))
   }
+  
 
   const response = NextResponse.next();
 
@@ -24,6 +20,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats',]
-  // matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats', '/create',]
+
+  matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats', '/create','/settings']
 }
