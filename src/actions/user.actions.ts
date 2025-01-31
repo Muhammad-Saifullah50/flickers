@@ -10,7 +10,7 @@ export const getCurrentUserFromDb = async () => {
         const session = await auth();
         const email = session?.user?.email
         if (!email) {
-            throw new Error('Not authenticated');
+            return null;
         }
 
         const user = await prisma.user.findUnique({
@@ -35,7 +35,6 @@ export const getCurrentUserFromDb = async () => {
         return user;
     } catch (error) {
         console.error('Error fetching current user:', error);
-        throw error
     }
 }
 

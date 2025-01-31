@@ -5,8 +5,6 @@ import Heading from "@/components/Heading";
 import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
 import { Suspense } from "react";
 
-export const experimental_ppr = true
-
 export default async function HomePage() {
 
   const currentUser = await getCurrentUserFromDb();
