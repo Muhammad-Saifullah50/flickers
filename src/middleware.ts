@@ -8,8 +8,6 @@ export async function middleware(request: NextRequest) {
 
   const session = await auth();
 
-
-
   if (!session?.user) {
     return NextResponse.redirect(new URL('/signin', url))
   }
@@ -20,5 +18,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats', '/create',]
+  matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats',]
+  // matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats', '/create',]
 }
