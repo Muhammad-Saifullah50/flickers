@@ -15,11 +15,10 @@ import { createPost, updatePost } from '@/actions/post.actions'
 import { Post, User } from '@prisma/client'
 
 interface PostFormProps {
-    user: User
     post?: Post
     isEditing?: boolean
 }
-const PostForm = ({ user, post, isEditing }: PostFormProps) => {
+const PostForm = ({  post, isEditing }: PostFormProps) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
@@ -84,8 +83,6 @@ const PostForm = ({ user, post, isEditing }: PostFormProps) => {
                 caption: data.caption,
                 altText: data.altText,
                 assets: [...uploadedUrls, ...existingFiles],
-            // have to remove this authorif field from here and add it in the backend server action, so that i can test the ppr 
-                authorId: user.id || '',
                 hashtags: data.hashtags
             };
 

@@ -39,11 +39,11 @@ export default async function CreatePost() {
         </TabsList>
 
         <TabsContent value="post">
-          <PostForm user={user!} />
+          <PostForm />
         </TabsContent>
 
         <TabsContent value="flick">
-          <FlickForm user={user!} />
+          <FlickForm/>
         </TabsContent>
       </Tabs>
 

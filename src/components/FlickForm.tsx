@@ -15,11 +15,10 @@ import { createFlick, updateFlick } from '@/actions/flick.actions'
 import FlickUploader from './FlickUploader'
 
 interface PostFormProps {
-    user: User
     flick?: Flick
     isEditing?: boolean
 }
-const FlickForm = ({ user, flick, isEditing }: PostFormProps) => {
+const FlickForm = ({ flick, isEditing }: PostFormProps) => {
 
     const [uploadedFile, setUploadedFile] = useState<string>();
     const [file, setFile] = useState<File>();
@@ -83,7 +82,6 @@ const FlickForm = ({ user, flick, isEditing }: PostFormProps) => {
                 caption: data.caption,
                 altText: data.altText,
                 videoUrl: uploadedUrl,
-                authorId: user.id || '',
                 hashtags: data.hashtags
             };
 

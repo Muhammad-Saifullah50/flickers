@@ -8,19 +8,19 @@ interface createPostParams {
     caption: string;
     altText: string;
     assets: string[];
-    authorId: string;
     hashtags?: string
 }
 
 export const createPost = async (data: createPostParams) => {
     try {
+        const user = await getCurrentUserFromDb();
         const post = await prisma.post.create({
             data: {
                 caption: data.caption,
                 altText: data.altText,
                 shares: 0,
                 assets: data.assets,
-                authorId: data.authorId,
+                authorId: user.id,
                 hashtags: data.hashtags || ''
             },
             include: {

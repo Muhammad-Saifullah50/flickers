@@ -31,10 +31,7 @@ export const getCurrentUserFromDb = async () => {
             }
         });
 
-        if (!user) {
-            throw new Error('User not found');
-        }
-
+        if (!user) return null;
         return user;
     } catch (error) {
         console.error('Error fetching current user:', error);

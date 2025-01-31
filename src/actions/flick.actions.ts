@@ -7,18 +7,18 @@ interface createFlickParams {
     caption: string;
     altText: string;
     videoUrl: string;
-    authorId: string;
     hashtags?: string
 }
 
 export const createFlick = async (data: createFlickParams) => {
     try {
+        const user = await getCurrentUserFromDb();
         const flick = await prisma.flick.create({
             data: {
                 caption: data.caption,
                 altText: data.altText,
                 videoUrl: data.videoUrl,
-                authorId: data.authorId,
+                authorId: user.id,
                 hashtags: data.hashtags || ''
             },
             include: {

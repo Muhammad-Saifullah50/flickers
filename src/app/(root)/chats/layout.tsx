@@ -15,6 +15,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
     <main className="flex gap-4">
       <section className="flex flex-col gap-4 w-2/5">
         <Heading text='All Chats' icon='/icons/chats-white.svg' />
+        
         <Suspense fallback={
           <div className='flex flex-col gap-4 p-4'>
             {Array.from({ length: 4 }).map((_, index) => (
