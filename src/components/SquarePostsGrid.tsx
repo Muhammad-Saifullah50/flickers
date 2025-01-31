@@ -1,24 +1,28 @@
-import { Flick, Post, User } from '@prisma/client'
+import { Post, User } from '@prisma/client'
 import { use } from 'react'
-import FlickCard from './FlickCard';
-import PostCard from './PostCard';
+import PostCard from './PostCard'
 
-type Item = (Post & { author: User })
+type Item = Post & { author: User }
 
 type SquareGridProps = {
-    items: Item[]
+    itemsPromise: Promise<Item[]>
 }
-const SquarePostsGrid = ({ items }: SquareGridProps) => {
+
+const SquarePostsGrid = ({ itemsPromise }: SquareGridProps) => {
+
+    const items = use(itemsPromise)
 
     return (
-
         <section className='flex flex-wrap gap-5'>
-            {items?.map((item) => {
+            {items?.map((item) => (
 
-                return (
-                    <PostCard post={item} key={item.id} extraImageClasses='!w-[330px] !h-[315px]' />
-                )
-            })}
+                <PostCard
+                    post={item}
+                    key={item.id}
+                    extraImageClasses='!w-[330px] !h-[315px]'
+                />
+
+            ))}
         </section>
     )
 }

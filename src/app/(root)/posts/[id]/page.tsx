@@ -1,7 +1,9 @@
 import { getPostById, getRelatedOrMoreUserOrLatestPosts } from "@/actions/post.actions"
 import { getCurrentUserFromDb } from "@/actions/user.actions";
+import Heading from "@/components/Heading";
 import PostDetails from "@/components/PostDetails";
 import PostInfoSkeleton from "@/components/skeletons/PostInfoSkeleton";
+import SquarePostsGridSkeleton from "@/components/skeletons/SquarePostsGridSkeleton";
 import SquarePostsGrid from "@/components/SquarePostsGrid";
 
 import { notFound } from "next/navigation"
@@ -15,7 +17,7 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
     if (!post) return notFound();
 
     const user = await getCurrentUserFromDb()
-    const morePosts = await getRelatedOrMoreUserOrLatestPosts(post)
+    const morePostsPromise = getRelatedOrMoreUserOrLatestPosts(post)
 
     return (
         <main className="w-full flex flex-col gap-10">
@@ -27,13 +29,10 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
                 />
             </Suspense>
 
-            <h2>More  Posts</h2>
-
+            <Heading text="More Posts" />
             <section>
-                <Suspense fallback={<div>loading</div>}>
-                   {morePosts && (
-                        <SquarePostsGrid items={morePosts} />
-                   )}
+                <Suspense fallback={<SquarePostsGridSkeleton />}>
+                    <SquarePostsGrid itemsPromise={morePostsPromise} />
                 </Suspense>
             </section>
         </main>

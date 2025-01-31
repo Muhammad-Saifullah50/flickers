@@ -143,7 +143,7 @@ export const updatePost = async (postId: string, data: createPostParams) => {
 export const deletePost = async (postId: string) => {
 
     try {
-        await prisma.post.delete({
+       await prisma.post.delete({
             where: {
                 id: postId
             }
@@ -225,10 +225,11 @@ export const getPostsandFlicksByHashtags = async (query: string) => {
     }
 }
 
-export const getMoreUserPosts = async (userId: string) => {
+export const getMoreUserPosts = async (userId: string, postId:string) => {
     try {
         const posts = await prisma.post.findMany({
             where: {
+                id: {not: postId},
                 authorId: userId
             },
             include: {
@@ -246,10 +247,12 @@ export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
     // if no related posts are found it will return more posts by the same author
     // if no more posts by the author are found it will return the latest posts
 
-    let posts: (Post & {author: User})[] | undefined;
+    let posts: (Post & { author: User })[] | undefined;
     try {
         posts = await prisma.post.findMany({
+    
             where: {
+                id: {not: post.id},
                 OR: [
                     {
                         hashtags: {
@@ -258,12 +261,12 @@ export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
                     },
                     {
                         caption: {
-                            contains: post.caption || ''
+                            contains: post.caption
                         }
                     },
                     {
                         altText: {
-                            contains: post.altText || ''
+                            contains: post.altText 
                         }
                     }
                 ]
@@ -274,15 +277,15 @@ export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
             },
             take: 4
         });
-
         if (posts.length === 0) {
-            posts = await getMoreUserPosts(post.authorId)
+            posts = await getMoreUserPosts(post.authorId, post.id)
+            return posts
         }
-
         if (posts?.length === 0) {
             posts = await getFeedPosts(false)
-        }
 
+            return posts
+        }
         return posts
     } catch (error) {
         console.error('error fetching related posts', error)
