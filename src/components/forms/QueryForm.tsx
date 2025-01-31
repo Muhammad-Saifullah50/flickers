@@ -1,6 +1,6 @@
 
 import Form from 'next/form'
-import { Input } from './ui/input'
+import { Input } from '../ui/input'
 import Image from 'next/image'
 
 type QueryFormProps = {

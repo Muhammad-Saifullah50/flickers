@@ -1,6 +1,6 @@
 
 import React from 'react'
-import PostForm from '@/components/PostForm'
+import PostForm from '@/components/forms/PostForm'
 import Heading from '@/components/Heading'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import FlickForm from '@/components/FlickForm'

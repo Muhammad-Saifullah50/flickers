@@ -1,6 +1,6 @@
 
 import React from 'react'
-import PostForm from '@/components/PostForm'
+import PostForm from '@/components/forms/PostForm'
 import Heading from '@/components/Heading'
 import { getPostById } from '@/actions/post.actions'
 

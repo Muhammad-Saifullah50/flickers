@@ -19,7 +19,7 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
             <video src={post.assets[0]}
                 controls={false}
                 className='rounded-3xl w-full h-full'
-                onClick={() => router.push(`/posts/${post.id}`)}
+                onClick={() => router.push(`/post-modal/${post.id}`)}
             />
         ) : (
             <Image
@@ -28,7 +28,7 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
                 height={500}
                 alt={post.altText}
                 className={`rounded-3xl w-full h-full min-w-[200px] min-h-[200px] ${extraImageClasses}`}
-                onClick={() => router.push(`/posts/${post.id}`)}
+                onClick={() => router.push(`/post-modal/${post.id}`)}
             />
         )}
 

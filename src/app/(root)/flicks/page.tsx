@@ -1,7 +1,7 @@
 import Flicks from '@/components/Flicks';
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
-import QueryForm from '@/components/QueryForm'
+import QueryForm from '@/components/forms/QueryForm'
 import FlickSkeleton from '@/components/skeletons/FlickSkeleton';
 import React, { Suspense } from 'react'
 

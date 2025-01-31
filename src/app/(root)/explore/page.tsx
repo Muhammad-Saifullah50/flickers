@@ -2,7 +2,7 @@ import { getPopularTodayPostsAndFlicks, getPostsandFlicksByHashtags } from '@/ac
 import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import PostsGrid from '@/components/PostsGrid';
-import QueryForm from '@/components/QueryForm'
+import QueryForm from '@/components/forms/QueryForm'
 import GridSkeleton from '@/components/skeletons/GridSkeleton';
 import { Suspense } from 'react';
 
