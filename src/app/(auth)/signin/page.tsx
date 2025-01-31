@@ -1,11 +1,12 @@
 
 import AuthForm from "@/components/AuthForm"
 
-export default async function SignInPage() {
+export default async function SignInPage({ searchParams }: { searchParams: { callbackUrl: string } }) {
 
+  const {callbackUrl} = await searchParams;
   return (
     <AuthForm
-      callbackUrl={'/'}
+      callbackUrl={callbackUrl}
       type="signin" />
   )
 }
