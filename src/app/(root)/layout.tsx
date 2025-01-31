@@ -13,7 +13,10 @@ const homeLayout = async ({ children }: { children: React.ReactNode }) => {
                 <LeftSidebar />
             </div>
             <div className="w-full flex-1 sm:ml-[272px] xl:mr-[465px] p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 ">
+                <div className="mx-auto max-w-4xl">
+
                 {children}
+                </div>
             </div>
             <div className="hidden xl:flex fixed right-0 top-0">
                 <RightSidebar />

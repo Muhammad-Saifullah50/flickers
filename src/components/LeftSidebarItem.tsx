@@ -1,7 +1,9 @@
 'use client'
 
 import { signoutOnServer } from "@/actions/auth.actions";
+import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,8 +23,10 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
 
     const isLogoutLink = link === '/logout';
 
+    const session = useSession();
+
     return (
-        <div className="relative">
+        <div className={`${isLogoutLink && !session && 'hidden'} relative`}>
             {isActive &&
                 <span className="bg-purple-primary w-4 h-[63px] rounded-r-full absolute -left-8" />}
             <Link
