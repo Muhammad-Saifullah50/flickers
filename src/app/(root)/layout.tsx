@@ -3,7 +3,6 @@ import MobileFooter from "@/components/MobileFooter"
 import MobileNavbar from "@/components/MobileNavbar"
 import RightSidebar from "@/components/RightSidebar"
 
-export const experimental_ppr = true;
 
 const homeLayout = async ({ children }: { children: React.ReactNode }) => {
 
