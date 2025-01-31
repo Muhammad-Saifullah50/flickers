@@ -25,8 +25,10 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
 
     const session = useSession();
 
+    const shouldBeHidden = isLogoutLink && !session.data;
+
     return (
-        <div className={`${isLogoutLink && !session && 'hidden'} relative`}>
+        <div className={`${shouldBeHidden && 'hidden'} relative`}>
             {isActive &&
                 <span className="bg-purple-primary w-4 h-[63px] rounded-r-full absolute -left-8" />}
             <Link

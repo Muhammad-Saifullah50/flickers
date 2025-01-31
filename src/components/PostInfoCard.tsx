@@ -110,7 +110,8 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
             </section>
 
 
-            {userId && <section className={"flex flex-col gap-4"}>
+            {userId && 
+            <section className={"flex flex-col gap-4"}>
                 <Link href={`/posts/${post.id}`}>
                     <section className="flex items-center justify-between ">
                         <div className="flex items-center justify-start gap-4">

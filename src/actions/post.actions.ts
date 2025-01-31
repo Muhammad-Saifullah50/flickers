@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserFromDb } from "./user.actions";
 import { revalidatePath } from "next/cache";
+import { Post, User } from "@prisma/client";
 
 interface createPostParams {
     caption: string;
@@ -54,7 +55,7 @@ export const getPostById = async (id: string) => {
                                 createdAt: 'desc'
                             }
                         }
-                        
+
                     }
                 },
                 saves: true,
@@ -79,8 +80,8 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
             const posts = await prisma.post.findMany({
                 where: {
                     // correct typeerror
-        //@ts-expect-error have to correct this 
-        authorId: currUser.following.id
+                    //@ts-expect-error have to correct this 
+                    authorId: currUser.following.id
                 },
                 orderBy: {
                     createdAt: 'desc'
@@ -223,3 +224,69 @@ export const getPostsandFlicksByHashtags = async (query: string) => {
 
     }
 }
+
+export const getMoreUserPosts = async (userId: string) => {
+    try {
+        const posts = await prisma.post.findMany({
+            where: {
+                authorId: userId
+            },
+            include: {
+                author: true
+            }
+        });
+        return posts
+    } catch (error) {
+        console.error('error fetching more user posts', error)
+
+    }
+}
+export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
+    // this function will search for related posts 
+    // if no related posts are found it will return more posts by the same author
+    // if no more posts by the author are found it will return the latest posts
+
+    let posts: (Post & {author: User})[] | undefined;
+    try {
+        posts = await prisma.post.findMany({
+            where: {
+                OR: [
+                    {
+                        hashtags: {
+                            contains: post.hashtags || ''
+                        }
+                    },
+                    {
+                        caption: {
+                            contains: post.caption || ''
+                        }
+                    },
+                    {
+                        altText: {
+                            contains: post.altText || ''
+                        }
+                    }
+                ]
+
+            },
+            include: {
+                author: true
+            },
+            take: 4
+        });
+
+        if (posts.length === 0) {
+            posts = await getMoreUserPosts(post.authorId)
+        }
+
+        if (posts?.length === 0) {
+            posts = await getFeedPosts(false)
+        }
+
+        return posts
+    } catch (error) {
+        console.error('error fetching related posts', error)
+        return []
+    }
+}
+

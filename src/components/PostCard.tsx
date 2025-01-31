@@ -3,9 +3,12 @@ import { Like, Post, User } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
 
-const PostCard = ({ post }: { post: Post & { author: User, likes: Like[] } }) => {
+type PostCardProps = {
+    post: Post & { author: User, likes: Like[] }
+    extraImageClasses?: string
+}
+const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
 
     const router = useRouter();
 
@@ -24,7 +27,7 @@ const PostCard = ({ post }: { post: Post & { author: User, likes: Like[] } }) =>
                 width={500}
                 height={500}
                 alt={post.altText}
-                className='rounded-3xl w-full h-full min-w-[200px] min-h-[200px]'
+                className={`rounded-3xl w-full h-full min-w-[200px] min-h-[200px] ${extraImageClasses}`}
                 onClick={() => router.push(`/posts/${post.id}`)}
             />
         )}

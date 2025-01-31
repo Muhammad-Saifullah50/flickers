@@ -10,6 +10,7 @@ import { commentSchema } from "@/validations/commentSchema"
 import { z } from "zod"
 import { createCommentOrReply } from "@/actions/comments.actons"
 import { useSession } from "next-auth/react"
+import CommentFormSkeleton from "./skeletons/CommentFormSkeleton"
 
 interface PostCommentProps {
     author: User
@@ -31,12 +32,14 @@ const PostComment = ({ author, postId, isReply, parentCommentId, setisReplying }
 
     const session = useSession();
 
-    // todo: show skeleton for laofing state
-    if (session.status !== 'authenticated') {
-        return (
-            <span>Please login to comment</span>
-        )
+    if (session.status === 'loading') {
+        return <CommentFormSkeleton />
     }
+    if (session.status === 'unauthenticated') {
+        return null;
+    }
+
+
 
     const onSubmit = async (data: z.infer<typeof commentSchema>) => {
         try {
