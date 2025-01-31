@@ -35,6 +35,7 @@ export const getCurrentUserFromDb = async () => {
         return user;
     } catch (error) {
         console.error('Error fetching current user:', error);
+        throw error
     }
 }
 

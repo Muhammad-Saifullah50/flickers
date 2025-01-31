@@ -5,6 +5,8 @@ import Heading from "@/components/Heading"
 import ChatListItemSkeleton from "@/components/skeletons/ChatListItemSkeleton"
 import { Suspense } from "react"
 
+export const dynamic = 'force-dynamic';
+
 const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 
   const chatListPromise = getChatList()

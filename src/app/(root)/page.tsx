@@ -7,21 +7,26 @@ import { Suspense } from "react";
 
 export default async function HomePage() {
 
-  const currentUser = await getCurrentUserFromDb();
+  let currentUser = null;
+  let userHasFollowed = false;
 
-    let userhasFollowed;
+  try {
+    currentUser = await getCurrentUserFromDb();
 
-    if (!currentUser) {
-        userhasFollowed = false
-    } else if (currentUser && currentUser?.following?.length === 0) {
-        userhasFollowed = false
-    } else if (currentUser && currentUser?.following?.length > 0) {
-        userhasFollowed = true
-    } else {
-        userhasFollowed = false
-    }
+  } catch (error) {
+    console.error('User not authenticated', error);
+  }
 
-    const postsPromise = getFeedPosts(userhasFollowed);
+  if (!currentUser) {
+    userHasFollowed = false
+  } else if (currentUser && currentUser?.following?.length === 0) {
+    userHasFollowed = false
+  } else if (currentUser && currentUser?.following?.length > 0) {
+    userHasFollowed = true
+  } else {
+    userHasFollowed = false
+  }
+  const postsPromise = getFeedPosts(userHasFollowed);
 
   return (
     <main>
@@ -36,7 +41,7 @@ export default async function HomePage() {
           </div>
         }>
 
-          <FeedList postsPromise={postsPromise} currentUser={currentUser}/>
+          <FeedList postsPromise={postsPromise} currentUser={currentUser} />
 
         </Suspense>
       </section>

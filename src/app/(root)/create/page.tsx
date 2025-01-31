@@ -7,7 +7,7 @@ import FlickForm from '@/components/FlickForm'
 import Image from 'next/image'
 
 export const createPage = () => {
-console.log('Create being rendered')
+
   return (
     <section>
       <Heading text='Create a Post' icon='/icons/create-white.svg' />

@@ -3,8 +3,6 @@ import PostDetails from "@/components/PostDetails";
 
 import { notFound } from "next/navigation"
 
-export const experimental_ppr = true
-
 const PostPage = async ({ params }: { params: { id: string } }) => {
 
     const { id } = await params
