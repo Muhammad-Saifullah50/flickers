@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { auth } from './lib/auth'
+import { getCurrentUserFromDb } from './actions/user.actions';
 
 export async function middleware(request: NextRequest) {
 
   const url = request.nextUrl.clone()
 
-  const session = await auth();
+  // const session = await auth();
 
-  if (!session?.user) {
+  // if (!session?.user) {
+  //   return NextResponse.redirect(new URL('/signin', url))
+  // }
+   const user = await getCurrentUserFromDb();
+
+  if (!user) {
     return NextResponse.redirect(new URL('/signin', url))
   }
 
