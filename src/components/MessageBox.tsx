@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React from 'react'
-import SendMessageForm from './SendMessageForm'
+import SendMessageForm from '@/components/forms/SendMessageForm'
 import { User } from '@prisma/client'
 import { getChatById } from '@/actions/chat.actions'
 import Messages from './Messages'

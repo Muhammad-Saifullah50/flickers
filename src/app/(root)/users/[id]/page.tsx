@@ -21,8 +21,8 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
     const isOwner = currentUser?.id === user?.id
 
-    const posts = await getPostsByUserId(id);
-    const flicks = await getFlicksByUserId(id)
+    const postsPromise =  getPostsByUserId(id);
+    const flicksPromise =  getFlicksByUserId(id)
 
 
     return (
@@ -86,7 +86,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
             </section>
 
             <section>
-                <PostTabs posts={posts} flicks={flicks} />
+                <PostTabs postsPromise={postsPromise} flicksPromise={flicksPromise} />
             </section>
         </main>
     )

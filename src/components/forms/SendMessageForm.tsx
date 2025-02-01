@@ -1,9 +1,9 @@
 'use client';
 import Image from 'next/image'
 import React, { useState } from 'react'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Form, FormControl, FormField, FormItem } from './ui/form'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { Form, FormControl, FormField, FormItem } from '../ui/form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';

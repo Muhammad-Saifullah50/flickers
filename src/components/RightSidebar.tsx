@@ -66,7 +66,7 @@ const RightSidebar = async () => {
           </div>
 
           <div className="relative flex flex-col gap-4 p-10 items-center justify-center">
-            <Heading text="Top posts by you" className="font-semibold text-xl" />
+          <Heading text="Top posts by you" className="!font-semibold !text-xl" />
 
             <Suspense fallback={
               <div className='flex flex-wrap gap-4 py-9'>
@@ -76,7 +76,7 @@ const RightSidebar = async () => {
               </div>
             }>
               {topPosts ? topPosts?.map((post) => (
-                <PostCard key={post.id} post={post} extraImageClasses="!w-[330px] !h-[315px]" />
+                <PostCard key={post.id} post={post} extraImageClasses="!w-[250px] !h-[250px]" />
               )) :
                 <p>
                   You havent created any posts yet
@@ -92,3 +92,5 @@ const RightSidebar = async () => {
 }
 
 export default RightSidebar
+
+// have to make this a client component

@@ -1,5 +1,5 @@
 
-import AuthForm from "@/components/AuthForm"
+import AuthForm from "@/components/forms/AuthForm"
 
 export default async function SignInPage({ searchParams }: { searchParams: { callbackUrl: string } }) {
 

@@ -12,7 +12,7 @@ interface PostTabsProps {
 const PostTabs = ({ postsPromise, flicksPromise }: PostTabsProps) => {
 
     return (
-        <Tabs defaultValue="posts" className="w-[400px]">
+        <Tabs defaultValue="posts">
             <TabsList>
                 <TabsTrigger value="posts" className="w-[170px] flex items-center gap-4">
                     <Image
@@ -34,9 +34,11 @@ const PostTabs = ({ postsPromise, flicksPromise }: PostTabsProps) => {
             </TabsList>
 
             <TabsContent value="posts">
-                <SquarePostsGrid posts={posts} />
+                <SquarePostsGrid itemsPromise={postsPromise} />
             </TabsContent>
-            <TabsContent value="flicks">Change your password here.</TabsContent>
+            <TabsContent value="flicks">
+                <SquarePostsGrid itemsPromise={flicksPromise} />
+            </TabsContent>
         </Tabs>
 
     )

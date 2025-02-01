@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
   headers.set('x-current-path', request.nextUrl.pathname)
 
   if (!session?.user) {
-    return NextResponse.redirect(new URL('/signin', url))
+    return NextResponse.redirect(new URL(`/signin?callbackUrl=${url}`, url))
   }
   
 
@@ -22,5 +22,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
 
-  matcher: ['/posts/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats', '/create','/settings']
+  matcher: ['/posts/:path*','/post-modal/:path*', '/people', '/users/:path*', '/saved', '/explore', '/flicks', '/chats', '/create','/settings']
 }
