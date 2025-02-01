@@ -1,10 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Flick, Like, Post, User } from "@prisma/client"
 import Image from "next/image"
+import { use } from "react"
+import SquarePostsGrid from "./SquarePostsGrid"
 
-// interface PostTabsProps { 
-//     posts: Post[]  | undefined
-// }
-const PostTabs = () => {
+interface PostTabsProps {
+    postsPromise: Promise<(Post & { author: User }[])>
+    flicksPromise: Promise<(Flick & { author: User, likes: Like[] })>
+}
+
+const PostTabs = ({ postsPromise, flicksPromise }: PostTabsProps) => {
+
     return (
         <Tabs defaultValue="posts" className="w-[400px]">
             <TabsList>
@@ -27,14 +33,13 @@ const PostTabs = () => {
                     Flicks</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="posts">Make changes to your account here.</TabsContent>
+            <TabsContent value="posts">
+                <SquarePostsGrid posts={posts} />
+            </TabsContent>
             <TabsContent value="flicks">Change your password here.</TabsContent>
-            <TabsContent value="tagged">Change your password here.</TabsContent>
         </Tabs>
 
     )
 }
 
 export default PostTabs
-
-// have to make the user page grid and the saved page grid same and the merge into one component naved savedItemsComponent

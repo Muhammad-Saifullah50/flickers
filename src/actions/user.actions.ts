@@ -71,8 +71,16 @@ export const getDbUserByIdWithDetails = async (id: string) => {
                 id
             },
             include: {
-                followedBy: true,
-                following: true,
+                followedBy: {
+                    include: {
+                        follower: true
+                    }
+                },
+                following: {
+                    include: {
+                        following: true
+                    }
+                },
                 posts: true
             }
         })

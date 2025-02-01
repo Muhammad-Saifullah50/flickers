@@ -315,3 +315,22 @@ export const getTopPostsByUser = async (userId: string) => {
 
     }
 }
+
+export const getPostsByUserId = async (userId: string) => {
+    try {
+        const posts = await prisma.post.findMany({
+            where: {
+                authorId: userId
+            },
+            include: {
+                author: true
+            },
+            take: 10
+        }
+        );
+        return posts
+    } catch (error) {
+        console.error('error fetching posts by user', error)
+    }
+}
+

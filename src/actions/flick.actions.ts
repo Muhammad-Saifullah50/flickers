@@ -102,7 +102,7 @@ export const getfollowingFlicks = async () => {
                     in: currrUser?.following.map((user) => user.id)
                 }
             },
-            include:{
+            include: {
                 author: true,
                 likes: true
             }
@@ -123,7 +123,7 @@ export const getPopularFlicks = async () => {
                 }
             },
             take: 10,
-            include:{
+            include: {
                 author: true,
                 likes: true
             }
@@ -142,7 +142,7 @@ export const getMostViewedFlicks = async () => {
                 plays: 'desc',
             },
             take: 10,
-            include:{
+            include: {
                 author: true,
                 likes: true
             }
@@ -204,5 +204,23 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
         console.error('Error getting prev and next flicks on server:', error);
         throw error
 
+    }
+}
+
+export const getFlicksByUserId = async (userId: string) => {
+    try {
+        const flicks = await prisma.flick.findMany({
+            where: {
+                authorId: userId
+            },
+            include: {
+                author: true,
+                likes: true
+            }
+        });
+        return flicks
+
+    } catch (error) {
+        console.error('Error getting flicks by user id on server:', error);
     }
 }
