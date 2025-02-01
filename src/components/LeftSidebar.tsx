@@ -4,6 +4,7 @@ import React from 'react'
 import LeftSidebarItem from './LeftSidebarItem';
 import Link from 'next/link';
 import { getCurrentUserFromDb } from '@/actions/user.actions';
+import { Button } from './ui/button';
 
 const LeftSidebar = async () => {
 
@@ -62,7 +63,11 @@ const LeftSidebar = async () => {
         ))}
       </ul>
 
-
+      {!user && (
+        <Link href={'/signin'}>
+          <Button size={'lg'} className='font-medium text-base w-full'>Login</Button>
+        </Link>
+      )}
     </aside>
   )
 }

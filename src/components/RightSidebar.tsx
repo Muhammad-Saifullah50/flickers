@@ -1,61 +1,87 @@
+'use client'
 import { cn } from "@/lib/utils";
 import Heading from "./Heading";
 import { getTopCreators } from "@/actions/creator.actions";
 import UserCard from "./UserCard";
-import { headers } from "next/headers";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import UserCardSkeleton from "./skeletons/UserCardSkeleton";
 import Image from "next/image";
 import { getTopPostsByUser } from "@/actions/post.actions";
 import PostCard from "./PostCard";
+import { usePathname } from "next/navigation";
+import { Post, User } from "@prisma/client";
 
 
-const RightSidebar = async () => {
+const RightSidebar = () => {
+
+  const [currUser, setCurrUser] = useState<User>();
+  const [topCreatorstoShow, setTopCreatorsToShow] = useState<User[]>();
+  const [topPostsToShow, settopPostsToShow] = useState<Post[]>()
+  const [loading, setLoading] = useState(false)
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const currUser = await getCurrentUserFromDb();
+        setCurrUser(currUser!);
+
+        if (pathname === '/') {
+          const topcreators = await getTopCreators();
+          const creatorsToShow = topcreators?.filter(creator => creator.id !== currUser?.id)
+          setTopCreatorsToShow(creatorsToShow!);
+        }
+
+        if (pathname === '/create' || pathname === '/settings') {
+          const topPosts = await getTopPostsByUser(currUser?.id!);
+          settopPostsToShow(topPosts!);
+        }
+      } catch (error) {
+        console.log('error fetchiong data  for right sidebar', error)
+      } finally {
+        setLoading(false);
+      }
 
 
-  const headersList = await headers();
-  const currUser = await getCurrentUserFromDb();
+    }
 
-  const pathname = headersList.get('x-current-path')
-  console.log(pathname, 'pathname')
-  const shouldBeVisible = pathname === '/edit-profile' || pathname === '/create' || !pathname
+    fetchData()
 
-
-  if (!shouldBeVisible) {
-    return null
-  }
+  }, [])
 
   switch (pathname) {
-    //maeans homepage
-    case null:
-      const topCreators = await getTopCreators();
-      const creatorsToShow = topCreators?.filter(creator => creator.id !== currUser?.id)
+    case '/':
       return (
         <aside className={cn('w-[420px] h-screen overflow-y-scroll')}>
           <Heading text="Top Creators" className="text-2xl font-semibold text-left sticky top-0 p-10 bg-dark-1" />
-          <Suspense fallback={
-            <div className='flex flex-wrap gap-4 py-9'>
-              {Array.from({ length: 4 }).map((_, index) => (
-                <UserCardSkeleton key={index} />
+
+          {loading ? (
+            <div className="flex flex-col gap-4 items-center p-10">
+             {Array.from({ length: 4 }).map((_, index) => (
+              <UserCardSkeleton key={index} />
+            ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 items-center p-10">
+              {topCreatorstoShow?.map((creator) => (
+                <UserCard key={creator.id} user={creator} />
               ))}
             </div>
-          }>
-            {creatorsToShow?.map((creator) => (
-              <UserCard key={creator.id} user={creator} />
-            ))}
-          </Suspense>
+          )}
+
         </aside>
       )
     case 'settings':
     case '/create':
 
-      const topPosts = await getTopPostsByUser(currUser?.id!);
+
       return (
         <aside className={cn('w-[420px] h-screen overflow-y-scroll')}>
           <div className="flex flex-col gap-4 items-center p-10 ">
             <Image
-              src={currUser?.image || 'icons/dummyuser.png'}
+              src={currUser?.image || '/icons/dummyuser.png'}
               alt="user image"
               width={150}
               height={150}
@@ -66,7 +92,7 @@ const RightSidebar = async () => {
           </div>
 
           <div className="relative flex flex-col gap-4 p-10 items-center justify-center">
-          <Heading text="Top posts by you" className="!font-semibold !text-xl" />
+            <Heading text="Top posts by you" className="!font-semibold !text-xl" />
 
             <Suspense fallback={
               <div className='flex flex-wrap gap-4 py-9'>
@@ -75,7 +101,7 @@ const RightSidebar = async () => {
                 ))}
               </div>
             }>
-              {topPosts ? topPosts?.map((post) => (
+              {topPostsToShow ? topPostsToShow?.map((post) => (
                 <PostCard key={post.id} post={post} extraImageClasses="!w-[250px] !h-[250px]" />
               )) :
                 <p>
@@ -93,4 +119,4 @@ const RightSidebar = async () => {
 
 export default RightSidebar
 
-// have to make this a client component
+// have to correct the foillow unfoillow functionality from the rioght sidebar

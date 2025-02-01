@@ -1,7 +1,9 @@
+'use client'
 import { Follows, User } from "@prisma/client"
 import Image from "next/image"
 import FollowButton from "./FollowButton"
 import { getCurrentUserFromDb } from "@/actions/user.actions"
+import { useState, useEffect } from "react"
 
 type UserWithFollows = User & {
     followedBy: (Follows & {
@@ -12,10 +14,17 @@ type UserWithFollows = User & {
     })[];
 }
 
-const UserCard = async ({ user }: { user: UserWithFollows }) => {
+const UserCard =  ({ user }: { user: UserWithFollows }) => {
 
-    const currentUser = await getCurrentUserFromDb();
+    const [currentUser, setCurrentUser] = useState<User>()
 
+useEffect(() => {
+    const fetchData = async () => {
+        const currentUser = await getCurrentUserFromDb();
+        setCurrentUser(currentUser!);
+    };
+    fetchData();
+}, []);
     const isFollowing = user.followedBy.some((follow) => follow.follower.id === currentUser?.id);
 
     const followId = user.followedBy.find((follow) => follow.follower.id === currentUser?.id)?.id

@@ -1,7 +1,6 @@
 'use client'
 import { Button } from './ui/button'
 import { followUser, unfollowUser } from '@/actions/follow.actions';
-
 interface FollowButtonProps {
     followerUserId: string;
     userToFollowId: string;
@@ -15,15 +14,15 @@ const FollowButton = ({ followerUserId, userToFollowId, isFollowing, followId }:
     }
 
     const handleUnfollow = async () => {
-      if(followId) await unfollowUser(followId)
+        if (followId) await unfollowUser(followId)
     }
 
     return (
-        <Button
-            onClick={isFollowing ? handleUnfollow : handleFollow}
-            size={"lg"}>
-            {isFollowing ? "Unfollow" : "Follow"}
-        </Button>
+            <Button
+                onClick={isFollowing ? handleUnfollow : handleFollow}
+                size={"lg"}>
+                {isFollowing ? "Unfollow" : "Follow"}
+            </Button>
     )
 }
 

@@ -1,7 +1,6 @@
 'use client'
 
 import { signoutOnServer } from "@/actions/auth.actions";
-import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -44,8 +43,8 @@ const LeftSidebarItem = ({ link, label, icon, whiteIcon }: LeftSidebarItemProps)
                 })}>
 
                     <Image
-        //@ts-expect-error have to correct this 
-        src={isActive ? whiteIcon : icon }
+                        //@ts-expect-error have to correct this 
+                        src={isActive ? whiteIcon : icon}
                         width={20}
                         height={20}
                         alt="icon"
