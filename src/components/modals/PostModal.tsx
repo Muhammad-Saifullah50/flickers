@@ -1,9 +1,7 @@
 import {
     Dialog,
-    DialogClose,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
+   
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Suspense } from "react"
@@ -19,7 +17,7 @@ type PostModalProps = {
 const PostModal = ({ post, user }: PostModalProps) => {
     return (
         <Dialog open={true}>
-            <DialogContent>
+            <DialogContent className="h-full overflow-y-auto pb-20">
                 <DialogTitle />
                 <Suspense fallback={<PostInfoSkeleton />}>
                     <PostDetails

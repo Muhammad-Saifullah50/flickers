@@ -1,18 +1,18 @@
 'use client'
-import { Textarea } from './ui/textarea'
-import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from './ui/form'
+import { Textarea } from '../ui/textarea'
+import { FormField, Form, FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
-import { Button } from './ui/button'
-import Loader from './Loader'
+import { Button } from '../ui/button'
+import Loader from '../Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { Flick, User } from '@prisma/client'
 import { FlickEditingSchema, FlickSchema } from '@/validations/flickSchema'
 import { createFlick, updateFlick } from '@/actions/flick.actions'
-import FlickUploader from './FlickUploader'
+import FlickUploader from '../FlickUploader'
 
 interface PostFormProps {
     flick?: Flick

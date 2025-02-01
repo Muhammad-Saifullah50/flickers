@@ -14,7 +14,7 @@ const homeLayout = async ({ children, postmodal }: { children: React.ReactNode, 
             <div className="fixed left-0 top-0 h-screen overflow-y-auto">
                 <LeftSidebar />
             </div>
-            <div className="w-full flex-1 sm:ml-[272px] xl:mr-[465px] p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 ">
+            <div className="w-full flex-1 sm:ml-[272px] xl:mr-[420px] p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 ">
                 <div className="mx-auto max-w-4xl">
                         {children}
                         {postmodal}

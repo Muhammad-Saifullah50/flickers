@@ -11,7 +11,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
     const user = await getDbUserByIdWithDetails(id)
     const currentUser = await getCurrentUserFromDb();
     return (
-        <main className='flex flex-col gap-4'>
+        <main className='flex flex-col gap-4 '>
             <section className='flex gap-4 py-4'>
                 <div className='flex justify-center items-start'>
                     <Image
@@ -54,7 +54,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                     </div>
 
                     <div>
-                        {/* have to add the bio */}
+                       <p className='text-base text-light-2'>{user?.bio}</p>
                     </div>
                 </div>
             </section>

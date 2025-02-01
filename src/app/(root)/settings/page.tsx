@@ -1,6 +1,6 @@
 import { getCurrentUserFromDb } from '@/actions/user.actions'
 import Heading from '@/components/Heading'
-import ProfileForm from '@/components/ProfileForm'
+import ProfileForm from '@/components/forms/ProfileForm'
 
 const SettingsPage =  async () => {
 

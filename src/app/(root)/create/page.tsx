@@ -3,7 +3,7 @@ import React from 'react'
 import PostForm from '@/components/forms/PostForm'
 import Heading from '@/components/Heading'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import FlickForm from '@/components/FlickForm'
+import FlickForm from '@/components/forms/FlickForm'
 import Image from 'next/image'
 
 export const createPage = () => {

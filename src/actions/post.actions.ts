@@ -143,7 +143,7 @@ export const updatePost = async (postId: string, data: createPostParams) => {
 export const deletePost = async (postId: string) => {
 
     try {
-       await prisma.post.delete({
+        await prisma.post.delete({
             where: {
                 id: postId
             }
@@ -225,11 +225,11 @@ export const getPostsandFlicksByHashtags = async (query: string) => {
     }
 }
 
-export const getMoreUserPosts = async (userId: string, postId:string) => {
+export const getMoreUserPosts = async (userId: string, postId: string) => {
     try {
         const posts = await prisma.post.findMany({
             where: {
-                id: {not: postId},
+                id: { not: postId },
                 authorId: userId
             },
             include: {
@@ -250,9 +250,9 @@ export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
     let posts: (Post & { author: User })[] | undefined;
     try {
         posts = await prisma.post.findMany({
-    
+
             where: {
-                id: {not: post.id},
+                id: { not: post.id },
                 OR: [
                     {
                         hashtags: {
@@ -266,7 +266,7 @@ export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
                     },
                     {
                         altText: {
-                            contains: post.altText 
+                            contains: post.altText
                         }
                     }
                 ]
@@ -293,3 +293,25 @@ export const getRelatedOrMoreUserOrLatestPosts = async (post: Post) => {
     }
 }
 
+export const getTopPostsByUser = async (userId: string) => {
+    try {
+        const posts = await prisma.post.findMany({
+            where: {
+                authorId: userId
+            },
+            orderBy: {
+                likes: {
+                    _count: 'desc'
+                }
+            },
+            include: {
+                author: true
+            }
+        }
+        );
+        return posts
+    } catch (error) {
+        console.error('error fetching top posts by user', error)
+
+    }
+}
