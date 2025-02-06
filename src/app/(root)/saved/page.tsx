@@ -1,8 +1,10 @@
 import { getSavedItems } from "@/actions/save.actions"
 import Heading from "@/components/Heading"
 import SavedPostFlickCard from "@/components/SavedPostFlickCard"
+import SquarePostsGridSkeleton from "@/components/skeletons/SquarePostsGridSkeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
+import { Suspense } from "react"
 
 const SavedPage = async () => {
 
@@ -36,20 +38,23 @@ const SavedPage = async () => {
                     </TabsList>
 
                     <TabsContent value="posts" className="flex gap-6">
-                        {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
-                            if (!item.flickId)
-                                return (
-                                    <SavedPostFlickCard
-                                        postId={item.postId}
-                                        key={item.id}
-                                    />
-                                )
-                        }) : (
-                            <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
-                                <p>No saved posts yet</p>
-                            </div>
+                        <Suspense fallback={<SquarePostsGridSkeleton />}>
 
-                        )}
+                            {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
+                                if (!item.flickId)
+                                    return (
+                                        <SavedPostFlickCard
+                                            postId={item.postId}
+                                            key={item.id}
+                                        />
+                                    )
+                            }) : (
+                                <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
+                                    <p>No saved posts yet</p>
+                                </div>
+
+                            )}
+                        </Suspense>
                     </TabsContent>
 
                     <TabsContent value="flicks" className="flex gap-6">

@@ -1,8 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Flick, Like, Post, User } from "@prisma/client"
 import Image from "next/image"
-import { use } from "react"
+import { Suspense, use } from "react"
 import SquarePostsGrid from "./SquarePostsGrid"
+import SquarePostsGridSkeleton from "./skeletons/SquarePostsGridSkeleton"
 
 interface PostTabsProps {
     postsPromise: Promise<(Post & { author: User }[])>
@@ -34,10 +35,12 @@ const PostTabs = ({ postsPromise, flicksPromise }: PostTabsProps) => {
             </TabsList>
 
             <TabsContent value="posts">
-                <SquarePostsGrid itemsPromise={postsPromise} />
+                <Suspense fallback={<SquarePostsGridSkeleton />}>
+                    <SquarePostsGrid itemsPromise={postsPromise} />
+                </Suspense>
             </TabsContent>
             <TabsContent value="flicks">
-                <SquarePostsGrid itemsPromise={flicksPromise} />
+            <SquarePostsGrid itemsPromise={flicksPromise} />
             </TabsContent>
         </Tabs>
 

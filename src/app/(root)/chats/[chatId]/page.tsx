@@ -30,4 +30,3 @@ const ChatPage = async ({ params }: { params: { chatId: string } }) => {
 
 export default ChatPage
 
-// have tio correct  the page. The data is not changed as soon as the page loads

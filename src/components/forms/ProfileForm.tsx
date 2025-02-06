@@ -21,7 +21,6 @@ interface ProfileFormProps {
 }
 const ProfileForm = ({ user }: ProfileFormProps) => {
 
-    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState<string | null>(user?.image || '/icons/dummy-user.png');
     const [imageFile, setImageFile] = useState<File | null>(null);

@@ -20,23 +20,25 @@ interface RootLayoutProps {
 }
 export default function RootLayout({
   children
-}:RootLayoutProps) {
+}: RootLayoutProps) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProvider>
-            {children}
-            <Toaster />
-          </SessionProvider>
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SessionProvider>
+              {children}
+              <Toaster />
+            </SessionProvider>
+          </ThemeProvider>
+
       </body>
     </html>
   );

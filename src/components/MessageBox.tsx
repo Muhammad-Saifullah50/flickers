@@ -21,10 +21,13 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
         return chat?.messages
     }
 
-    const { data: messages, isLoading, error,  } = useSWR(`chat-${chatId}`, fetcher, {
-        revalidateIfStale: true,
-        refreshInterval: 5,
-        });
+    const { data: messages, isLoading, error, } = useSWR(`chat-${chatId}`, fetcher, {
+        revalidateIfStale: false,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+        refreshInterval: 1000,
+        dedupingInterval: 5000
+    });
     return (
         <>
             <section className="flex justify-between items-center pb-4">
@@ -73,7 +76,7 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
             </section>
 
             <section>
-                
+
                 <SendMessageForm chatId={chatId} senderId={currentUser?.id} />
             </section>
         </>
@@ -81,3 +84,6 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
 }
 
 export default MessageBox
+
+// some issue the app is infiniteley requesting to the server'
+// maybe i will have to use web soickets for thsi chat app

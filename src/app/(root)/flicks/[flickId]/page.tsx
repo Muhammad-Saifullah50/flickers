@@ -119,7 +119,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
     return (
         <div
-            className="h-full flex flex-col gap-6 items-center justify-center overflow-y-scroll focus-visible:outline-none"
+            className="h-full flex flex-col gap-6 items-center justify-center overflow-y-scroll focus-visible:outline-none "
             tabIndex={0}
             onKeyDown={handleKeyDown}
         >
@@ -136,7 +136,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
                     >
                         <FlickCard
                             flick={currFlick!}
-                            classNames="w-[300px] h-[500px]"
+                            classNames="w-[450px] h-[calc(100vh-200px)]"
                             loading={loading}
                         />
                     </motion.div>
