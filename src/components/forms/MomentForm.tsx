@@ -13,111 +13,102 @@ import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { createPost, updatePost } from '@/actions/post.actions'
 import { Post, User } from '@prisma/client'
+import { MomentSchema } from '@/validations/momentSchema'
+import { } from 'react-color';
+import { CirclePicker } from 'react-color';
 
-interface PostFormProps {
-    post?: Post
-    isEditing?: boolean
-}
-const PostForm = ({  post, isEditing }: PostFormProps) => {
+
+const MomentForm = () => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
-    const [existingFiles, setExistingFiles] = useState<string[]>(post?.assets || []);
     const [isUploading, setIsUploading] = useState(false);
 
     const router = useRouter();
 
-    const totalFiles = files.length + existingFiles.length;
+    // const totalFiles = files.length
 
-    const schema = (!isEditing || totalFiles === 0) ? PostSchema : PostEditingSchema
-
-    const form = useForm<z.infer<typeof schema>>({
-        resolver: zodResolver(schema),
+    const form = useForm<z.infer<typeof MomentSchema>>({
+        resolver: zodResolver(MomentSchema),
         defaultValues: {
-            caption: post?.caption || '',
-            altText: post?.altText || '',
-            assets: post?.assets || [],
-            hashtags: post?.hashtags || ''
+            caption: '',
+            altText: '',
+            assets: [],
         }
     })
+    const handleFormSubmit = async (data: z.infer<typeof MomentSchema>) => { 
 
-    const handleRemoveExisting = (fileUrl: string) => {
-        setExistingFiles(prev => prev.filter(f => f !== fileUrl));
-    };
+        // try {
+        //     setIsUploading(true);
 
-    const handleFormSubmit = async (data: z.infer<typeof schema>) => {
+        //     // Upload files to Cloudinary first
+        //     const uploadedUrls: string[] = [];
+        //     for (const file of files) {
+        //         try {
+        //             const formData = new FormData();
+        //             formData.append("file", file);
 
-        try {
-            setIsUploading(true);
+        //             const request = await fetch('/api/upload', {
+        //                 method: 'POST',
 
-            // Upload files to Cloudinary first
-            const uploadedUrls: string[] = [];
-            for (const file of files) {
-                try {
-                    const formData = new FormData();
-                    formData.append("file", file);
+        //                 body: formData,
+        //             });
 
-                    const request = await fetch('/api/upload', {
-                        method: 'POST',
+        //             const url = await request.json();
+        //             if (url) {
+        //                 //data field is returned by our upload api
+        //                 uploadedUrls.push(url.data);
+        //             }
 
-                        body: formData,
-                    });
+        //         } catch (error) {
+        //             console.error('Error uploading file:', error);
+        //             toast({
+        //                 description: `Error uploading file: ${file.name}`,
+        //                 variant: 'destructive'
+        //             });
+        //         }
+        //     }
 
-                    const url = await request.json();
-                    if (url) {
-                        //data field is returned by our upload api
-                        uploadedUrls.push(url.data);
-                    }
+        //     // Update the form data with Cloudinary URLs
+        //     const formData = {
+        //         caption: data.caption,
+        //         altText: data.altText,
+        //         assets: [...uploadedUrls, ...existingFiles],
+        //         hashtags: data.hashtags
+        //     };
 
-                } catch (error) {
-                    console.error('Error uploading file:', error);
-                    toast({
-                        description: `Error uploading file: ${file.name}`,
-                        variant: 'destructive'
-                    });
-                }
-            }
+        //     if (uploadedUrls.length > 0 || existingFiles.length > 0) {
 
-            // Update the form data with Cloudinary URLs
-            const formData = {
-                caption: data.caption,
-                altText: data.altText,
-                assets: [...uploadedUrls, ...existingFiles],
-                hashtags: data.hashtags
-            };
+        //         if (isEditing && post) {
+        //             const updatedPost = await updatePost(post?.id, formData)
+        //             if (updatedPost) {
+        //                 toast({
+        //                     description: 'Post updated successfully',
+        //                     variant: 'default'
+        //                 })
+        //                 router.push(`/posts/${updatedPost.id}`);
+        //             }
+        //         } else {
+        //             const post = await createPost(formData);
+        //             if (post) {
+        //                 toast({
+        //                     description: 'Post created successfully',
+        //                     variant: 'default'
+        //                 })
+        //                 router.push(`/posts/${post.id}`);
+        //             }
+        //         }
+        //     }
 
-            if (uploadedUrls.length > 0 || existingFiles.length > 0) {
-
-                if (isEditing && post) {
-                    const updatedPost = await updatePost(post?.id, formData)
-                    if (updatedPost) {
-                        toast({
-                            description: 'Post updated successfully',
-                            variant: 'default'
-                        })
-                        router.push(`/posts/${updatedPost.id}`);
-                    }
-                } else {
-                    const post = await createPost(formData);
-                    if (post) {
-                        toast({
-                            description: 'Post created successfully',
-                            variant: 'default'
-                        })
-                        router.push(`/posts/${post.id}`);
-                    }
-                }
-            }
-
-        } catch (error) {
-            console.error('Error creating post:', error);
-            toast({
-                description: 'Error creating post',
-                variant: 'destructive'
-            })
-        } finally {
-            setIsUploading(false);
-        }
+        // } catch (error) {
+        //     console.error('Error creating post:', error);
+        //     toast({
+        //         description: 'Error creating post',
+        //         variant: 'destructive'
+        //     })
+        // } finally {
+        //     setIsUploading(false);
+        // }
     };
 
     return (
@@ -156,8 +147,6 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                                     }}
                                     uploadedFiles={uploadedFiles}
                                     setUploadedFiles={setUploadedFiles}
-                                    existingFiles={existingFiles}
-                                    onRemoveExisting={handleRemoveExisting}
                                 />
                             </FormControl>
                             <FormMessage />
@@ -170,7 +159,7 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                     name="altText"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Photo/Video Alt Text</FormLabel>
+                            <FormLabel>Photo/Video Alternate Text</FormLabel>
                             <FormControl>
                                 <Textarea
                                     className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
@@ -182,14 +171,27 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                 />
                 <FormField
                     control={form.control}
-                    name="hashtags"
+                    name="text"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Hashtags</FormLabel>
+                            <FormLabel>Text</FormLabel>
                             <FormControl>
                                 <Textarea
                                     className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
                                 !bg-dark-3" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="bgColor"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Background Color</FormLabel>
+                            <FormControl>
+                                <CirclePicker onChange={field.onChange} color={field.value} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -200,7 +202,7 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                         type='submit'
                         disabled={isUploading}
                     >
-                        {isUploading ? <Loader variant='white' /> : isEditing ? 'Update Post' : 'Share Post'}
+                        {isUploading ? <Loader variant='white' /> : 'Share Moment'}
                     </Button>
                 </div>
             </Form >
@@ -208,4 +210,4 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
     )
 }
 
-export default PostForm
+export default MomentForm

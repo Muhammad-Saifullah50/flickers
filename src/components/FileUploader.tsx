@@ -8,7 +8,7 @@ interface FileUploaderProps {
     onChange: (files: File[]) => void
     uploadedFiles: string[]
     setUploadedFiles: (files: string[]) => void
-    existingFiles: string[]
+    existingFiles?: string[]
     onRemoveExisting?: (fileUrl: string) => void
 }
 

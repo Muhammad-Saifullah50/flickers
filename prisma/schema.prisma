@@ -32,6 +32,7 @@ model User {
 
   messages Message[]
   flick    Flick[]
+  moments   Moment[]
 }
 
 model Account {
@@ -192,4 +193,16 @@ model Flick {
   saves     Save[]
 
   @@index([authorId])
+}
+
+model Moment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  authorId  String   @db.ObjectId
+  caption   String?
+  assets    String[]
+  bgColor   String?
+  altText   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
 }

@@ -1,7 +1,9 @@
+import { getRecentMoments } from "@/actions/moments.actions";
 import { getFeedPosts } from "@/actions/post.actions";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
+import MomentsList from "@/components/MomentsList";
 import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
 import { Suspense } from "react";
 
@@ -27,9 +29,11 @@ export default async function HomePage() {
     userHasFollowed = false
   }
   const postsPromise = getFeedPosts(userHasFollowed);
+  const momentsPromise = getRecentMoments();
 
   return (
     <main>
+      <MomentsList momentsPromise={momentsPromise} currentUser={currentUser} />
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
       <section className="flex flex-col gap-6 py-9">
@@ -47,6 +51,6 @@ export default async function HomePage() {
       </section>
     </main>
   )
-
-  return <h1>static</h1>
 }
+
+// have to see why is this page causing aq full page reload
