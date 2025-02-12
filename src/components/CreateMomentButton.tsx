@@ -1,16 +1,20 @@
-'use client';
 
 import { User } from "@prisma/client";
 import Image from "next/image";
-import DialogContent, { Dialog, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Button } from "./ui/button";
+import DialogContent, { Dialog, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import MomentForm from "./forms/MomentForm";
 
+// have to optimizee it to recieve ionly the user iod insted of the whole user object
 const CreateMomentButton = ({ currentUser }: { currentUser: User | null }) => {
+
+    if (!currentUser) {
+        return null;
+    }
+
     return (
 
-        <Dialog>
-            <DialogTrigger asChild>
+        <Dialog >
+            <DialogTrigger asChild >
                 <div className="flex flex-col items-center justify-center gap-2">
                     <Image
                         src={'/icons/plus.svg'}
@@ -23,30 +27,16 @@ const CreateMomentButton = ({ currentUser }: { currentUser: User | null }) => {
                     </span>
                 </div>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="max-h-[67vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Add a moment</DialogTitle>
                     <DialogDescription>
                         Your moments will disappear after 24 hours. It will be visible to every user.
                     </DialogDescription>
                 </DialogHeader>
-                <MomentForm />
-                <DialogFooter>
-                    <Button type="submit">Save changes</Button>
-                </DialogFooter>
+                <MomentForm userId={currentUser?.id} />
             </DialogContent>
         </Dialog>
-
-
-
-
-
-
-
-
-
-
-
     )
 }
 

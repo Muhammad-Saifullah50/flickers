@@ -119,25 +119,25 @@ const FileUploader = ({
             <Input {...getInputProps()} multiple />
             <div>
                 {/* Show existing files */}
-                {existingFiles.length > 0 && (
+                {existingFiles && existingFiles?.length > 0 && (
                     <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-4'>
-                        {existingFiles.map((file, index) => renderPreview(file, index, true))}
+                        {existingFiles?.map((file, index) => renderPreview(file, index, true))}
                     </div>
                 )}
                 
                 {/* Show newly uploaded files */}
-                {files.length > 0 && (
+                {files?.length > 0 && (
                     <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
                         {uploadedFiles.map((file, index) => renderPreview(file, index, false))}
                     </div>
                 )}
                 
-                <div className={`flex flex-col gap-2 p-8 items-center justify-center ${files.length > 0 || existingFiles.length > 0 ? 'h-32' : 'h-60'} bg-dark-3 rounded-lg border-2 border-dashed border-gray-500 cursor-pointer hover:bg-dark-4 transition mt-4`}>
+                <div className={`flex flex-col gap-2 p-8 items-center justify-center ${files?.length > 0 || existingFiles && existingFiles?.length > 0 ? 'h-32' : 'h-60'} bg-dark-3 rounded-lg border-2 border-dashed border-gray-500 cursor-pointer hover:bg-dark-4 transition mt-4`}>
                     <Image
                         src={'/icons/image.svg'}
                         alt="Upload"
-                        width={files.length > 0 || existingFiles.length > 0 ? 48 : 96}
-                        height={files.length > 0 || existingFiles.length > 0 ? 38 : 77}
+                        width={files?.length > 0 || existingFiles && existingFiles?.length > 0 ? 48 : 96}
+                        height={files?.length > 0 || existingFiles && existingFiles?.length > 0 ? 38 : 77}
                         className='object-contain mx-auto'
                     />
                     <p className='text-light-2 text-center'>

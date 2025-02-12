@@ -21,7 +21,7 @@ export const createPost = async (data: createPostParams) => {
                 altText: data.altText,
                 shares: 0,
                 assets: data.assets,
-                authorId: user.id,
+                authorId: user?.id!,
                 hashtags: data.hashtags || ''
             },
             include: {

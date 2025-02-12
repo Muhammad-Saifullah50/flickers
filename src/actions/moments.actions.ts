@@ -1,6 +1,15 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
+import { MomentSchema } from "@/validations/momentSchema";
+
+interface createMomentParams {
+    caption: string;
+    assets: string[];
+    altText: string;
+    bgColor: string;
+    authorId: string;
+}
 
 export const getRecentMoments = async () => {
     const moments = await prisma.moment.findMany({
@@ -12,5 +21,21 @@ export const getRecentMoments = async () => {
     });
 
     return moments;
+}
+
+export const createMoment = async (data: createMomentParams) => {
+    const moment = await prisma.moment.create({
+        data: {
+            caption: data.caption,
+            assets: data.assets,
+            altText: data.altText,
+            bgColor: data.bgColor,
+            authorId: data.authorId
+        },
+        include: {
+            author: true
+        }
+    })
+    return moment;
 }
 
