@@ -14,10 +14,9 @@ import { MomentSchema } from '@/validations/momentSchema'
 import { } from 'react-color';
 import { CirclePicker } from 'react-color';
 import { createMoment } from '@/actions/moments.actions'
-import { revalidatePath } from 'next/cache'
 
 
-const MomentForm = ({ userId }: { userId: string }) => {
+const MomentForm = ({ userId, setOpen }: { userId: string, setOpen: (value:boolean) => void }) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
@@ -91,7 +90,7 @@ const MomentForm = ({ userId }: { userId: string }) => {
                     variant: 'default'
                 })
             }
-
+            setOpen(false);
 
         } catch (error) {
             console.error('Error creating moment:', error);
@@ -103,7 +102,7 @@ const MomentForm = ({ userId }: { userId: string }) => {
             setIsUploading(false);
         }
     };
-// have tyo figure out how to close the modal
+
     return (
         <form onSubmit={form.handleSubmit(handleFormSubmit)}
             className='flex flex-col gap-9 py-9'>
@@ -223,5 +222,3 @@ const MomentForm = ({ userId }: { userId: string }) => {
 
 export default MomentForm
 
-// have to chekck form validation errors
-// have to correct the dialog close isasue

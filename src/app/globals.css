@@ -32,6 +32,10 @@ body {
   }
 }
 
+.momentdiv::-webkit-scrollbar {
+  display: none;
+}
+
 ::-webkit-scrollbar {
   /* Todo: make this scrollbar visible */
   /* width: 5px; */
