@@ -14,9 +14,10 @@ import { MomentSchema } from '@/validations/momentSchema'
 import { } from 'react-color';
 import { CirclePicker } from 'react-color';
 import { createMoment } from '@/actions/moments.actions'
+import { revalidatePath } from 'next/cache'
 
 
-const MomentForm = ({userId}: {userId: string}) => {
+const MomentForm = ({ userId }: { userId: string }) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
@@ -31,78 +32,78 @@ const MomentForm = ({userId}: {userId: string}) => {
             altText: '',
             assets: [],
         }
-    })
-    const handleFormSubmit = async (data: z.infer<typeof MomentSchema>) => { 
+    });
+
+    const handleFormSubmit = async (data: z.infer<typeof MomentSchema>) => {
 
         try {
             setIsUploading(true);
 
-            console.log(data, 'data')
-
-            // Upload files to Cloudinary first
-            // const uploadedUrls: string[] = [];
-            // for (const file of files) {
-            //     try {
-            //         const formData = new FormData();
-            //         formData.append("file", file);
-
-            //         const request = await fetch('/api/upload', {
-            //             method: 'POST',
-
-            //             body: formData,
-            //         });
-
-            //         const url = await request.json();
-            //         if (url) {
-            //             //data field is returned by our upload api
-            //             uploadedUrls.push(url.data);
-            //         }
-
-            //     } catch (error) {
-            //         console.error('Error uploading file:', error);
-            //         toast({
-            //             description: `Error uploading file: ${file.name}`,
-            //             variant: 'destructive'
-            //         });
-            //     }
-            // }
-
-            // // Update the form data with Cloudinary URLs
-            // const formData = {
-            //     caption: data.caption,
-            //     altText: data.altText,
-            //     assets: uploadedUrls,
-            //     text: data.text,
-            //     bgColor: data.bgColor,
-            //     authorId: userId
-
-            // };
-
-            // if (uploadedUrls.length > 0) {
+            // upload files to cloudinary first
+            const uploadedUrls: string[] = [];
+            if (data?.assets && data.assets.length > 0) {
 
 
-            //         const moment = await createMoment(formData);
-            //         if (moment) {
-            //             toast({
-            //                 description: 'Post created successfully',
-            //                 variant: 'default'
-            //             })
-            //             router.push(`/`);
-            //         }
-                
-            // }
+
+                for (const file of files) {
+                    try {
+                        const formData = new FormData();
+                        formData.append("file", file);
+
+                        const request = await fetch('/api/upload', {
+                            method: 'POST',
+
+                            body: formData,
+                        });
+
+                        const url = await request.json();
+                        if (url) {
+                            //data field is returned by our upload api
+                            uploadedUrls.push(url.data);
+                        }
+
+                    } catch (error) {
+                        console.error('Error uploading file:', error);
+                        toast({
+                            description: `Error uploading file: ${file.name}`,
+                            variant: 'destructive'
+                        });
+                    }
+                }
+            }
+
+            // Update the form data with Cloudinary URLs
+            const formData = {
+                caption: data.caption,
+                altText: data.altText,
+                assets: uploadedUrls,
+                text: data.text,
+                bgColor: data?.bgColor,
+                authorId: userId
+
+            };
+
+
+            const moment = await createMoment(formData);
+            if (moment) {
+                toast({
+                    description: 'Moment created successfully',
+                    variant: 'default'
+                })
+            }
+
 
         } catch (error) {
-            console.error('Error creating post:', error);
+            console.error('Error creating moment:', error);
             toast({
-                description: 'Error creating post',
+                description: 'Error creating moment',
                 variant: 'destructive'
             })
         } finally {
             setIsUploading(false);
         }
     };
-
+// have tyo figure out how to close the modal
     return (
         <form onSubmit={form.handleSubmit(handleFormSubmit)}
             className='flex flex-col gap-9 py-9'>
@@ -183,7 +184,25 @@ const MomentForm = ({userId}: {userId: string}) => {
                         <FormItem>
                             <FormLabel>Background Color</FormLabel>
                             <FormControl>
-                                <CirclePicker onChange={field.onChange} color={field.value} width='100%' circleSpacing={40} circleSize={50} className='pt-10'/>
+                                <div className="flex flex-col gap-4">
+                                    <CirclePicker
+                                        onChange={(color) => field.onChange(color.hex)}
+                                        color={field.value}
+                                        width='100%'
+                                        circleSpacing={40}
+                                        circleSize={50}
+                                        className='pt-10'
+                                    />
+                                    {field.value && (
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() => field.onChange('')}
+                                        >
+                                            Clear Color
+                                        </Button>
+                                    )}
+                                </div>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -204,5 +223,5 @@ const MomentForm = ({userId}: {userId: string}) => {
 
 export default MomentForm
 
-// have to chekck form validation errors 
+// have to chekck form validation errors
 // have to correct the dialog close isasue

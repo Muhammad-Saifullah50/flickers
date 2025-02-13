@@ -1,57 +1,70 @@
 import { z } from "zod";
 
 export const MomentSchema = z.object({
-    caption: z.string().min(5, { message: "Caption must be at least 5 characters" }).optional(),
-    text: z.string().min(5, { message: "Text must be at least 5 characters" }).optional(),
-    altText: z.string().min(5, { message: "Alt text must be at least 5 characters" }).optional(),
+    caption: z.string().optional(),
+    text: z.string().optional(),
+    altText: z.string().optional(),
     bgColor: z.string().optional(),
     assets: z.array(z.custom<File>().or(z.string())).optional(),
 }).superRefine((data, ctx) => {
-    // Check if neither assets nor text is provided
-    if (!data.assets?.length && !data.text) {
+
+    const hasAssets = data.assets && data.assets.length > 0;
+
+    if (!data.caption && !hasAssets && !data.text && !data.altText) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Either assets or text must be provided",
-            path: ["assets", "text"]
-        });
+            message: "Fill in the fields",
+            path: ["caption"]
+        })
     }
 
-    // Check if both assets and text are provided
-    if (data.assets?.length && data.text) {
+    if (!data.caption && hasAssets) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Only one of assets or text can be provided",
-            path: ["assets", "text"]
-        });
+            message: "Caption is required when assets are provided",
+            path: ["caption"]
+        })
+    }
+    if (data.caption && !hasAssets) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Assets are required when caption is provided",
+            path: ["assets"]
+        })
     }
 
-    // Check if assets are provided but no alt text
-    if (data.assets?.length && !data.altText) {
+    if (data.caption && hasAssets && !data.altText) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "If assets are provided, alt text must be provided",
+            message: "Alt text is required when assets are provided",
             path: ["altText"]
-        });
+        })
     }
 
-    // Check if text is provided but no background color
     if (data.text && !data.bgColor) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "If text is provided, background color must be provided",
+            message: "Background color is required when text is provided",
             path: ["bgColor"]
-        });
+        })
     }
 
-    // Check if text and caption are both provided
-    if (data.text && data.caption) {
+    if (data.text && (data.caption || hasAssets || data.altText)) {
         ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "If text is provided, caption must not be provided",
-            path: ["caption"]
-        });
+            message: "Text cannot be provided when caption, assets, or alt text are present",
+            path: ["text"]
+        })
     }
-});
+    if (data.bgColor && (data.caption || hasAssets || data.altText)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Background color cannot be provided when caption, assets, or alt text are present",
+            path: ["bgColor"]
+        })
+    }
+})
+
 
 // text ya assets honay chahiye
 // assets agar hon to alt text bhi honi chahiye

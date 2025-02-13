@@ -17,7 +17,9 @@ type PostModalProps = {
 const PostModal = ({ post, user }: PostModalProps) => {
     return (
         <Dialog open={true}>
-            <DialogContent className=" overflow-y-auto max-md:pb-20">
+            <DialogContent className=" overflow-y-auto max-md:pb-20"
+                //@ts-ignore
+                shdGoBack>
                 <DialogTitle />
                 <Suspense fallback={<PostInfoSkeleton />}>
                     <PostDetails

@@ -9,7 +9,7 @@ const MomentsList = ({ momentsPromise, currentUser }: { momentsPromise: Promise<
 
     return (
         <section className="pb-6 flex gap-4">
-            <CreateMomentButton currentUser={currentUser} />
+            <CreateMomentButton userId={currentUser?.id} userImage={currentUser?.image} />
             {moments && moments.map((moment: Moment) => (
                 <div key={moment.id}>
                     <MomentCircle moment={moment} />
