@@ -224,3 +224,18 @@ export const getFlicksByUserId = async (userId: string) => {
         console.error('Error getting flicks by user id on server:', error);
     }
 }
+
+export const getAllFlickIds = async () => {
+    try {
+        const posts = await prisma.flick.findMany({
+            select: {
+                id: true
+            }
+        });
+
+        const flickIdsArray = posts.map(post => post.id);
+        return flickIdsArray
+    } catch (error) {
+        console.error('error fetching all flick ids', error)
+    }
+}

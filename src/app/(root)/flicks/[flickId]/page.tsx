@@ -1,12 +1,20 @@
 'use client'
 
-import { getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
+import { getAllFlickIds, getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
 import FlickCard from "@/components/FlickCard";
 import { Flick, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 import Loader from "@/components/Loader";
+
+export const generateStaticParams = async () => {
+    const postIds = await getAllFlickIds()
+
+    return postIds?.map(flickId => ({
+        flickId,
+    }))
+}
 
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {

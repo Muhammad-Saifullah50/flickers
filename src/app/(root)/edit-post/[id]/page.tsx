@@ -2,7 +2,16 @@
 import React from 'react'
 import PostForm from '@/components/forms/PostForm'
 import Heading from '@/components/Heading'
-import { getPostById } from '@/actions/post.actions'
+import { getAllPostIds, getPostById } from '@/actions/post.actions'
+
+export const generateStaticParams = async () => {
+    const postIds = await getAllPostIds()
+
+    return postIds?.map(id => ({
+        id,
+    }))
+}
+
 
 export default async function EditPost({ params }: { params: { id: string } }) {
 
