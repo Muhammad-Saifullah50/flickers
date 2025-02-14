@@ -24,7 +24,12 @@ export const POST = async (request: NextRequest) => {
         }
 
         const data = await response.json(); 
-        return NextResponse.json({ message: 'File uploaded successfully', data: data.secure_url, status: 200 })
+
+    const dataObj = {
+            url: data.secure_url,
+            duration: data.duration || null,
+        }
+        return NextResponse.json({ message: 'File uploaded successfully', data: dataObj, status: 200 })
     } catch (error) {
         console.error('Error uploading to Cloudinary:', error);
         return NextResponse.json({

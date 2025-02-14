@@ -1,4 +1,4 @@
-import { getPostById, getRelatedOrMoreUserOrLatestPosts } from "@/actions/post.actions"
+import { getAllPostIds, getPostById, getRelatedOrMoreUserOrLatestPosts } from "@/actions/post.actions"
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import Heading from "@/components/Heading";
 import PostDetails from "@/components/PostDetails";
@@ -8,6 +8,14 @@ import SquarePostsGrid from "@/components/SquarePostsGrid";
 
 import { notFound } from "next/navigation"
 import { Suspense } from "react";
+
+export const generateStaticParams = async () => {
+    const postIds = await getAllPostIds()
+
+    return postIds?.map(id => ({
+        id,
+    }))
+}
 
 const PostPage = async ({ params }: { params: { id: string } }) => {
 

@@ -39,10 +39,9 @@ const MomentForm = ({ userId, setOpen }: { userId: string, setOpen: (value:boole
             setIsUploading(true);
 
             // upload files to cloudinary first
-            const uploadedUrls: string[] = [];
+            const uploadedAssets: { url: string; duration: number; }[] = [];
+            
             if (data?.assets && data.assets.length > 0) {
-
-
 
                 for (const file of files) {
                     try {
@@ -58,7 +57,10 @@ const MomentForm = ({ userId, setOpen }: { userId: string, setOpen: (value:boole
                         const url = await request.json();
                         if (url) {
                             //data field is returned by our upload api
-                            uploadedUrls.push(url.data);
+                            uploadedAssets.push({
+                                url: url.data.url,
+                                duration: url.data.duration || 10,
+                            });
                         }
 
                     } catch (error) {
@@ -75,11 +77,10 @@ const MomentForm = ({ userId, setOpen }: { userId: string, setOpen: (value:boole
             const formData = {
                 caption: data.caption,
                 altText: data.altText,
-                assets: uploadedUrls,
+                assets: uploadedAssets,
                 text: data.text,
                 bgColor: data?.bgColor,
                 authorId: userId
-
             };
 
 

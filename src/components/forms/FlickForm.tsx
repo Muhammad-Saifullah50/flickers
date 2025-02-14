@@ -66,7 +66,7 @@ const FlickForm = ({ flick, isEditing }: PostFormProps) => {
                 const url = await request.json();
                 if (url) {
                     //data field is returned by our upload api
-                    uploadedUrl = url.data;
+                    uploadedUrl = url.data.url;
                 }
 
             } catch (error) {

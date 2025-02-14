@@ -334,3 +334,17 @@ export const getPostsByUserId = async (userId: string) => {
     }
 }
 
+export const getAllPostIds = async () => {
+    try {
+        const posts = await prisma.post.findMany({
+            select: {
+                id: true
+            }
+        });
+
+        const postIdsArray = posts.map(post => post.id);
+        return postIdsArray
+    } catch (error) {
+        console.error('error fetching all post ids', error)
+    }
+}

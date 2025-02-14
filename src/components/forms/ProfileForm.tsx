@@ -57,7 +57,7 @@ const ProfileForm = ({ user }: ProfileFormProps) => {
                     });
 
                     const url = await request.json();
-                    uploadedUrl = url.data
+                    uploadedUrl = url.data.url
                 } catch (error) {
                     console.error('Error uploading file:', error);
                     toast({

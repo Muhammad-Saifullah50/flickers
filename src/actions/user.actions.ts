@@ -147,3 +147,15 @@ export const updateProfile = async (data: updateProfileParams, userId: string) =
 
     }
 }
+
+export const getAllUserIds = async () => {
+    const userIds = await prisma.user.findMany({
+        select: {
+            id: true
+        }
+    });
+
+    const userIdsArray = userIds.map(user => user.id) 
+    
+    return userIdsArray
+}

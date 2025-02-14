@@ -32,7 +32,7 @@ model User {
 
   messages Message[]
   flick    Flick[]
-  moments   Moment[]
+  moments  Moment[]
 }
 
 model Account {
@@ -196,14 +196,23 @@ model Flick {
 }
 
 model Moment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  authorId  String   @db.ObjectId
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  authorId  String        @db.ObjectId
   caption   String?
-  assets    String[]
+  assets    MomentAsset[] @relation(name: "MomentToAssets")
   bgColor   String?
   altText   String?
   text      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  author    User          @relation(fields: [authorId], references: [id])
+}
+
+model MomentAsset {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  url      String
+  duration Int
+
+  Moment   Moment? @relation(name: "MomentToAssets", fields: [momentId], references: [id])
+  momentId String? @db.ObjectId
 }

@@ -66,7 +66,7 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                     const url = await request.json();
                     if (url) {
                         //data field is returned by our upload api
-                        uploadedUrls.push(url.data);
+                        uploadedUrls.push(url.data.url);
                     }
 
                 } catch (error) {

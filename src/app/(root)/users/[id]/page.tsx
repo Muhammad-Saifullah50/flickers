@@ -1,12 +1,22 @@
 import { getFlicksByUserId } from '@/actions/flick.actions';
 import { getPostsByUserId } from '@/actions/post.actions';
-import { getCurrentUserFromDb, getDbUserByIdWithDetails } from '@/actions/user.actions'
+import { getAllUserIds, getCurrentUserFromDb, getDbUserByIdWithDetails } from '@/actions/user.actions'
 import FollowButton from '@/components/FollowButton';
 import MessageButton from '@/components/MessageButton';
 import PostTabs from '@/components/PostTabs';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+
+export const generateStaticParams = async () => {
+    const userIds = await getAllUserIds();
+
+    return userIds.map((id) => {
+        return {
+            id,
+        }
+    })
+}
 
 const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
@@ -21,8 +31,8 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
     const isOwner = currentUser?.id === user?.id
 
-    const postsPromise =  getPostsByUserId(id);
-    const flicksPromise =  getFlicksByUserId(id)
+    const postsPromise = getPostsByUserId(id);
+    const flicksPromise = getFlicksByUserId(id)
 
 
     return (
