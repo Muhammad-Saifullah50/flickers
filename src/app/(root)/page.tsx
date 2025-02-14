@@ -5,6 +5,7 @@ import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
 import MomentsList from "@/components/MomentsList";
 import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
+import MomentSkeleton from "@/components/skeletons/MomentSkeleton";
 import { Suspense } from "react";
 
 export default async function HomePage() {
@@ -33,7 +34,10 @@ export default async function HomePage() {
 
   return (
     <main>
-      <MomentsList momentsPromise={momentsPromise} currentUser={currentUser} />
+      <Suspense fallback={<MomentSkeleton />}>
+
+        <MomentsList momentsPromise={momentsPromise} currentUser={currentUser} />
+      </Suspense>
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
       <section className="flex flex-col gap-6 py-9">

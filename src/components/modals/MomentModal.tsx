@@ -36,7 +36,7 @@ const MomentModal = ({ moment, allMoments }: { moment: Moment & { author: User }
       </DialogTrigger>
       <DialogContent className="!bg-transparent h-full border-none">
 
-        <MomentCarousel allMoments={allMoments} />
+        <MomentCarousel allMoments={allMoments} currMomentId={moment.id} />
       </DialogContent>
     </Dialog>
   )
