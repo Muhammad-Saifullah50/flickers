@@ -13,6 +13,7 @@ interface createMomentParams {
     altText?: string;
     bgColor?: string;
     authorId: string;
+    text?: string
 }
 
 export const getRecentMoments = async () => {
@@ -37,6 +38,7 @@ export const createMoment = async (data: createMomentParams) => {
             altText: data.altText,
             bgColor: data.bgColor,
             authorId: data.authorId,
+            text: data.text,
             assets: {
                 create: data.assets?.map(asset => ({
                     url: asset.url,
