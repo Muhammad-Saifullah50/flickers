@@ -65,9 +65,12 @@ const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: { mome
               height={isCurrentMoment ? 591 : 235}
               alt="moment image"
               className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
-                'w-[333px] h-[591px]': isCurrentMoment
+                'w-[333px] h-[591px] relative': isCurrentMoment
               })} />
 
+            {isCurrentMoment && <div className="absolute flex gap-2 items-center justify-center p-2 bg-black/60 rounded-lg w-full bottom-0">
+              {moment.caption}
+            </div>}
             {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
           </div>
         )}
