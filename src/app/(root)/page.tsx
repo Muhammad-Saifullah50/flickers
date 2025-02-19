@@ -30,14 +30,12 @@ export default async function HomePage() {
     userHasFollowed = false
   }
   const postsPromise = getFeedPosts(userHasFollowed);
-  const momentsPromise = getRecentMoments();
 
   return (
     <main>
-      <Suspense fallback={<MomentSkeleton />}>
 
-        <MomentsList momentsPromise={momentsPromise} currentUser={currentUser} />
-      </Suspense>
+        <MomentsList 
+         currentUser={currentUser} />
       <Heading text='Home Feed' icon='/icons/home-white.svg' />
 
       <section className="flex flex-col gap-6 py-9">
