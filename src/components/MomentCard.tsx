@@ -8,6 +8,7 @@ import MomentCircle from "./MomentCircle";
 import { CarouselNext, CarouselPrevious } from "./ui/carousel";
 import { Progress } from "@/components/ui/progress"
 import { updateFlick } from "@/actions/flick.actions";
+import  AssetCarousel  from "./AssetCarousel";
 
 
 interface MomentCardProps {
@@ -41,11 +42,11 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
     <div className="relative mr-4">
       <div className="relative">
 
-        {isCurrentMoment && <div className="absolute w-full flex flex-col gap-2 items-center p-2">
+        {isCurrentMoment && <div className="absolute w-full flex flex-col gap-2 items-center p-2 z-50">
           {
             isCurrentMoment && <Progress value={progress} className="h-1" />
           }
-          <div className="flex gap-2 items-center justify-start w-full">
+          <div className="flex gap-2 items-center justify-start w-full relative z-50 p-2">
 
             <Image
               src={moment.author.image || '/icons/dummyuser.png'}
@@ -58,48 +59,63 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
           </div>
         </div>}
 
-        <div style={{ backgroundColor: moment.bgColor! }}
-          className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center", {
-            'w-[333px] h-[591px]': isCurrentMoment
-          })}>
+        {!isCurrentMoment &&
+          <div style={{ backgroundColor: moment.bgColor! }}
+            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center")}>
 
 
-          {mediaType === 'text' ? (
-            <>
-              <p className="text-2xl text-white font-bold rounded-lg p-2">
-                {moment.text}
-              </p>
-              {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
-            </>
-          ) : mediaType === 'image' ? (
-            <>
-              <Image src={firstAsset?.url}
-                width={isCurrentMoment ? 333 : 133}
-                height={isCurrentMoment ? 591 : 235}
-                alt="moment image"
-                className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
-                  'w-[333px] h-[591px] relative': isCurrentMoment
-                })} />
+            {mediaType === 'text' ? (
+              <>
+                <p className="text-2xl text-white font-bold rounded-lg p-2">
+                  {moment.text}
+                </p>
+                {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
+              </>
+            ) : mediaType === 'image' ? (
+              <>
+                <Image src={firstAsset?.url}
+                  width={ 133}
+                  height={ 235}
+                  alt="moment image"
+                  className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill")} />
 
-              {isCurrentMoment && <div className="absolute flex gap-2 items-center justify-center p-2 bg-black/60 rounded-lg w-full bottom-0">
-                {moment.caption}
-              </div>}
-              {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
-            </>
-          ) : (
-            <>
-              <video src={firstAsset?.url}
-                controls={isCurrentMoment ? true : false}
-                autoPlay={isCurrentMoment ? true : false}
-                controlsList="nodownload nofullscreen noremoteplayback"
-                className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
-                  'w-[333px] h-[591px]': isCurrentMoment
-                })} />
+                
+              </>
+            ) : (
+              <>
+                <video src={firstAsset?.url}
+                  controls={false}
+                  autoPlay={ false}
+                  controlsList="nodownload nofullscreen noremoteplayback"
+                  className={" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill"} />
 
-              {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
-            </>
-          )}
-        </div>
+                {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
+              </>
+            )}
+
+          </div>
+        }
+        {isCurrentMoment && mediaType === 'text' &&
+
+          (<div 
+          style={{ backgroundColor: moment.bgColor! }}  
+          className="w-[333px] h-[591px] flex rounded-lg items-center justify-center">
+            <p className="text-2xl text-white font-bold rounded-lg p-2">
+              {moment.text}
+            </p>
+          
+          </div>)
+        }
+
+        {isCurrentMoment && currMoment.assets.length > 0 && (
+          <div className="w-[333px] h-[591px] flex rounded-lg items-center justify-center ">
+            <AssetCarousel 
+            assets={currMoment.assets} 
+            caption={moment.caption} 
+            firstAssetDuration={currMoment.assets[0].duration}/>
+          </div>
+        )}
+
 
       </div>
       <div className="flex justify-between items-center absolute top-1/2 mx-auto w-[330px]">

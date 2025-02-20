@@ -72,3 +72,31 @@ export function formatMessageTime(localTime: Date | string): string {
     return date.toLocaleString('en-US', { month: 'long', day: 'numeric' }) + `, ${timeString}`;
   }
 }
+
+export const determineAssetType = (url: string) => {
+  // Image extensions
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg']
+  // Video extensions  
+  const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv']
+
+  const extension = url.toLowerCase().substring(url.lastIndexOf('.'))
+
+  if (imageExtensions.includes(extension)) {
+    return 'image'
+  }
+
+  if (videoExtensions.includes(extension)) {
+    return 'video' 
+  }
+
+  // Handle URLs without extensions (e.g. data URLs)
+  if (url.startsWith('data:image/')) {
+    return 'image'
+  }
+
+  if (url.startsWith('data:video/')) {
+    return 'video'
+  }
+
+  return 'unknown'
+}
