@@ -49,9 +49,16 @@ const MomentCarousel = ({ allMoments, currMomentId }: { allMoments: (Moment & { 
   }
 
   const handlePrevious = () => {
-    setCurrentIndex(currentIndex !== 0 ? currentIndex - 1 : 0)
 
-    setCurrentMomentId(momentIdList[currentIndex - 1])
+    const isFirstMoment = currentIndex === 0
+    if (isFirstMoment) {
+      setCurrentIndex(momentIdList.length - 1)
+      setCurrentMomentId(momentIdList[momentIdList.length - 1])
+    } else {
+
+      setCurrentIndex(currentIndex - 1)
+      setCurrentMomentId(momentIdList[currentIndex - 1])
+    }
   }
 
   return (
@@ -61,10 +68,10 @@ const MomentCarousel = ({ allMoments, currMomentId }: { allMoments: (Moment & { 
         loop: true
       }}
     >
-      <CarouselContent className="flex items-center">
+      <CarouselContent className="flex items-center  sm:gap-8 xl:gap-0">
         {allMoments.map((moment, index) => (
           <CarouselItem key={index}
-            className="md:basis-1/2 lg:basis-1/3 flex justify-center"
+            className="md:basis-1/2 lg:basis-1/3 flex justify-center  relative -z-50  "
           >
             <MomentCard
               moment={moment}

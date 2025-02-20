@@ -2,14 +2,23 @@
 import { cn } from "@/lib/utils";
 import { Moment, MomentAsset, User } from "@prisma/client"
 import Image from "next/image";
-import { useRef, } from "react";
+import { useEffect, useRef, useState, } from "react";
 import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 import MomentCircle from "./MomentCircle";
 import { CarouselNext, CarouselPrevious } from "./ui/carousel";
+import { Progress } from "@/components/ui/progress"
 
-const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: { moment: Moment & { author: User, assets: MomentAsset[] }, currMomentId: string }) => {
 
-  const ref = useRef<LoadingBarRef>(null);
+interface MomentCardProps {
+  moment: Moment & { author: User, assets: MomentAsset[] },
+  currMomentId: string,
+  handlePrevious: () => void,
+  handleNext: () => void,
+}
+
+const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: MomentCardProps) => {
+
+  const [progress, setProgress] = useState(0);
   const isCurrentMoment = moment.id === currMomentId;
 
   const isText = !!moment.text && moment.bgColor !== '';
@@ -21,12 +30,21 @@ const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: { mome
 
   const isImage = firstAsset?.url.includes('png') || firstAsset?.url.includes('jpg') || firstAsset?.url.includes('avif') || firstAsset?.url.includes('svg');
 
+  useEffect(() => {
+    const timer = setTimeout(() => setProgress(100), 1000)
+    return () => clearTimeout(timer)
+  }, [currMomentId])
+  
+
   const isCurrent = moment.id === currMomentId;
 
   return (
-    <div className="relative">
+    <div className="relative mr-4">
       <div className="relative">
-        <LoadingBar color="#FFFFFF59" ref={ref} shadow={true} height={10} className="z-50 absolute top-0 left-0 right-0" />
+        {
+         isCurrentMoment && <Progress value={progress}/>
+        }
+
 
         {isCurrentMoment && <div className="absolute flex gap-2 items-center p-2">
           <Image
@@ -40,7 +58,7 @@ const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: { mome
         </div>}
 
         {isVideo && (
-          <div className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center", {
+          <div className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center ", {
             'w-[333px] h-[591px]': isCurrentMoment
           })}>
             <video src={firstAsset?.url}
@@ -56,8 +74,8 @@ const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: { mome
         )}
 
         {isImage && (
-          <div style={{ backgroundColor: moment.bgColor! }}
-            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center", {
+          <div
+            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center ", {
               'w-[333px] h-[591px]': isCurrentMoment
             })}>
             <Image src={firstAsset?.url}
@@ -90,8 +108,8 @@ const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: { mome
       </div>
       <div className="flex justify-between items-center absolute top-1/2 mx-auto w-[330px]">
 
-        {isCurrent && <CarouselPrevious onClick={handlePrevious} className="relative" />}
-        {isCurrentMoment && <CarouselNext onClick={handleNext} className="relative " />}
+        {isCurrent && <CarouselPrevious onClick={handlePrevious} className="relative z-50" />}
+        {isCurrentMoment && <CarouselNext onClick={handleNext} className="relative z-50" />}
       </div>
     </div>
   )
@@ -102,3 +120,6 @@ export default MomentCard
 // have to complete this
 // have to implement the loading and the next assets etc
 // have to correlctylk imoplement the carousel
+// haver to ckeck and correcvt the prev carousel button not clockable when video is on leift
+//have to us eplaiceholder to genereate lur place holder images
+// haver to delete the loading bar thingy
