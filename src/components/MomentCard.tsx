@@ -7,108 +7,104 @@ import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 import MomentCircle from "./MomentCircle";
 import { CarouselNext, CarouselPrevious } from "./ui/carousel";
 import { Progress } from "@/components/ui/progress"
+import { updateFlick } from "@/actions/flick.actions";
 
 
 interface MomentCardProps {
   moment: Moment & { author: User, assets: MomentAsset[] },
-  currMomentId: string,
+  currMoment: Moment & { author: User, assets: MomentAsset[] },
   handlePrevious: () => void,
   handleNext: () => void,
+  currMomentId: string
 }
 
-const MomentCard = ({ moment, currMomentId, handlePrevious, handleNext }: MomentCardProps) => {
+const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCardProps) => {
 
   const [progress, setProgress] = useState(0);
-  const isCurrentMoment = moment.id === currMomentId;
-
-  const isText = !!moment.text && moment.bgColor !== '';
-  const momentHasSingleAsset = moment.assets.length === 1;
+  const [asset, setAsset] = useState(currMoment.assets[0])
 
   const firstAsset = moment.assets[0]
 
   const isVideo = firstAsset?.url.includes('mp4') || firstAsset?.url.includes('mov') || firstAsset?.url.includes('webm');
-
   const isImage = firstAsset?.url.includes('png') || firstAsset?.url.includes('jpg') || firstAsset?.url.includes('avif') || firstAsset?.url.includes('svg');
+
+  const isCurrentMoment = moment.id === currMoment.id;
+
 
   useEffect(() => {
     const timer = setTimeout(() => setProgress(100), 1000)
     return () => clearTimeout(timer)
-  }, [currMomentId])
-  
+  }, [currMoment.id])
 
-  const isCurrent = moment.id === currMomentId;
-
+  const mediaType = isVideo ? 'video' : isImage ? 'image' : 'text';
   return (
     <div className="relative mr-4">
       <div className="relative">
-        {
-         isCurrentMoment && <Progress value={progress}/>
-        }
 
+        {isCurrentMoment && <div className="absolute w-full flex flex-col gap-2 items-center p-2">
+          {
+            isCurrentMoment && <Progress value={progress} className="h-1" />
+          }
+          <div className="flex gap-2 items-center justify-start w-full">
 
-        {isCurrentMoment && <div className="absolute flex gap-2 items-center p-2">
-          <Image
-            src={moment.author.image || '/icons/dummyuser.png'}
-            width={25}
-            height={25}
-            alt="user image"
-            className="rounded-full"
-          />
-          <p className="text-xs">{moment.author.name}</p>
+            <Image
+              src={moment.author.image || '/icons/dummyuser.png'}
+              width={25}
+              height={25}
+              alt="user image"
+              className="rounded-full"
+            />
+            <p className="text-xs">{moment.author.name}</p>
+          </div>
         </div>}
 
-        {isVideo && (
-          <div className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center ", {
+        <div style={{ backgroundColor: moment.bgColor! }}
+          className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center", {
             'w-[333px] h-[591px]': isCurrentMoment
           })}>
-            <video src={firstAsset?.url}
-              controls={isCurrentMoment ? true : false}
-              autoPlay={isCurrentMoment ? true : false}
-              controlsList="nodownload nofullscreen noremoteplayback"
-              className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
-                'w-[333px] h-[591px]': isCurrentMoment
-              })} />
 
-            {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
-          </div>
-        )}
 
-        {isImage && (
-          <div
-            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center ", {
-              'w-[333px] h-[591px]': isCurrentMoment
-            })}>
-            <Image src={firstAsset?.url}
-              width={isCurrentMoment ? 333 : 133}
-              height={isCurrentMoment ? 591 : 235}
-              alt="moment image"
-              className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
-                'w-[333px] h-[591px] relative': isCurrentMoment
-              })} />
+          {mediaType === 'text' ? (
+            <>
+              <p className="text-2xl text-white font-bold rounded-lg p-2">
+                {moment.text}
+              </p>
+              {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
+            </>
+          ) : mediaType === 'image' ? (
+            <>
+              <Image src={firstAsset?.url}
+                width={isCurrentMoment ? 333 : 133}
+                height={isCurrentMoment ? 591 : 235}
+                alt="moment image"
+                className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
+                  'w-[333px] h-[591px] relative': isCurrentMoment
+                })} />
 
-            {isCurrentMoment && <div className="absolute flex gap-2 items-center justify-center p-2 bg-black/60 rounded-lg w-full bottom-0">
-              {moment.caption}
-            </div>}
-            {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
-          </div>
-        )}
+              {isCurrentMoment && <div className="absolute flex gap-2 items-center justify-center p-2 bg-black/60 rounded-lg w-full bottom-0">
+                {moment.caption}
+              </div>}
+              {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
+            </>
+          ) : (
+            <>
+              <video src={firstAsset?.url}
+                controls={isCurrentMoment ? true : false}
+                autoPlay={isCurrentMoment ? true : false}
+                controlsList="nodownload nofullscreen noremoteplayback"
+                className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill", {
+                  'w-[333px] h-[591px]': isCurrentMoment
+                })} />
 
-        {isText && (
-          <div style={{ backgroundColor: moment.bgColor! }}
-            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center", {
-              'w-[333px] h-[591px]': isCurrentMoment
-            })}>
-            <p className="text-2xl text-white font-bold rounded-lg p-2">
-              {moment.text}
-            </p>
-            {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
-          </div>
-        )}
+              {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}
+            </>
+          )}
+        </div>
 
       </div>
       <div className="flex justify-between items-center absolute top-1/2 mx-auto w-[330px]">
 
-        {isCurrent && <CarouselPrevious onClick={handlePrevious} className="relative z-50" />}
+        {isCurrentMoment && <CarouselPrevious onClick={handlePrevious} className="relative z-50" />}
         {isCurrentMoment && <CarouselNext onClick={handleNext} className="relative z-50" />}
       </div>
     </div>

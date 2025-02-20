@@ -27,7 +27,7 @@ const MomentModal = ({ moment, allMoments }: { moment: Moment & { author: User }
             <X />
           </DialogClose>
 
-          <MomentCarousel allMoments={allMoments} currMomentId={moment.id} />
+          <MomentCarousel allMoments={allMoments} currMoment={moment} />
         </section>
       </DialogOverlay>
     </Dialog>

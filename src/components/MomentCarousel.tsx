@@ -6,20 +6,24 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Moment, User } from "@prisma/client"
+import { Moment, MomentAsset, User } from "@prisma/client"
 import MomentCard from "./MomentCard"
 import { type CarouselApi } from "@/components/ui/carousel"
 import { useEffect, useRef, useState } from "react"
 
-
-const MomentCarousel = ({ allMoments, currMomentId }: { allMoments: (Moment & { author: User })[], currMomentId: string }) => {
+type MomentCarouselProps = {
+  allMoments: (Moment & { author: User, assets: MomentAsset[] })[],
+  currMoment: Moment & { author: User, assets: MomentAsset[] }
+}
+const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
 
   const [api, setApi] = useState<CarouselApi>();
-  const [currentMomentId, setCurrentMomentId] = useState<string>(currMomentId);
+  const [currentMomentId, setCurrentMomentId] = useState<string>(currMoment.id);
+  const [currentMoment, setCurrentMoment] = useState<Moment & { author: User, assets: MomentAsset[] }>(currMoment);
 
   const momentIdList = allMoments.map(moment => moment.id)
 
-  let initialIndex = momentIdList.findIndex(id => id === currMomentId)
+  let initialIndex = momentIdList.findIndex(id => id === currMoment.id)
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
 
@@ -40,10 +44,12 @@ const MomentCarousel = ({ allMoments, currMomentId }: { allMoments: (Moment & { 
     if (isLastMoment) {
       setCurrentIndex(0)
       setCurrentMomentId(momentIdList[0])
+      setCurrentMoment(allMoments[0])
     } else {
 
       setCurrentIndex(currentIndex + 1)
       setCurrentMomentId(momentIdList[currentIndex + 1])
+      setCurrentMoment(allMoments[currentIndex + 1])
     }
 
   }
@@ -54,10 +60,12 @@ const MomentCarousel = ({ allMoments, currMomentId }: { allMoments: (Moment & { 
     if (isFirstMoment) {
       setCurrentIndex(momentIdList.length - 1)
       setCurrentMomentId(momentIdList[momentIdList.length - 1])
+      setCurrentMoment(allMoments[momentIdList.length - 1])
     } else {
 
       setCurrentIndex(currentIndex - 1)
       setCurrentMomentId(momentIdList[currentIndex - 1])
+      setCurrentMoment(allMoments[currentIndex - 1])
     }
   }
 
@@ -75,7 +83,7 @@ const MomentCarousel = ({ allMoments, currMomentId }: { allMoments: (Moment & { 
           >
             <MomentCard
               moment={moment}
-              currMomentId={currentMomentId}
+              currMoment={currentMoment}
               momentIdList={momentIdList}
               handlePrevious={handlePrevious}
               handleNext={handleNext}
