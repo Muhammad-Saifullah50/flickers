@@ -80,4 +80,4 @@ const AssetCarousel = ({ assets, caption, firstAssetDuration }: AssetCarouselPro
 export default AssetCarousel
 
 // havev to figure out how to go to the next moment when the last asset has completed
-// and when the user clicks or slides on the next moment, it should go to the next moment
+// and when the user clicks or slides on the next moment, it should go to the next moment       
