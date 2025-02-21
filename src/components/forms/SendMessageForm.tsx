@@ -9,8 +9,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
 import { createMessage } from '@/actions/chat.actions';
+import { Room } from '@ably/chat';
 
-const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId: string }) => {
+const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId: string, room: Room }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
@@ -24,9 +25,11 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         try {
             setLoading(true);
+
+            await room.messages.send({text: data.message!});
+            
             form.setValue('message', '');
 
-            await room.messages.send(data.message);
             const dataObj = {
                 ...data,
                 chatId: chatId,

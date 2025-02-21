@@ -17,50 +17,66 @@ const ChatPage = () => {
   const { chatId } = useParams();
   const [currentUser, setCurrentUser] = useState<User | null>();
   const [room, setRoom] = useState<Room>();
+  const [chatClient, setChatClient] = useState<ChatClient>();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUser = async () => {
       const currUser = await getCurrentUserFromDb();
       setCurrentUser(currUser);
     };
 
-    fetchData()
+    fetchUser()
+  }, [])
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const realtimeClient = new Ably.Realtime({
+      clientId: currentUser?.id!,
+      authUrl: '/api/ably',
+      authParams: { clientId: currentUser?.id! }
+    });
+
+    const client = new ChatClient(realtimeClient);
+
+    setChatClient(client);
   }, [currentUser])
 
 
-console.log(currentUser, 'currentUser')
-  const realtimeClient = new Ably.Realtime({ clientId: currentUser?.id!, authUrl: '/api/ably', authParams: { clientId: currentUser?.id! } });
-
-  const client = new ChatClient(realtimeClient);
-
-  const typing = { timeoutMs: 5000 }
 
   useEffect(() => {
+
+    if (!chatClient || !chatId) return;
+
     const getRoom = async () => {
-      const fetchedRoom = await client.rooms.get(chatId as string, { typing });
+      const typing = { timeoutMs: 5000 }
+      const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing });
+      
       setRoom(fetchedRoom);
+      await fetchedRoom.attach()
     }
     getRoom()
-  }, [room])
+  }, [chatClient, chatId]);
 
-console.log(client, 'client')
+
   
   return (
-    client ? (
+    (chatClient && room) ? (
 
-      <ChatClientProvider client={client}>
+      <ChatClientProvider client={chatClient}>
+
         <ChatRoomProvider id={room?.roomId}>
 
-          <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
+        <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
 
-            <MessageBox
+          <MessageBox
               room={room!}
               chatId={chatId as string}
               currentUser={currentUser!}
               // otherUser={otherUser!}
               key={chatId as string}
             />
-          </main>
+        </main>
         </ChatRoomProvider>
       </ChatClientProvider>
     ) : (

@@ -7,8 +7,7 @@ import { getChatById } from '@/actions/chat.actions'
 import Messages from './Messages'
 import useSWR from 'swr';
 import Loader from './Loader'
-import { Room } from '@ably/chat'
-import { Message } from 'ably'
+import { Message, OrderBy, PaginatedResult, Room } from '@ably/chat'
 
 
 const MessageBox = ({ chatId, currentUser, otherUser, room }: {
@@ -19,27 +18,33 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 }) => {
 
 
-    const [messages, setMessages] = useState<Message>();
+    const [messages, setMessages] = useState<PaginatedResult<Message>[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    console.log(room, 'room')
 
-    const {unsubscribe} = room.messages.subscribe((event) => {
-        console.log(event.message, 'message');
-      });
+    useEffect(() => {
+if (!room.messages) return;
+        const fetchMessages = async () => {
+            try {
 
-    // useEffect(() => {
-    //     const fetchMessages = async () => {
-    //         const historicalMessages = await room.messages.get({
-    //             limit: 10
-    //         });
+                const historicalMessages = await room.messages.get({
+                    limit: 10
+                });
 
-    //         setMessages(historicalMessages)
-    //         console.log(messages, 'messages')
-    //     }
+                setMessages(historicalMessages)
+            } catch (error) {
+                console.error('Error fetching messages from ably:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
 
-    //     fetchMessages()
-    // }, [])
+        fetchMessages()
+    }, [room]);
+
+    useEffect(() => {
+        console.log("Updated messages state:", messages); // ✅ Logs updated messages
+    }, [messages]); // ✅ Runs when `messages` state changes
 
     return (
         <>
@@ -47,7 +52,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                 <div className="flex gap-4 items-center">
                     <div>
                         <Image
-                            src={otherUser?.image as string}
+                            src={otherUser?.image as string || '/icons/dummyuser.png'}
                             width={50}
                             height={50}
                             alt="chat image"
@@ -81,18 +86,17 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
             <section className=" overflow-y-scroll h-full">
                 {isLoading ? (
                     <Loader variant="purple" />
-            
+
                 ) : messages ? (
-                    <p>messages</p>
-                    // <Messages messages={messages} currUser={currentUser} />
+                    <Messages messages={messages.items} currUser={currentUser} />
                 ) : null}
             </section>
 
             <section>
 
-                <SendMessageForm 
-                chatId={chatId} senderId={currentUser?.id} 
-                room={room}/>
+                <SendMessageForm
+                    chatId={chatId} senderId={currentUser?.id}
+                    room={room} />
             </section>
         </>
     )
