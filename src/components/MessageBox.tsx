@@ -18,17 +18,18 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 }) => {
 
 
-    const [messages, setMessages] = useState<PaginatedResult<Message>[]>([]);
+    const [messages, setMessages] = useState<PaginatedResult<Message>>();
     const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
-if (!room.messages) return;
+        if (!room.messages) return;
         const fetchMessages = async () => {
             try {
 
                 const historicalMessages = await room.messages.get({
-                    limit: 10
+                    limit: 10,
+                    
                 });
 
                 setMessages(historicalMessages)
@@ -42,9 +43,12 @@ if (!room.messages) return;
         fetchMessages()
     }, [room]);
 
-    useEffect(() => {
-        console.log("Updated messages state:", messages); // ✅ Logs updated messages
-    }, [messages]); // ✅ Runs when `messages` state changes
+    const {unsubscribe} = room.messages.subscribe((event) => {
+        setMessages(event.message);
+      });
+      // have to correct the real trime 
+
+    const reversedMessages = messages?.items.slice().reverse();
 
     return (
         <>
@@ -87,8 +91,8 @@ if (!room.messages) return;
                 {isLoading ? (
                     <Loader variant="purple" />
 
-                ) : messages ? (
-                    <Messages messages={messages.items} currUser={currentUser} />
+                ) : messages ?  (
+                    <Messages messages={reversedMessages} currUser={currentUser} />
                 ) : null}
             </section>
 
