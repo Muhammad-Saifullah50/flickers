@@ -13,8 +13,10 @@ const MessageButton = ({ currentUserId, otherUserId }: { currentUserId: string, 
 
         try {
             setLoading(true);
-            // will check for existing chat and the create a new one if need be
-             await createChat(currentUserId, otherUserId)
+            // will check for existing chat and the create a new one if need be in the database
+            const chat = await createChat(currentUserId, otherUserId);
+
+            
         } catch (error) {
             console.error('Error creating chat on client:', error);
         } finally {

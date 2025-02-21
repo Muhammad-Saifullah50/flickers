@@ -1,33 +1,46 @@
 'use client'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SendMessageForm from '@/components/forms/SendMessageForm'
 import { User } from '@prisma/client'
 import { getChatById } from '@/actions/chat.actions'
 import Messages from './Messages'
 import useSWR from 'swr';
 import Loader from './Loader'
+import { Room } from '@ably/chat'
+import { Message } from 'ably'
 
 
-
-const MessageBox = ({ chatId, currentUser, otherUser }: {
+const MessageBox = ({ chatId, currentUser, otherUser, room }: {
     chatId: string,
     currentUser: User,
-    otherUser: User
+    otherUser: User,
+    room: Room
 }) => {
 
-    const fetcher = async () => {
-        const chat = await getChatById(chatId);
-        return chat?.messages
-    }
 
-    const { data: messages, isLoading, error, } = useSWR(`chat-${chatId}`, fetcher, {
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        refreshInterval: 1000,
-        dedupingInterval: 5000
-    });
+    const [messages, setMessages] = useState<Message>();
+    const [isLoading, setIsLoading] = useState(true);
+
+    console.log(room, 'room')
+
+    const {unsubscribe} = room.messages.subscribe((event) => {
+        console.log(event.message, 'message');
+      });
+
+    // useEffect(() => {
+    //     const fetchMessages = async () => {
+    //         const historicalMessages = await room.messages.get({
+    //             limit: 10
+    //         });
+
+    //         setMessages(historicalMessages)
+    //         console.log(messages, 'messages')
+    //     }
+
+    //     fetchMessages()
+    // }, [])
+
     return (
         <>
             <section className="flex justify-between items-center pb-4">
@@ -68,16 +81,18 @@ const MessageBox = ({ chatId, currentUser, otherUser }: {
             <section className=" overflow-y-scroll h-full">
                 {isLoading ? (
                     <Loader variant="purple" />
-                ) : error ? (
-                    <p>Error</p>
+            
                 ) : messages ? (
-                    <Messages messages={messages} currUser={currentUser} />
+                    <p>messages</p>
+                    // <Messages messages={messages} currUser={currentUser} />
                 ) : null}
             </section>
 
             <section>
 
-                <SendMessageForm chatId={chatId} senderId={currentUser?.id} />
+                <SendMessageForm 
+                chatId={chatId} senderId={currentUser?.id} 
+                room={room}/>
             </section>
         </>
     )

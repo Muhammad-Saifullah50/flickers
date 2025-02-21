@@ -4,6 +4,7 @@ import Image from "next/image"
 import FollowButton from "./FollowButton"
 import { getCurrentUserFromDb } from "@/actions/user.actions"
 import { useState, useEffect } from "react"
+import Link from "next/link"
 
 type UserWithFollows = User & {
     followedBy: (Follows & {
@@ -30,6 +31,7 @@ useEffect(() => {
     const followId = user.followedBy.find((follow) => follow.follower.id === currentUser?.id)?.id
 
     return (
+        <Link href={`/users/${user.id}`}>
         <aside className="flex flex-col gap-4  border-[3px] border-dark-3 p-4 rounded-xl h-[320px] w-[320px] items-center justify-center">
             <Image
                 src={user.image!}
@@ -37,7 +39,7 @@ useEffect(() => {
                 height={90}
                 alt='profile photo'
                 className='rounded-full'
-            />
+                />
 
             <h3 className="text-white">{user.name}</h3>
             <p className="text-purple-tertiary">{user.username}</p>
@@ -49,6 +51,7 @@ useEffect(() => {
                 followId={followId}
             />}
         </aside>
+                </Link>
     )
 }
 

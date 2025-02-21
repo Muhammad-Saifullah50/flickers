@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
 import { createMessage } from '@/actions/chat.actions';
 
-const SendMessageForm = ({ chatId, senderId }: { chatId: string, senderId: string }) => {
+const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId: string }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
@@ -25,6 +25,8 @@ const SendMessageForm = ({ chatId, senderId }: { chatId: string, senderId: strin
         try {
             setLoading(true);
             form.setValue('message', '');
+
+            await room.messages.send(data.message);
             const dataObj = {
                 ...data,
                 chatId: chatId,
