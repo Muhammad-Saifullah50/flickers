@@ -19,6 +19,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [typing, setTyping] = useState(false);
+    const [isOnline, setIsOnline] = useState(false);
 
 
 
@@ -53,7 +54,6 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
         return () => {
             unsubscribe();
-            room.detach()
         }
     }, [room]);
 
@@ -72,10 +72,30 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
             unsubscribe();
         };
 
-    }, [room])
+    }, [room]);
 
+  useEffect(() => {
+        if (!room || !otherUser) return;
 
+        room.presence.enter();
+        const { unsubscribe } = room.presence.subscribe((event) => {
+console.log(event, 'event')
+            if (event.action === 'enter' && event.clientId === otherUser.id) {
+                console.log('enteriung')
+                setIsOnline(true);
+            } 
+            // else if (event.action === 'leave' && event.clientId === otherUser.id) {
+            //     console.log('leaving')
+            //     setIsOnline(false);
+            // }
+        });
+        return () => {
+            unsubscribe();
+        };
 
+    }, [room, otherUser]);
+
+// have to correct this
 
     return (
         <>
@@ -94,6 +114,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                     <div className='flex flex-col gap-'> 
                         <h2 className='text-white'>{otherUser?.name}</h2>
                     {typing && <p className='text-xs text-purple-primary font-semibold'>typing...</p>}
+                    {isOnline && <p className='text-xs text-purple-primary font-semibold'>online</p>}
                     </div>
 
                 </div>

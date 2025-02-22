@@ -3,9 +3,10 @@ import { getChatById } from "@/actions/chat.actions";
 import { getCurrentUserFromDb, getDbUserById } from "@/actions/user.actions";
 import Loader from "@/components/Loader";
 import MessageBox from "@/components/MessageBox";
-import { ChatClient, ChatClientProvider, ChatRoomProvider, Room } from '@ably/chat';
+import { ChatClient, ChatClientProvider, ChatRoomProvider, Room, RoomOptionsDefaults } from '@ably/chat';
 import { User } from "@prisma/client";
 import * as Ably from 'ably';
+import { subscribe } from "diagnostics_channel";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -55,11 +56,13 @@ const ChatPage = () => {
     if (!chatClient || !chatId) return;
 
     const getRoom = async () => {
-      const typing = { timeoutMs: 3000 }
-      const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing });
+      const typing = { timeoutMs: 3000 };
+      const presence = {enter: true, leave: true, subscribe: true};
+      const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing, presence });
 
       setRoom(fetchedRoom);
       await fetchedRoom.attach()
+
     }
     getRoom()
   }, [chatClient, chatId]);
