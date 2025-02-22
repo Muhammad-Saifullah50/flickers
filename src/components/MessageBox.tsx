@@ -29,7 +29,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
             try {
 
                 const historicalMessages = await room.messages.get({
-                    limit: 10,
+                    limit: 100,
 
                 });
                 const reversedList = historicalMessages.items.slice().reverse();
@@ -44,7 +44,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
         fetchMessages()
     }, [room]);
 
-
+// have to implenment pagination
     useEffect(() => {
         if (!room) return;
         const { unsubscribe } = room.messages.subscribe((event) => {

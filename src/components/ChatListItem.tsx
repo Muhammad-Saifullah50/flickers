@@ -27,7 +27,7 @@ const ChatListItem = ({ chatName, chatId, chatImage, chatUsername, isOnline, typ
                 {/* // the other persons name and username */}
                 <div className="text-white">
                     <h4 className="line-clamp-1">{chatName}</h4>
-                    {typing ? <p className="text-sm text-purple-primary font-normal">typing...</p> : (
+                    {typing ? <p className="text-sm text-purple-primary font-semibold">typing...</p> : (
                         <p className="text-sm text-purple-secondary font-normal">{chatUsername}</p>
                     )}
                     
