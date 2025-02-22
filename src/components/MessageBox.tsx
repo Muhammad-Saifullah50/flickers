@@ -77,9 +77,15 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
         if (!room || !otherUser) return;
 
         room.presence.enter();
+        const checkPresence = async () => {
+           const members = await room.presence.get();
+           setIsOnline(members.some(member => member.clientId === otherUser.id));
+
+        };
+        checkPresence();
         const { unsubscribe } = room.presence.subscribe((event) => {
 
-            if (event.action === 'enter') {
+            if (event.action === 'enter' && event.clientId === otherUser.id) {
                 setIsOnline(true);
             }
             else if (event.action === 'leave') {

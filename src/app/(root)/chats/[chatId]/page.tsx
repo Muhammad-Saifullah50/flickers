@@ -3,10 +3,9 @@ import { getChatById } from "@/actions/chat.actions";
 import { getCurrentUserFromDb, getDbUserById } from "@/actions/user.actions";
 import Loader from "@/components/Loader";
 import MessageBox from "@/components/MessageBox";
-import { ChatClient, ChatClientProvider, ChatRoomProvider, Room, RoomOptionsDefaults } from '@ably/chat';
+import { ChatClient, ChatClientProvider, ChatRoomProvider, Room } from '@ably/chat';
 import { User } from "@prisma/client";
 import * as Ably from 'ably';
-import { subscribe } from "diagnostics_channel";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 

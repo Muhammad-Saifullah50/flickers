@@ -13,7 +13,7 @@ const ChatLayout = ({ children }: { children: React.ReactNode }) => {
 
 
   return (
-    <main className="flex gap-4">
+    <main className="flex gap-4 ">
       <section className="flex flex-col gap-4 w-2/5">
         <Heading text='All Chats' icon='/icons/chats-white.svg' />
         
