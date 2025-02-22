@@ -41,7 +41,7 @@ const ChatPage = () => {
     if (!currentUser || !otherUser) return;
 
     const realtimeClient = new Ably.Realtime({
-      clientId: currentUser?.id!,
+      clientId: currentUser.id,
       authUrl: '/api/ably',
       authParams: { clientId: currentUser?.id! }
     });
