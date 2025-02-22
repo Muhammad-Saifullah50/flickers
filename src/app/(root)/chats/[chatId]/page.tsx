@@ -57,7 +57,7 @@ const ChatPage = () => {
 
     const getRoom = async () => {
       const typing = { timeoutMs: 3000 };
-      const presence = {enter: true, leave: true, subscribe: true};
+      const presence = {enter: true, leave: true};
       const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing, presence });
 
       setRoom(fetchedRoom);

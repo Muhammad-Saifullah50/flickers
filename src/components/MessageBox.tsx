@@ -47,7 +47,6 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
     useEffect(() => {
         if (!room) return;
-        room.attach()
         const { unsubscribe } = room.messages.subscribe((event) => {
             setMessages(prevMessages => [...prevMessages, event.message]);
         });
@@ -60,7 +59,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
     useEffect(() => {
         if (!room) return;
         const { unsubscribe } = room.typing.subscribe((event) => {
-           if (event.currentlyTyping.has(otherUser.id)) {
+            if (event.currentlyTyping.has(otherUser.id)) {
                 setTyping(true);
             } else {
                 setTyping(false);
@@ -74,20 +73,18 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
     }, [room]);
 
-  useEffect(() => {
+    useEffect(() => {
         if (!room || !otherUser) return;
 
         room.presence.enter();
         const { unsubscribe } = room.presence.subscribe((event) => {
-console.log(event, 'event')
-            if (event.action === 'enter' && event.clientId === otherUser.id) {
-                console.log('enteriung')
+
+            if (event.action === 'enter') {
                 setIsOnline(true);
-            } 
-            // else if (event.action === 'leave' && event.clientId === otherUser.id) {
-            //     console.log('leaving')
-            //     setIsOnline(false);
-            // }
+            }
+            else if (event.action === 'leave') {
+                setIsOnline(false);
+            }
         });
         return () => {
             unsubscribe();
@@ -95,7 +92,6 @@ console.log(event, 'event')
 
     }, [room, otherUser]);
 
-// have to correct this
 
     return (
         <>
@@ -111,10 +107,10 @@ console.log(event, 'event')
                             className="rounded-full"
                         />
                     </div>
-                    <div className='flex flex-col gap-'> 
+                    <div className='flex flex-col gap-'>
                         <h2 className='text-white'>{otherUser?.name}</h2>
-                    {typing && <p className='text-xs text-purple-primary font-semibold'>typing...</p>}
-                    {isOnline && <p className='text-xs text-purple-primary font-semibold'>online</p>}
+                        {typing && <p className='text-xs text-purple-primary font-semibold'>typing...</p>}
+                        {isOnline && <p className='text-xs text-purple-primary font-semibold'>online</p>}
                     </div>
 
                 </div>
@@ -150,7 +146,7 @@ console.log(event, 'event')
 
                 <SendMessageForm
                     chatId={chatId} senderId={currentUser?.id}
-                    room={room}  />
+                    room={room} />
             </section>
         </>
     )
