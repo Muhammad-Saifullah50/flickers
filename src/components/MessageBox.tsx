@@ -129,7 +129,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
                 <SendMessageForm
                     chatId={chatId} senderId={currentUser?.id}
-                    room={room} setTyping={setTyping} />
+                    room={room}  />
             </section>
         </>
     )

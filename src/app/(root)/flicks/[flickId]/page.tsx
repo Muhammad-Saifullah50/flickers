@@ -8,13 +8,6 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 import Loader from "@/components/Loader";
 
-export const generateStaticParams = async () => {
-    const postIds = await getAllFlickIds()
-
-    return postIds?.map(flickId => ({
-        flickId,
-    }))
-}
 
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {

@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
 import { Room } from '@ably/chat';
 
-const SendMessageForm = ({ chatId, senderId, room, setTyping }: { chatId: string, senderId: string, room: Room }) => {
+const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId: string, room: Room }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
