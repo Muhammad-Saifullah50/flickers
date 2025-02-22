@@ -1,13 +1,11 @@
 'use client'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import SendMessageForm from '@/components/forms/SendMessageForm'
 import { User } from '@prisma/client'
-import { getChatById } from '@/actions/chat.actions'
 import Messages from './Messages'
-import useSWR from 'swr';
 import Loader from './Loader'
-import { Message, OrderBy, PaginatedResult, Room } from '@ably/chat'
+import { Message, Room, useTyping } from '@ably/chat'
 
 
 const MessageBox = ({ chatId, currentUser, otherUser, room }: {
@@ -20,6 +18,8 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [typing, setTyping] = useState(false);
+
 
 
     useEffect(() => {
@@ -45,33 +45,55 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
 
     useEffect(() => {
-        if (!room.messages) return;
+        if (!room) return;
         room.attach()
         const { unsubscribe } = room.messages.subscribe((event) => {
-            setMessages(prevMessages => [ ...prevMessages, event.message ]);
+            setMessages(prevMessages => [...prevMessages, event.message]);
         });
 
         return () => {
             unsubscribe();
             room.detach()
         }
-    }, [room.messages])
+    }, [room]);
+
+    useEffect(() => {
+        if (!room) return;
+        const { unsubscribe } = room.typing.subscribe((event) => {
+           if (event.currentlyTyping.has(otherUser.id)) {
+                setTyping(true);
+            } else {
+                setTyping(false);
+            }
+
+        });
+
+        return () => {
+            unsubscribe();
+        };
+
+    }, [room])
+
+
+
 
     return (
         <>
-            <section className="flex justify-between items-center pb-4">
+            <section className="flex justify-between items-center pb-4 ">
+
                 <div className="flex gap-4 items-center">
                     <div>
                         <Image
-                            src={otherUser?.image as string || '/icons/dummyuser.png'}
+                            src={otherUser?.image as string}
                             width={50}
                             height={50}
                             alt="chat image"
                             className="rounded-full"
                         />
                     </div>
-                    <div>
+                    <div className='flex flex-col gap-'> 
                         <h2 className='text-white'>{otherUser?.name}</h2>
+                    {typing && <p className='text-xs text-purple-primary font-semibold'>typing...</p>}
                     </div>
 
                 </div>
@@ -107,7 +129,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
                 <SendMessageForm
                     chatId={chatId} senderId={currentUser?.id}
-                    room={room} />
+                    room={room} setTyping={setTyping} />
             </section>
         </>
     )

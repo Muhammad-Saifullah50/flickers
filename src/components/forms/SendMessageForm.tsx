@@ -8,10 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
-import { createMessage } from '@/actions/chat.actions';
 import { Room } from '@ably/chat';
 
-const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId: string, room: Room }) => {
+const SendMessageForm = ({ chatId, senderId, room, setTyping }: { chatId: string, senderId: string, room: Room }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
@@ -25,17 +24,11 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         try {
             setLoading(true);
+            room.typing.stop()
+            await room.messages.send({ text: data.message! });
 
-            await room.messages.send({text: data.message!});
-            
             form.setValue('message', '');
 
-            const dataObj = {
-                ...data,
-                chatId: chatId,
-                senderId: senderId
-            }
-            //  await createMessage(dataObj);
         } catch (error) {
             console.error('Error creating message on client:', error);
         } finally {
@@ -71,6 +64,13 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
                                             placeholder="Write your message here..."
                                             {...field}
                                             className="!bg-dark-3 pr-10 focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0"
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                room.typing.start();
+                                            }}
+                                            onBlur={() => {
+                                                room.typing.stop();
+                                            }}
                                         />
                                         <Button
                                             disabled={loading}

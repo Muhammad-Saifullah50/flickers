@@ -1,6 +1,6 @@
 'use client';
 import { getChatById } from "@/actions/chat.actions";
-import { getCurrentUserFromDb } from "@/actions/user.actions";
+import { getCurrentUserFromDb, getDbUserById } from "@/actions/user.actions";
 import Loader from "@/components/Loader";
 import MessageBox from "@/components/MessageBox";
 import { ChatClient, ChatClientProvider, ChatRoomProvider, Room } from '@ably/chat';
@@ -8,7 +8,6 @@ import { User } from "@prisma/client";
 import * as Ably from 'ably';
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { set } from "zod";
 
 
 const ChatPage = () => {
@@ -16,6 +15,7 @@ const ChatPage = () => {
 
   const { chatId } = useParams();
   const [currentUser, setCurrentUser] = useState<User | null>();
+  const [otherUser, setOtherUser] = useState<User | null>();
   const [room, setRoom] = useState<Room>();
   const [chatClient, setChatClient] = useState<ChatClient>();
 
@@ -23,13 +23,19 @@ const ChatPage = () => {
     const fetchUser = async () => {
       const currUser = await getCurrentUserFromDb();
       setCurrentUser(currUser);
+
+      const chat = await getChatById(chatId as string);
+
+      const otherUserId = chat?.users.find((user) => user.id !== currUser?.id)?.id;
+      const fetchedOtherUser = await getDbUserById(otherUserId!);
+      setOtherUser(fetchedOtherUser);
     };
 
     fetchUser()
   }, [])
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || !otherUser) return;
 
     const realtimeClient = new Ably.Realtime({
       clientId: currentUser?.id!,
@@ -40,7 +46,7 @@ const ChatPage = () => {
     const client = new ChatClient(realtimeClient);
 
     setChatClient(client);
-  }, [currentUser])
+  }, [currentUser, otherUser]);
 
 
 
@@ -49,7 +55,7 @@ const ChatPage = () => {
     if (!chatClient || !chatId) return;
 
     const getRoom = async () => {
-      const typing = { timeoutMs: 5000 }
+      const typing = { timeoutMs: 3000 }
       const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing });
 
       setRoom(fetchedRoom);
@@ -75,7 +81,7 @@ const ChatPage = () => {
                 room={room!}
                 chatId={chatId as string}
                 currentUser={currentUser!}
-                // otherUser={otherUser!}
+                otherUser={otherUser!}
                 key={chatId as string}
               />
             </ChatRoomProvider>
@@ -92,4 +98,5 @@ const ChatPage = () => {
 
 export default ChatPage
 
-// have to see chatgpt solution
+// something is going wronmg with the chat ckliewnt 
+// it is coming undefined as the fiorst time
