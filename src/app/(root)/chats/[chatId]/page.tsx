@@ -1,23 +1,26 @@
 'use client';
-import { getChatById } from "@/actions/chat.actions";
+import { getChatById, getChatList } from "@/actions/chat.actions";
 import { getCurrentUserFromDb, getDbUserById } from "@/actions/user.actions";
+import ChatsList from "@/components/ChatsList";
+import Heading from "@/components/Heading";
 import Loader from "@/components/Loader";
 import MessageBox from "@/components/MessageBox";
+import ChatListItemSkeleton from "@/components/skeletons/ChatListItemSkeleton";
 import { ChatClient, ChatClientProvider, ChatRoomProvider, Room } from '@ably/chat';
 import { User } from "@prisma/client";
 import * as Ably from 'ably';
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 
 const ChatPage = () => {
-
 
   const { chatId } = useParams();
   const [currentUser, setCurrentUser] = useState<User | null>();
   const [otherUser, setOtherUser] = useState<User | null>();
   const [room, setRoom] = useState<Room>();
   const [chatClient, setChatClient] = useState<ChatClient>();
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,7 +35,7 @@ const ChatPage = () => {
     };
 
     fetchUser()
-  }, [])
+  }, [chatId])
 
   useEffect(() => {
     if (!currentUser || !otherUser) return;
@@ -56,7 +59,7 @@ const ChatPage = () => {
 
     const getRoom = async () => {
       const typing = { timeoutMs: 3000 };
-      const presence = {enter: true, leave: true};
+      const presence = { enter: true, leave: true };
       const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing, presence });
 
       setRoom(fetchedRoom);
@@ -71,28 +74,42 @@ const ChatPage = () => {
   return (
 
 
-    <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
-      {
-        (chatClient && room) ? (
+    <main className="flex gap-4 ">
+      <section className="flex flex-col gap-4 w-2/5">
+        <Heading text='All Chats' icon='/icons/chats-white.svg' />
 
-          <ChatClientProvider client={chatClient}>
+        <ChatsList 
+        otherUser={otherUser}
+        room={room!}
+        currentUser={currentUser!}
+        />
+      </section>
 
-            <ChatRoomProvider id={room?.roomId}>
+      <section className="flex h-full w-3/5">
+        <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
+          {
+            (chatClient && room) ? (
 
-              <MessageBox
-                room={room!}
-                chatId={chatId as string}
-                currentUser={currentUser!}
-                otherUser={otherUser!}
-                key={chatId as string}
-              />
-            </ChatRoomProvider>
-          </ChatClientProvider>
-        ) : (
-          <Loader variant="purple" />
-        )
+              <ChatClientProvider client={chatClient}>
 
-      }
+                <ChatRoomProvider id={room?.roomId}>
+
+                  <MessageBox
+                    room={room!}
+                    currentUser={currentUser!}
+                    otherUser={otherUser!}
+                    key={chatId as string}
+                    chatId={chatId as string}
+                  />
+                </ChatRoomProvider>
+              </ChatClientProvider>
+            ) : (
+              <Loader variant="purple" />
+            )
+
+          }
+        </main>
+      </section>
     </main>
   )
 
@@ -100,5 +117,3 @@ const ChatPage = () => {
 
 export default ChatPage
 
-// something is going wronmg with the chat ckliewnt 
-// it is coming undefined as the fiorst time

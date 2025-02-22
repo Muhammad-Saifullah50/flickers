@@ -115,8 +115,10 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                     </div>
                     <div className='flex flex-col gap-'>
                         <h2 className='text-white'>{otherUser?.name}</h2>
-                        {typing && <p className='text-xs text-purple-primary font-semibold'>typing...</p>}
-                        {isOnline && <p className='text-xs text-purple-primary font-semibold'>online</p>}
+                        {typing ? ( <p className='text-xs text-purple-primary font-semibold'>typing...</p>) : isOnline && !typing  ? (
+                            <p className='text-sm text-purple-secondary'>online</p>
+                        ) : (null)}
+                        
                     </div>
 
                 </div>

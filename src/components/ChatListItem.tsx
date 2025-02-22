@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image"
 import Link from "next/link"
 
@@ -6,8 +7,10 @@ type ChatListItemProps = {
     chatUsername: string
     chatId: string;
     chatImage: string | null
+    isOnline: boolean;
+    typing: boolean;
 }
-const ChatListItem = ({ chatName, chatId, chatImage, chatUsername }: ChatListItemProps) => {
+const ChatListItem = ({ chatName, chatId, chatImage, chatUsername, isOnline, typing }: ChatListItemProps) => {
     return (
         <li>
             <Link href={`/chats/${chatId}`}
@@ -24,10 +27,16 @@ const ChatListItem = ({ chatName, chatId, chatImage, chatUsername }: ChatListIte
                 {/* // the other persons name and username */}
                 <div className="text-white">
                     <h4 className="line-clamp-1">{chatName}</h4>
-                    <p className="text-sm text-purple-secondary font-normal">{chatUsername}</p>
+                    {typing ? <p className="text-sm text-purple-primary font-normal">typing...</p> : (
+                        <p className="text-sm text-purple-secondary font-normal">{chatUsername}</p>
+                    )}
+                    
                 </div>
 
-                <span className="h-[14px] w-[14px] bg-dark-4 rounded-full"/>
+                <span className={cn("h-[14px] w-[14px] rounded-full", {
+                    "bg-green-500": isOnline,
+                    "bg-red-500": !isOnline,
+                })}/>
             </Link>
         </li>
     )
