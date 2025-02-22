@@ -3,6 +3,8 @@ import { Message } from "@ably/chat"
 import { User } from "@prisma/client"
 import Image from "next/image"
 import { useEffect, useRef } from "react"
+import { v4 as uuidv4 } from "uuid";
+
 
 const Messages = ({ messages, currUser }: { messages: Message[], currUser: User }) => {
 
@@ -21,7 +23,7 @@ if ( msgref.current) msgref.current.scrollIntoView({behavior: 'instant'})
 
           <div
             ref={isLastMessage ? msgref : null}
-            key={message.createdAt.toString()}
+            key={uuidv4()}
             className={cn("flex flex-col  max-w-fit self-start",
               isOwner && "self-end"
             )}>

@@ -18,7 +18,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 }) => {
 
 
-    const [messages, setMessages] = useState<PaginatedResult<Message>>();
+    const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -29,10 +29,10 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
                 const historicalMessages = await room.messages.get({
                     limit: 10,
-                    
-                });
 
-                setMessages(historicalMessages)
+                });
+                const reversedList = historicalMessages.items.slice().reverse();
+                setMessages(reversedList);
             } catch (error) {
                 console.error('Error fetching messages from ably:', error);
             } finally {
@@ -43,12 +43,19 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
         fetchMessages()
     }, [room]);
 
-    const {unsubscribe} = room.messages.subscribe((event) => {
-        setMessages(event.message);
-      });
-      // have to correct the real trime 
 
-    const reversedMessages = messages?.items.slice().reverse();
+    useEffect(() => {
+        if (!room.messages) return;
+        room.attach()
+        const { unsubscribe } = room.messages.subscribe((event) => {
+            setMessages(prevMessages => [ ...prevMessages, event.message ]);
+        });
+
+        return () => {
+            unsubscribe();
+            room.detach()
+        }
+    }, [room.messages])
 
     return (
         <>
@@ -91,8 +98,8 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                 {isLoading ? (
                     <Loader variant="purple" />
 
-                ) : messages ?  (
-                    <Messages messages={reversedMessages} currUser={currentUser} />
+                ) : messages ? (
+                    <Messages messages={messages} currUser={currentUser} />
                 ) : null}
             </section>
 
@@ -108,5 +115,3 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
 export default MessageBox
 
-// some issue the app is infiniteley requesting to the server'
-// maybe i will have to use web soickets for thsi chat app

@@ -35,7 +35,7 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
                 chatId: chatId,
                 senderId: senderId
             }
-             await createMessage(dataObj);
+            //  await createMessage(dataObj);
         } catch (error) {
             console.error('Error creating message on client:', error);
         } finally {

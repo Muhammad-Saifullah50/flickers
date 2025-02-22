@@ -51,7 +51,7 @@ const ChatPage = () => {
     const getRoom = async () => {
       const typing = { timeoutMs: 5000 }
       const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing });
-      
+
       setRoom(fetchedRoom);
       await fetchedRoom.attach()
     }
@@ -59,31 +59,35 @@ const ChatPage = () => {
   }, [chatClient, chatId]);
 
 
-  
+
   return (
-    (chatClient && room) ? (
 
-      <ChatClientProvider client={chatClient}>
 
-        <ChatRoomProvider id={room?.roomId}>
+    <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
+      {
+        (chatClient && room) ? (
 
-        <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
+          <ChatClientProvider client={chatClient}>
 
-          <MessageBox
-              room={room!}
-              chatId={chatId as string}
-              currentUser={currentUser!}
-              // otherUser={otherUser!}
-              key={chatId as string}
-            />
-        </main>
-        </ChatRoomProvider>
-      </ChatClientProvider>
-    ) : (
-      <Loader variant="purple" />
-    )
+            <ChatRoomProvider id={room?.roomId}>
 
+              <MessageBox
+                room={room!}
+                chatId={chatId as string}
+                currentUser={currentUser!}
+                // otherUser={otherUser!}
+                key={chatId as string}
+              />
+            </ChatRoomProvider>
+          </ChatClientProvider>
+        ) : (
+          <Loader variant="purple" />
+        )
+
+      }
+    </main>
   )
+
 }
 
 export default ChatPage
