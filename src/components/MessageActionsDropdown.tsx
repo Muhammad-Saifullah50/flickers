@@ -19,7 +19,8 @@ import EditMessageModal from "./modals/EditMessageModal"
 import { DialogTrigger } from "@radix-ui/react-dialog"
 import { useState } from "react"
 import DeleteMessageModal from "./modals/DeleteMessageModal"
-const MessageActionsDropdown = () => {
+import { Message, Room } from "@ably/chat"
+const MessageActionsDropdown = ({room, message}: {room: Room,message: Message}) => {
 
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -32,6 +33,7 @@ const MessageActionsDropdown = () => {
                         width={15}
                         height={15}
                         alt={'arrow-down'}
+                        className="absolute -left-4 top-4"
                     />
                 </DropdownMenuTrigger>
 
@@ -60,7 +62,7 @@ const MessageActionsDropdown = () => {
                 <EditMessageModal />
             </Dialog>
             <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-                <DeleteMessageModal />
+                <DeleteMessageModal message={message} room={room}/>
             </Dialog>
         </>
     )

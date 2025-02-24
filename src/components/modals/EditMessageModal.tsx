@@ -7,6 +7,8 @@ import {
     DialogTrigger,
   } from "@/components/ui/dialog"
 import { Edit } from "lucide-react"
+import { AlertDialogAction, AlertDialogCancel, AlertDialogFooter } from "../ui/alert-dialog"
+import { Button } from "../ui/button"
   
 const EditMessageModal = () => {
   return (
@@ -18,6 +20,10 @@ const EditMessageModal = () => {
           and remove your data from our servers.
         </DialogDescription>
       </DialogHeader>
+      <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button >Continue</Button>
+        </AlertDialogFooter>
     </DialogContent>  
     )
 }

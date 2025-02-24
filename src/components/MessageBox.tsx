@@ -5,7 +5,7 @@ import SendMessageForm from '@/components/forms/SendMessageForm'
 import { User } from '@prisma/client'
 import Messages from './Messages'
 import Loader from './Loader'
-import { Message, Room, useTyping } from '@ably/chat'
+import { Message, MessageEvents, Room, useTyping } from '@ably/chat'
 
 
 const MessageBox = ({ chatId, currentUser, otherUser, room }: {
@@ -24,7 +24,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
 
     useEffect(() => {
-        if (!room.messages) return;
+        if (!room) return;
         const fetchMessages = async () => {
             try {
 
@@ -44,11 +44,32 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
         fetchMessages()
     }, [room]);
 
-// have to implenment pagination
+    // have to implenment pagination
     useEffect(() => {
         if (!room) return;
         const { unsubscribe } = room.messages.subscribe((event) => {
-            setMessages(prevMessages => [...prevMessages, event.message]);
+
+            switch (event.type) {
+                case MessageEvents.Created:
+                    setMessages(prevMessages => [...prevMessages, event.message]);
+                    break;
+
+                    case MessageEvents.Deleted:
+                        const existing = messages.find(event.message);
+                        if (existing && event.message.versionBefore(existing)) {
+                          // We've already received a more recent update, so this one can be discarded.
+                          return;
+                        }
+              
+              
+                        console.log('Message deleted: ', event.message);
+                        break;
+            }
+
+
+
+
+
         });
 
         return () => {
@@ -78,8 +99,8 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
         room.presence.enter();
         const checkPresence = async () => {
-           const members = await room.presence.get();
-           setIsOnline(members.some(member => member.clientId === otherUser.id));
+            const members = await room.presence.get();
+            setIsOnline(members.some(member => member.clientId === otherUser.id));
 
         };
         checkPresence();
@@ -115,10 +136,10 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                     </div>
                     <div className='flex flex-col gap-'>
                         <h2 className='text-white'>{otherUser?.name}</h2>
-                        {typing ? ( <p className='text-xs text-purple-primary font-semibold'>typing...</p>) : isOnline && !typing  ? (
+                        {typing ? (<p className='text-xs text-purple-primary font-semibold'>typing...</p>) : isOnline && !typing ? (
                             <p className='text-sm text-purple-secondary'>online</p>
                         ) : (null)}
-                        
+
                     </div>
 
                 </div>
@@ -146,7 +167,10 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                     <Loader variant="purple" />
 
                 ) : messages ? (
-                    <Messages messages={messages} currUser={currentUser} />
+                    <Messages
+                        messages={messages}
+                        currUser={currentUser}
+                        room={room} />
                 ) : null}
             </section>
 
