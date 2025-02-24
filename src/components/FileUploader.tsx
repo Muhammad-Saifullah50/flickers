@@ -9,7 +9,8 @@ interface FileUploaderProps {
     uploadedFiles: string[]
     setUploadedFiles: (files: string[]) => void
     existingFiles?: string[]
-    onRemoveExisting?: (fileUrl: string) => void
+    onRemoveExisting?: (fileUrl: string) => void;
+    multiple?: boolean
 }
 
 const FileUploader = ({ 
@@ -18,7 +19,8 @@ const FileUploader = ({
     setUploadedFiles, 
     uploadedFiles, 
     existingFiles,
-    onRemoveExisting 
+    onRemoveExisting,
+    multiple = true 
 }: FileUploaderProps) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
@@ -53,7 +55,7 @@ const FileUploader = ({
             'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
             'video/*': ['.mp4', '.webm', '.ogg']
         },
-        multiple: true
+        multiple: multiple,
     });
 
     useEffect(() => {
@@ -71,7 +73,7 @@ const FileUploader = ({
             : files[index]?.type.startsWith('video/');
         
         return (
-            <div key={file} className="relative group">
+            <div key={file} className="relative group ">
                 {isVideo ? (
                     <div className="w-[200px] h-[200px] relative">
                         <video
@@ -91,7 +93,7 @@ const FileUploader = ({
                         alt={`${isExisting ? 'Existing' : 'Uploaded'} file ${index + 1}`}
                         width={200}
                         height={200}
-                        className='object-cover rounded-lg w-[200px] h-[200px]'
+                        className='object-cover rounded-lg -w-[200px] h-[200px] '
                     />
                 )}
                 <button
@@ -120,14 +122,14 @@ const FileUploader = ({
             <div>
                 {/* Show existing files */}
                 {existingFiles && existingFiles?.length > 0 && (
-                    <div className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-4'>
+                    <div className='flex flex-wrap gap-4 mb-4'>
                         {existingFiles?.map((file, index) => renderPreview(file, index, true))}
                     </div>
                 )}
                 
                 {/* Show newly uploaded files */}
                 {files?.length > 0 && (
-                    <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+                    <div className='flex flex-wrap gap-4'>
                         {uploadedFiles.map((file, index) => renderPreview(file, index, false))}
                     </div>
                 )}
@@ -145,7 +147,7 @@ const FileUploader = ({
                             ? 'Drop files here...' 
                             : 'Drag and drop files here or click to browse'}
                     </p>
-                    <p className='text-light-1 text-sm text-center'>Supports images and videos</p>
+                    <p className='text-light-1 text-sm text-center'>Currently supports one image or video at a time</p>
                 </div>
             </div>
         </div>

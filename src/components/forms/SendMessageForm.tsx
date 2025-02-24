@@ -3,21 +3,23 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { Form, FormControl, FormField, FormItem } from '../ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
 import { Room } from '@ably/chat';
 import FileUploader from '../FileUploader';
+import { toast } from '@/hooks/use-toast';
 
 const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Room }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
         defaultValues: {
-            message: '',
-            images: []
+            message: undefined,
+            // have to correct this error of controlled and uncontrolled value for the assetUrl
+            assetUrl: undefined
         }
     });
 
@@ -29,10 +31,45 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         try {
             setLoading(true);
-            room.typing.stop()
-            await room.messages.send({ text: data.message! });
+            room.typing.stop();
+
+            let uploadedAssetUrl;
+
+            if (data?.assetUrl) {
+
+                for (const file of files) {
+                    try {
+                        const formData = new FormData();
+                        formData.append("file", file);
+
+                        const request = await fetch('/api/upload', {
+                            method: 'POST',
+
+                            body: formData,
+                        });
+
+                        const response = await request.json();
+                        if (response) {
+                            //data field is returned by our upload api
+                            uploadedAssetUrl = response.data.url;
+                        }
+
+                    } catch (error) {
+                        console.error('Error uploading file:', error);
+
+                        toast({
+                            description: `Error uploading file: ${file.name}`,
+                            variant: 'destructive'
+                        });
+                    }
+                }
+            }
+            await room.messages.send({ text: data.message! || uploadedAssetUrl  });
 
             form.setValue('message', '');
+            setFiles([]);
+            setUploadedFiles([]);
+            setImageUploaderOpen(false);
 
         } catch (error) {
             console.error('Error creating message on client:', error);
@@ -41,7 +78,6 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
         }
     }
 
-    // have to add the image upload functionality
     return (
         <section className="flex justify-between gap-2 w-full py-2">
 
@@ -50,15 +86,16 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
 
                     {imageUploaderOpen && <FormField
                         control={form.control}
-                        name="images"
+                        name="assetUrl"
                         render={() => (
                             <FormItem>
                                 <FormControl>
                                     <FileUploader
+                                        multiple={false}
                                         files={files}
                                         onChange={(files) => {
                                             setFiles(files);
-                                            form.setValue('images', files, { shouldValidate: true });
+                                            form.setValue('assetUrl', files, { shouldValidate: true });
                                         }}
                                         uploadedFiles={uploadedFiles}
                                         setUploadedFiles={setUploadedFiles}
@@ -67,7 +104,6 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
                             </FormItem>
                         )}
                     />}
-{/* have to completye this functionality */}
                     <FormField
                         control={form.control}
                         name="message"
