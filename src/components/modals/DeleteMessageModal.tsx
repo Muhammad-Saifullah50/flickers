@@ -10,7 +10,12 @@ import { useEffect, useState } from "react"
 import { Message, Room } from "@ably/chat"
 import Loader from "../Loader"
 
-const DeleteMessageModal = ({ room, message }: { room: Room, message: Message }) => {
+type DeleteMessageModalProps = {
+    room: Room
+    message: Message
+    setShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+const DeleteMessageModal = ({ room, message, setShowDeleteModal }: DeleteMessageModalProps) => {
     const [loading, setLoading] = useState(false)
     const handleDelete = async () => {
         try {
@@ -29,12 +34,19 @@ const DeleteMessageModal = ({ room, message }: { room: Room, message: Message })
             <DialogHeader>
                 <DialogTitle>Are you absolutely sure?</DialogTitle>
                 <DialogDescription>
-                    This action cannot be undone. This will permanently delete your message
+                    This action cannot be undone. This will permanently delete your message.
                 </DialogDescription>
             </DialogHeader>
             <AlertDialogFooter>
-                <Button variant={'secondary'}>Cancel</Button>
-                <Button variant={'destructive'} onClick={handleDelete}>{loading ? (<Loader variant="white"/>) : 'Delete'}</Button>
+                <Button
+                    variant={'secondary'}
+                    onClick={() => setShowDeleteModal(false)}>
+                    Cancel
+                </Button>
+                <Button
+                    variant={'destructive'}
+                    onClick={handleDelete}>
+                    {loading ? (<Loader variant="white" />) : 'Delete'}</Button>
             </AlertDialogFooter>
         </DialogContent>
     )

@@ -9,17 +9,22 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { messageSchema } from '@/validations/messageSchema';
 import { Room } from '@ably/chat';
+import FileUploader from '../FileUploader';
 
-const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId: string, room: Room }) => {
+const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Room }) => {
 
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
         defaultValues: {
             message: '',
+            images: []
         }
     });
 
     const [loading, setLoading] = useState(false);
+    const [imageUploaderOpen, setImageUploaderOpen] = useState(false);
+    const [files, setFiles] = useState<File[]>([]);
+    const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         try {
@@ -42,6 +47,27 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+
+                    {imageUploaderOpen && <FormField
+                        control={form.control}
+                        name="images"
+                        render={() => (
+                            <FormItem>
+                                <FormControl>
+                                    <FileUploader
+                                        files={files}
+                                        onChange={(files) => {
+                                            setFiles(files);
+                                            form.setValue('images', files, { shouldValidate: true });
+                                        }}
+                                        uploadedFiles={uploadedFiles}
+                                        setUploadedFiles={setUploadedFiles}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />}
+{/* have to completye this functionality */}
                     <FormField
                         control={form.control}
                         name="message"
@@ -58,6 +84,7 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
                                                 height={20}
                                                 alt="send"
                                                 className="opacity-70 hover:opacity-100 transition-opacity"
+                                                onClick={() => setImageUploaderOpen(prev => !prev)}
                                             />
                                         </Button>
                                         <Input
@@ -93,6 +120,7 @@ const SendMessageForm = ({ chatId, senderId, room }: { chatId: string, senderId:
                             </FormItem>
                         )}
                     />
+
                 </form>
             </Form>
         </section>)

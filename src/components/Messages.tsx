@@ -15,18 +15,16 @@ const Messages = ({ room, messages, currUser }: { messages: Message[], currUser:
   }, [messages])
 
   return (
-      <div className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10">
+      <div key={room.roomId} className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10">
         {messages.map((message, index) => {
           const isOwner = message.clientId === currUser?.id;
           const isLastMessage = index === messages.length - 1
           return (
 
-<>
+<React.Fragment key={message.serial}>
            
-            {/* have to filter oout the deleteed message from the ui */}
             <div
               ref={isLastMessage ? msgref : null}
-              key={message.serial}
               className={cn("flex relative flex-col  max-w-fit self-start",
                 isOwner && "self-end"
               )}>
@@ -51,11 +49,11 @@ const Messages = ({ room, messages, currUser }: { messages: Message[], currUser:
               </div>
               <span className={cn("text-xs flex text-purple-tertiary m-1",
                 isOwner && "justify-end"
-              )}>{formatMessageTime(message.createdAt)}</span>
+              )}>{message.isUpdated ? (`Edited - ${formatMessageTime(message.updatedAt)}`) : formatMessageTime(message.createdAt)}</span>
 
             </div>
 
-            </>
+            </React.Fragment>
  )
         })}
       </div>

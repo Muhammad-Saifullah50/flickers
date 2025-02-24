@@ -16,7 +16,6 @@ import {
 import Image from "next/image"
 import { Dialog } from "./ui/dialog"
 import EditMessageModal from "./modals/EditMessageModal"
-import { DialogTrigger } from "@radix-ui/react-dialog"
 import { useState } from "react"
 import DeleteMessageModal from "./modals/DeleteMessageModal"
 import { Message, Room } from "@ably/chat"
@@ -59,10 +58,14 @@ const MessageActionsDropdown = ({room, message}: {room: Room,message: Message}) 
             </DropdownMenu>
 
             <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-                <EditMessageModal />
+                <EditMessageModal 
+                message={message} 
+                room={room}
+                setShowEditModal={setShowEditModal}
+                />
             </Dialog>
             <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-                <DeleteMessageModal message={message} room={room}/>
+                <DeleteMessageModal message={message} room={room} setShowDeleteModal={setShowDeleteModal} />
             </Dialog>
         </>
     )

@@ -33,7 +33,8 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
                 });
                 const reversedList = historicalMessages.items.slice().reverse();
-                setMessages(reversedList);
+                const reversedFilteredListByDeletions = reversedList.filter(message => !message.isDeleted) 
+                setMessages(reversedFilteredListByDeletions);
             } catch (error) {
                 console.error('Error fetching messages from ably:', error);
             } finally {
@@ -54,21 +55,14 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                     setMessages(prevMessages => [...prevMessages, event.message]);
                     break;
 
-                    case MessageEvents.Deleted:
-                        const existing = messages.find(event.message);
-                        if (existing && event.message.versionBefore(existing)) {
-                          // We've already received a more recent update, so this one can be discarded.
-                          return;
-                        }
-              
-              
-                        console.log('Message deleted: ', event.message);
-                        break;
+                case MessageEvents.Deleted:
+
+                  setMessages(prevMessages => prevMessages.filter(message => message.serial !== event.message.serial));
+
+                case MessageEvents.Updated:
+                   
+                    setMessages(prevMessages => prevMessages.map(message => message.serial === event.message.serial ? event.message : message));
             }
-
-
-
-
 
         });
 
