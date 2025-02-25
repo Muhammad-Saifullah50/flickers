@@ -160,7 +160,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                 {isLoading ? (
                     <Loader variant="purple" />
 
-                ) : messages ? (
+                ) : room && messages ? (
                     <Messages
                         messages={messages}
                         currUser={currentUser}

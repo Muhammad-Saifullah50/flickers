@@ -17,9 +17,8 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver: zodResolver(messageSchema),
         defaultValues: {
-            message: undefined,
-            // have to correct this error of controlled and uncontrolled value for the assetUrl
-            assetUrl: undefined
+            message: '',
+            assets: []
         }
     });
 
@@ -28,14 +27,16 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
     const [files, setFiles] = useState<File[]>([]);
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
+    const sendMessage = async (text: string) => {
+        await room.messages.send({ text: text })
+    }
+
     const onSubmit = async (data: z.infer<typeof messageSchema>) => {
         try {
             setLoading(true);
             room.typing.stop();
 
-            let uploadedAssetUrl;
-
-            if (data?.assetUrl) {
+            if (data?.assets) {
 
                 for (const file of files) {
                     try {
@@ -51,7 +52,8 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
                         const response = await request.json();
                         if (response) {
                             //data field is returned by our upload api
-                            uploadedAssetUrl = response.data.url;
+                            const uploadedUrl = response.data.url;
+                            sendMessage(uploadedUrl);
                         }
 
                     } catch (error) {
@@ -64,7 +66,10 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
                     }
                 }
             }
-            await room.messages.send({ text: data.message! || uploadedAssetUrl  });
+
+            if (data.message) {
+                await room.messages.send({ text: data.message! });
+            }
 
             form.setValue('message', '');
             setFiles([]);
@@ -86,16 +91,15 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
 
                     {imageUploaderOpen && <FormField
                         control={form.control}
-                        name="assetUrl"
+                        name="assets"
                         render={() => (
                             <FormItem>
                                 <FormControl>
                                     <FileUploader
-                                        multiple={false}
                                         files={files}
                                         onChange={(files) => {
                                             setFiles(files);
-                                            form.setValue('assetUrl', files, { shouldValidate: true });
+                                            form.setValue('assets', files, { shouldValidate: true });
                                         }}
                                         uploadedFiles={uploadedFiles}
                                         setUploadedFiles={setUploadedFiles}

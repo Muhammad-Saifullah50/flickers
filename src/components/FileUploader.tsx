@@ -10,7 +10,6 @@ interface FileUploaderProps {
     setUploadedFiles: (files: string[]) => void
     existingFiles?: string[]
     onRemoveExisting?: (fileUrl: string) => void;
-    multiple?: boolean
 }
 
 const FileUploader = ({ 
@@ -20,7 +19,7 @@ const FileUploader = ({
     uploadedFiles, 
     existingFiles,
     onRemoveExisting,
-    multiple = true 
+ 
 }: FileUploaderProps) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
@@ -55,7 +54,7 @@ const FileUploader = ({
             'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
             'video/*': ['.mp4', '.webm', '.ogg']
         },
-        multiple: multiple,
+        multiple: true,
     });
 
     useEffect(() => {

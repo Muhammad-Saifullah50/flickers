@@ -78,11 +78,11 @@ const ChatPage = () => {
       <section className="flex flex-col gap-4 w-2/5">
         <Heading text='All Chats' icon='/icons/chats-white.svg' />
 
-        <ChatsList 
-        otherUser={otherUser}
-        room={room!}
-        currentUser={currentUser!}
-        />
+        {room && <ChatsList
+          otherUser={otherUser}
+          room={room!}
+          currentUser={currentUser!}
+        />}
       </section>
 
       <section className="flex h-full w-3/5">

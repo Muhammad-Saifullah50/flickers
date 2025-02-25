@@ -42,8 +42,27 @@ const Messages = ({ room, messages, currUser }: { messages: Message[], currUser:
                   height={20}
                   alt={'triangle'}
                   className={`absolute  -bottom-[7px]  -left-2 w-[20px] h-[20px]  ${isOwner && "hidden"}`} />
-                  {/* have to rendderr an image and video fr approprate use cases */}
-                {message.text}
+                
+
+                {isImage ? (
+                  <Image
+                    src={message.text}
+                    width={200}
+                    height={200}
+                    alt={'image'}
+                    className="rounded-lg"
+                  />
+                ) : isVideo ? (
+                  <video
+                    src={message.text}
+                    width={200}
+                    height={200}
+                    controls
+                    className="rounded-lg"
+                  />
+                ) : (
+                  message.text
+                )}
                 <Image
                   src={'/icons/tri-purple.svg'}
                   width={20}
