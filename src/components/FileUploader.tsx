@@ -146,7 +146,7 @@ const FileUploader = ({
                             ? 'Drop files here...' 
                             : 'Drag and drop files here or click to browse'}
                     </p>
-                    <p className='text-light-1 text-sm text-center'>Currently supports one image or video at a time</p>
+                    <p className='text-light-1 text-sm text-center'>Supports images and videos</p>
                 </div>
             </div>
         </div>

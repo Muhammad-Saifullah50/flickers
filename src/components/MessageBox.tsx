@@ -1,11 +1,12 @@
 'use client'
 import Image from 'next/image'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import SendMessageForm from '@/components/forms/SendMessageForm'
 import { User } from '@prisma/client'
 import Messages from './Messages'
 import Loader from './Loader'
-import { Message, MessageEvents, Room, useTyping } from '@ably/chat'
+import { Message, MessageEvents, PaginatedResult, Room, useTyping } from '@ably/chat'
+import { set } from 'zod'
 
 
 const MessageBox = ({ chatId, currentUser, otherUser, room }: {
@@ -18,8 +19,15 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [olderMessagesLoading, setOlderMessagesLoading] = useState(false);
     const [typing, setTyping] = useState(false);
     const [isOnline, setIsOnline] = useState(false);
+    const [hasMoreMessages, setHasMoreMessages] = useState<boolean | null>(null);
+    const [historyMessages, setHistoryMessages] = useState<PaginatedResult<Message>>();
+    // for the messages component to tell it that it contains older messages
+    const [containsOlderMessages, setContainsOlderMessages] = useState<boolean>(false);
+
+    const containerRef = useRef<HTMLDivElement>(null)
 
 
 
@@ -29,12 +37,17 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
             try {
 
                 const historicalMessages = await room.messages.get({
-                    limit: 100,
+                    limit: 10,
+
 
                 });
                 const reversedList = historicalMessages.items.slice().reverse();
-                const reversedFilteredListByDeletions = reversedList.filter(message => !message.isDeleted) 
+                const reversedFilteredListByDeletions = reversedList.filter(message => !message.isDeleted)
                 setMessages(reversedFilteredListByDeletions);
+                setHasMoreMessages(historicalMessages.hasNext());
+                setHistoryMessages(historicalMessages)
+
+
             } catch (error) {
                 console.error('Error fetching messages from ably:', error);
             } finally {
@@ -42,10 +55,9 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
             }
         }
 
-        fetchMessages()
+        fetchMessages();
     }, [room]);
 
-    // have to implenment pagination
     useEffect(() => {
         if (!room) return;
         const { unsubscribe } = room.messages.subscribe((event) => {
@@ -57,10 +69,10 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
                 case MessageEvents.Deleted:
 
-                  setMessages(prevMessages => prevMessages.filter(message => message.serial !== event.message.serial));
+                    setMessages(prevMessages => prevMessages.filter(message => message.serial !== event.message.serial));
 
                 case MessageEvents.Updated:
-                   
+
                     setMessages(prevMessages => prevMessages.map(message => message.serial === event.message.serial ? event.message : message));
             }
 
@@ -113,6 +125,50 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
     }, [room, otherUser]);
 
+    const loadOlderMessages = async () => {
+        if (!room || !hasMoreMessages) return;
+
+        try {
+            setOlderMessagesLoading(true);
+            const olderMessages = await historyMessages?.next();
+
+            if (!olderMessages) {
+                setContainsOlderMessages(false);
+                return;
+            }
+
+            const filteredOlderMessages = olderMessages.items.filter(message => !message.isDeleted);
+            setMessages(prevMessages => [...filteredOlderMessages.reverse(), ...prevMessages]);
+            setContainsOlderMessages(true);
+            setHasMoreMessages(olderMessages.hasNext());
+            setHistoryMessages(olderMessages);
+        } catch (error) {
+            console.error('Error fetching older messages:', error);
+        } finally {
+            setOlderMessagesLoading(false);
+        }
+
+
+
+    }
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            if (container.scrollTop === 0) {
+                loadOlderMessages();
+            }
+        }
+
+        container.addEventListener('scroll', handleScroll);
+
+        return () => {
+            container.removeEventListener('scroll', handleScroll);
+        }
+    }, [messages])
+
 
     return (
         <>
@@ -138,25 +194,12 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
 
                 </div>
 
-                <div className="flex gap-2">
-                    <Image
-                        src={'/icons/phone.svg'}
-                        width={20}
-                        height={20}
-                        alt="phone image"
-                    />
-                    <Image
-                        src={'/icons/video.svg'}
-                        width={20}
-                        height={20}
-                        alt="phone image"
-                    />
-                </div>
+
             </section>
 
             <span className="w-full h-[1px] bg-dark-4" />
 
-            <section className=" overflow-y-scroll h-full">
+            <section className=" overflow-y-scroll h-full" ref={containerRef}>
                 {isLoading ? (
                     <Loader variant="purple" />
 
@@ -164,7 +207,10 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
                     <Messages
                         messages={messages}
                         currUser={currentUser}
-                        room={room} />
+                        room={room}
+                        containsOlderMessages={containsOlderMessages}
+                        olderMessagesLoading={olderMessagesLoading}
+                    />
                 ) : null}
             </section>
 
