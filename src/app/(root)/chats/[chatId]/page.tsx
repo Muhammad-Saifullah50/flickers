@@ -59,26 +59,29 @@ const ChatPage = () => {
 
     const getRoom = async () => {
       const typing = { timeoutMs: 3000 };
-      const presence = { enter: true, leave: true };
-      const fetchedRoom = await chatClient.rooms.get(chatId as string, { typing, presence });
+      const presence = { enter: true, leave: true }
 
-      setRoom(fetchedRoom);
+
+
+      const fetchedRoom = await chatClient?.rooms?.get(chatId as string, { typing, presence });
+      if (!fetchedRoom) console.error('Room not found')
+
       await fetchedRoom.attach()
+      setRoom(fetchedRoom);
+
 
     }
     getRoom()
   }, [chatClient, chatId]);
 
 
-
   return (
-
 
     <main className="flex gap-4 ">
       <section className="flex flex-col gap-4 w-2/5">
         <Heading text='All Chats' icon='/icons/chats-white.svg' />
 
-        {room && <ChatsList
+        {room?.typing && <ChatsList
           otherUser={otherUser}
           room={room!}
           currentUser={currentUser!}
@@ -88,7 +91,7 @@ const ChatPage = () => {
       <section className="flex h-full w-3/5">
         <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
           {
-            (chatClient && room) ? (
+            (chatClient && room && currentUser && otherUser) ? (
 
               <ChatClientProvider client={chatClient}>
 
@@ -96,8 +99,8 @@ const ChatPage = () => {
 
                   <MessageBox
                     room={room!}
-                    currentUser={currentUser!}
-                    otherUser={otherUser!}
+                    currentUser={currentUser}
+                    otherUser={otherUser}
                     key={chatId as string}
                     chatId={chatId as string}
                   />

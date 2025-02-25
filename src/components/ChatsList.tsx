@@ -38,8 +38,9 @@ const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
   }, []);
 
   useEffect(() => {
-          if (!room) return;
-          const { unsubscribe } = room.typing.subscribe((event) => {
+
+          if (!room?.typing) return;
+          const { unsubscribe } = room?.typing.subscribe((event) => {
               if (event.currentlyTyping.has(otherUser.id)) {
                   setTyping(true);
               } else {
@@ -55,11 +56,11 @@ const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
       }, [room]);
   
       useEffect(() => {
-          if (!room || !otherUser) return;
+          if (!room?.presence || !otherUser) return;
   
           room.presence.enter();
           const checkPresence = async () => {
-             const members = await room.presence.get();
+             const members = await room?.presence.get();
              setIsOnline(members.some(member => member.clientId === otherUser.id));
   
           };
@@ -96,10 +97,10 @@ const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
               <ChatListItem
                 key={chat.id}
                 chatName={otherUser?.name}
-                //info the other users username
+                //  info the other users username
                 chatUsername={otherUser?.username || `@${otherUser?.name.toLowerCase().replace(' ', '')}`}
                 chatId={chat.id}
-                //info the other users image
+                //  info the other users image
                 chatImage={otherUser?.image}
                 isOnline={isOnline}
                 typing={typing}
