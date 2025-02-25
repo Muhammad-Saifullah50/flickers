@@ -138,7 +138,7 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
             }
 
             const filteredOlderMessages = olderMessages.items.filter(message => !message.isDeleted);
-            setMessages(prevMessages => [...filteredOlderMessages.reverse(), ...prevMessages]);
+            setMessages(prevMessages => [...filteredOlderMessages.slice().reverse(), ...prevMessages]);
             setContainsOlderMessages(true);
             setHasMoreMessages(olderMessages.hasNext());
             setHistoryMessages(olderMessages);
