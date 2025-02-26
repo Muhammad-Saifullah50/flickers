@@ -1,7 +1,6 @@
 'use client'
 import { Chat, User } from "@prisma/client"
 import ChatListItem from "./ChatListItem"
-import { getCurrentUserFromDb } from "@/actions/user.actions";
 import { useEffect, useState } from "react";
 import { getChatList } from "@/actions/chat.actions";
 import ChatListItemSkeleton from "./skeletons/ChatListItemSkeleton";
@@ -9,13 +8,12 @@ import { Room } from "@ably/chat";
 
 interface ChatListProps {
   currentUser: User;
-  otherUser: User;
-  room: Room;
-  chatId: string;
+  otherUser?: User;
+  room?: Room;
 }
 
 
-const ChatsList = ({ room, otherUser, currentUser, chatId }: ChatListProps) => {
+const ChatsList = ({ room, otherUser, currentUser }: ChatListProps) => {
 
   const [chatList, setchatList] = useState<(Chat & { users: User[] })[]>();
   const [loading, setloading] = useState(false);
@@ -40,13 +38,12 @@ const ChatsList = ({ room, otherUser, currentUser, chatId }: ChatListProps) => {
 
   useEffect(() => {
 
-    // have to see chatgpt solution
-    if (!room?.typing) return;
+    if (!room?.typing || !otherUser) return;
     const { unsubscribe } = room?.typing.subscribe((event) => {
 
       setTyping((prev) => ({
         ...prev,
-        [room.roomId]: event.currentlyTyping.has(otherUser.id),
+        [room.roomId]: event.currentlyTyping.has(otherUser?.id),
       }));
 
     });
@@ -95,7 +92,7 @@ const ChatsList = ({ room, otherUser, currentUser, chatId }: ChatListProps) => {
   return loading ? (
     <ChatListItemSkeleton />
   ) : (
-    <section>
+    <section >
       <ul>
         {chatList?.length === 0 ? (
           <p>No Chats to show</p>
@@ -103,6 +100,7 @@ const ChatsList = ({ room, otherUser, currentUser, chatId }: ChatListProps) => {
           chatList?.map((chat) => {
 
             const otherUser = chat.users.find((user: User) => user.id !== currentUser?.id);
+
 
             if (!otherUser) return null;
             return (

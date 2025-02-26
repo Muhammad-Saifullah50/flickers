@@ -24,7 +24,7 @@ const MobileFooter = () => {
                             alt={link.route}
                             className=""
                         />
-                        <h5 className="text-[10px]">{link.label}</h5>
+                        <h5 className="text-[10px] text-white">{link.label}</h5>
                     </div>
                 )
             })}

@@ -20,7 +20,7 @@ const MobileNavbar = async () => {
                             height={25}
                             alt="logo" />
 
-                        <h1 className="font-semibold text-2xl">Flickers</h1>
+                        <h1 className="font-semibold text-2xl text-white">Flickers</h1>
                     </div>
                 </Link>
             </div>

@@ -78,7 +78,7 @@ const ChatPage = () => {
   return (
 
     <main className="flex gap-4 ">
-      <section className="flex flex-col gap-4 w-2/5">
+      <section className="hidden lg:flex flex-col gap-4 w-2/5">
         <Heading text='All Chats' icon='/icons/chats-white.svg' />
 
         {room?.typing && <ChatsList
@@ -89,8 +89,8 @@ const ChatPage = () => {
         />}
       </section>
 
-      <section className="flex h-full w-3/5">
-        <main className="flex flex-col  w-full bg-dark-2 h-[calc(100vh-80px)] rounded-2xl border border-dark-4 p-4">
+      <section className="flex h-full lg:w-3/5 w-full">
+        <main className="flex flex-col  w-full bg-dark-2 max-sm:h-[80vh]    sm:h-[calc(100vh-50px)] rounded-2xl border border-dark-4 p-4 ">
           {
             (chatClient && room && currentUser && otherUser) ? (
 
