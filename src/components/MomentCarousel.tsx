@@ -3,13 +3,12 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Moment, MomentAsset, User } from "@prisma/client"
 import MomentCard from "./MomentCard"
 import { type CarouselApi } from "@/components/ui/carousel"
 import { useEffect, useRef, useState } from "react"
+import Autoplay from "embla-carousel-autoplay"
 
 type MomentCarouselProps = {
   allMoments: (Moment & { author: User, assets: MomentAsset[] })[],
@@ -71,6 +70,7 @@ const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
 
   return (
     <Carousel className="w-full " setApi={setApi}
+    
       opts={{
         align: 'center',
         loop: true

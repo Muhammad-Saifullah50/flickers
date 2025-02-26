@@ -19,7 +19,7 @@ interface MomentCardProps {
   currMomentId: string
 }
 
-const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCardProps) => {
+const MomentCard = ({ moment, currMoment, handlePrevious, handleNext, momentIdList }: MomentCardProps) => {
 
   const [progress, setProgress] = useState(0);
   const [asset, setAsset] = useState(currMoment.assets[0])
@@ -112,7 +112,9 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
             <AssetCarousel 
             assets={currMoment.assets} 
             caption={moment.caption} 
-            firstAssetDuration={currMoment.assets[0].duration}/>
+            firstAssetDuration={currMoment.assets[0].duration}
+            nextMomentId={momentIdList[momentIdList.indexOf(moment.id) + 1]}
+            />
           </div>
         )}
 

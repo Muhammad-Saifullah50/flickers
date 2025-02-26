@@ -18,7 +18,7 @@ type AssetCarouselProps = {
     firstAssetDuration: number
 }
 
-const AssetCarousel = ({ assets, caption, firstAssetDuration }: AssetCarouselProps) => {
+const AssetCarousel = ({ assets, caption, firstAssetDuration,nextMomentId }: AssetCarouselProps) => {
 
     // converting seconds to milliseconds
     const [duration, setDuration] = useState(firstAssetDuration * 1000);
