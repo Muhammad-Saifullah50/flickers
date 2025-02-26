@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getChatList } from "@/actions/chat.actions";
 import ChatListItemSkeleton from "./skeletons/ChatListItemSkeleton";
 import { Room } from "@ably/chat";
+import { useRouter } from "next/navigation";
 
 interface ChatListProps {
   currentUser: User;
@@ -92,7 +93,7 @@ const ChatsList = ({ room, otherUser, currentUser }: ChatListProps) => {
   return loading ? (
     <ChatListItemSkeleton />
   ) : (
-    <section >
+    <section>
       <ul>
         {chatList?.length === 0 ? (
           <p>No Chats to show</p>

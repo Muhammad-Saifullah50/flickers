@@ -10,7 +10,18 @@ import { ChatClient, ChatClientProvider, ChatRoomProvider, Room } from '@ably/ch
 import { User } from "@prisma/client";
 import * as Ably from 'ably';
 import { useParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import Image from "next/image";
+
 
 
 const ChatPage = () => {
@@ -20,7 +31,6 @@ const ChatPage = () => {
   const [otherUser, setOtherUser] = useState<User | null>();
   const [room, setRoom] = useState<Room>();
   const [chatClient, setChatClient] = useState<ChatClient>();
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -77,7 +87,7 @@ const ChatPage = () => {
 
   return (
 
-    <main className="flex gap-4 ">
+    <main className="flex gap-4 relative">
       <section className="hidden lg:flex flex-col gap-4 w-2/5">
         <Heading text='All Chats' icon='/icons/chats-white.svg' />
 
@@ -89,8 +99,35 @@ const ChatPage = () => {
         />}
       </section>
 
+      <Sheet >
+        <SheetTrigger className="lg:hidden absolute top-28">
+          <div className="flex items-center gap-2 bg-dark-4 rounded-full p-2 relative z-50">
+
+            <Image
+              src='/icons/arrow.svg'
+              width={30}
+              height={30}
+              alt="arrow"
+            />
+          </div>
+        </SheetTrigger>
+        <SheetContent className="lg:hidden w-[400px] bg-dark-2 border-dark-4" side={"left"}>
+          <SheetTitle className="sr-only">All Chats</SheetTitle>
+          <SheetDescription className="sr-only">sheet</SheetDescription>
+
+          <Heading text='All Chats' icon='/icons/chats-white.svg' className="pb-6" />
+
+            {room?.typing && <ChatsList
+              otherUser={otherUser}
+              room={room!}
+              currentUser={currentUser!}
+              chatId={chatId as string}
+            />}
+        </SheetContent>
+      </Sheet>
+
       <section className="flex h-full lg:w-3/5 w-full">
-        <main className="flex flex-col  w-full bg-dark-2 max-sm:h-[80vh]    sm:h-[calc(100vh-50px)] rounded-2xl border border-dark-4 p-4 ">
+        <main className="flex flex-col  w-full bg-dark-2 max-sm:h-[80vh]   sm:h-[calc(100vh-50px)] rounded-2xl border border-dark-4 p-4 ">
           {
             (chatClient && room && currentUser && otherUser) ? (
 

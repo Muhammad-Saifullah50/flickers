@@ -20,6 +20,7 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
             message: '',
             assets: []
         }
+    
     });
 
     const [loading, setLoading] = useState(false);
@@ -72,6 +73,7 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
             }
 
             form.setValue('message', '');
+            form.setValue('assets', []);
             setFiles([]);
             setUploadedFiles([]);
             setImageUploaderOpen(false);
@@ -99,7 +101,7 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
                                         files={files}
                                         onChange={(files) => {
                                             setFiles(files);
-                                            form.setValue('assets', files, { shouldValidate: true });
+                                            form.setValue('assets', files);
                                         }}
                                         uploadedFiles={uploadedFiles}
                                         setUploadedFiles={setUploadedFiles}
@@ -167,3 +169,4 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
 }
 
 export default SendMessageForm
+// have to allow sending only images

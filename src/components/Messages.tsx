@@ -26,7 +26,7 @@ const Messages = ({ room, messages, currUser, containsOlderMessages, olderMessag
   const reversed = messages.slice()
 
   return (
-    <div key={room.roomId} className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10">
+    <div key={room.roomId} className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10 ">
         {olderMessagesLoading && (
               <Loader variant="purple" />
             )}
