@@ -86,7 +86,8 @@ const MessageBox = ({ chatId, currentUser, otherUser, room }: {
     useEffect(() => {
         if (!room) return;
         const { unsubscribe } = room.typing.subscribe((event) => {
-            if (event.currentlyTyping.has(otherUser.id)) {
+           
+            if (chatId === room.roomId && event.currentlyTyping.has(otherUser.id)) {
                 setTyping(true);
             } else {
                 setTyping(false);

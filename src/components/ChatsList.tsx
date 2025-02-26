@@ -11,15 +11,16 @@ interface ChatListProps {
   currentUser: User;
   otherUser: User;
   room: Room;
+  chatId: string;
 }
 
 
-const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
+const ChatsList = ({ room, otherUser, currentUser, chatId }: ChatListProps) => {
 
   const [chatList, setchatList] = useState<(Chat & { users: User[] })[]>();
   const [loading, setloading] = useState(false);
-  const [typing, setTyping] = useState(false);
-  const [isOnline, setIsOnline] = useState(false);
+  const [typing, setTyping] = useState<{[key: string]: boolean}>({});
+  const [isOnline, setIsOnline] = useState<{[key: string]: boolean}>({});	
 
 
   useEffect(() => {
@@ -39,46 +40,57 @@ const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
 
   useEffect(() => {
 
-          if (!room?.typing) return;
-          const { unsubscribe } = room?.typing.subscribe((event) => {
-              if (event.currentlyTyping.has(otherUser.id)) {
-                  setTyping(true);
-              } else {
-                  setTyping(false);
-              }
-  
-          });
-  
-          return () => {
-              unsubscribe();
-          };
-  
-      }, [room]);
-  
-      useEffect(() => {
-          if (!room?.presence || !otherUser) return;
-  
-          room.presence.enter();
-          const checkPresence = async () => {
-             const members = await room?.presence.get();
-             setIsOnline(members.some(member => member.clientId === otherUser.id));
-  
-          };
-          checkPresence();
-          const { unsubscribe } = room.presence.subscribe((event) => {
-  
-              if (event.action === 'enter' && event.clientId === otherUser.id) {
-                  setIsOnline(true);
-              }
-              else if (event.action === 'leave') {
-                  setIsOnline(false);
-              }
-          });
-          return () => {
-              unsubscribe();
-          };
-  
-      }, [room, otherUser]);
+    // have to see chatgpt solution
+    if (!room?.typing) return;
+    const { unsubscribe } = room?.typing.subscribe((event) => {
+
+      setTyping((prev) => ({
+        ...prev,
+        [room.roomId]: event.currentlyTyping.has(otherUser.id),
+      }));
+
+    });
+
+    return () => {
+      unsubscribe();
+    };
+
+  }, [room]);
+
+  useEffect(() => {
+    if (!room?.presence || !otherUser) return;
+
+    const checkPresence = async () => {
+      const members = await room?.presence.get();
+      setIsOnline((prev) => ({
+        ...prev,
+        [room.roomId]: members.some((member) => member.clientId === otherUser.id),
+      }));
+
+    };
+    checkPresence();
+    
+    const { unsubscribe } = room.presence.subscribe((event) => {
+
+       if (event.action === 'enter' && event.clientId === otherUser.id) {
+                setIsOnline((prev) => ({
+                    ...prev,
+                    [room.roomId]: event.action === 'enter' && event.clientId === otherUser.id,
+                }));
+            }
+            else if (event.action === 'leave') {
+                setIsOnline((prev) => ({
+                    ...prev,
+                    [room.roomId]: false
+                }));
+            }
+ 
+    });
+    return () => {
+      unsubscribe();
+    };
+
+  }, [room, otherUser]);
 
   return loading ? (
     <ChatListItemSkeleton />
@@ -102,8 +114,8 @@ const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
                 chatId={chat.id}
                 //  info the other users image
                 chatImage={otherUser?.image}
-                isOnline={isOnline}
-                typing={typing}
+                isOnline={isOnline[chat.id] || false}
+                typing={typing[chat.id] || false}
               />
 
             )
@@ -115,3 +127,4 @@ const ChatsList = ({room, otherUser, currentUser}: ChatListProps) => {
 }
 
 export default ChatsList
+

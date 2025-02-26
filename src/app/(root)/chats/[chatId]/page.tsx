@@ -85,6 +85,7 @@ const ChatPage = () => {
           otherUser={otherUser}
           room={room!}
           currentUser={currentUser!}
+          chatId={chatId as string}
         />}
       </section>
 

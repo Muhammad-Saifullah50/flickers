@@ -23,7 +23,7 @@ const RightSidebar = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log('fetching data for right sidebar')
+      console.log('fetching data for right sidebar', window.innerWidth)
       try {
         setLoading(true);
         const currUser = await getCurrentUserFromDb();

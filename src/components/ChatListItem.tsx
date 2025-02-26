@@ -11,6 +11,7 @@ type ChatListItemProps = {
     typing: boolean;
 }
 const ChatListItem = ({ chatName, chatId, chatImage, chatUsername, isOnline, typing }: ChatListItemProps) => {
+    console.log(isOnline, ';')
     return (
         <li>
             <Link href={`/chats/${chatId}`}
@@ -36,7 +37,7 @@ const ChatListItem = ({ chatName, chatId, chatImage, chatUsername, isOnline, typ
                     </div>
                 </div>
 
-                <span className={cn("h-[14px] w-[14px] rounded-full", {
+                <span className={cn("h-[14px] w-[14px] rounded-full flex shrink-0", {
                     "bg-green-500": isOnline,
                     "bg-red-500": !isOnline,
                 })} />
