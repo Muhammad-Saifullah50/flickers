@@ -23,7 +23,7 @@ const RightSidebar = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (window.innerWidth < 1280) return;
+      if (!window || window.innerWidth < 1280) return;
       console.log('fetching data')
       try {
         setLoading(true);
@@ -51,7 +51,7 @@ const RightSidebar = () => {
 
     fetchData()
 
-  }, [])
+  }, [window.innerWidth])
 
   switch (pathname) {
     case '/':

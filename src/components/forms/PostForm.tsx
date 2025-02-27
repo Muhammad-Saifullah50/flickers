@@ -95,7 +95,7 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                             description: 'Post updated successfully',
                             variant: 'default'
                         })
-                        router.push(`/posts/${updatedPost.id}`);
+                        router.push(`/`);
                     }
                 } else {
                     const post = await createPost(formData);
@@ -104,7 +104,7 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                             description: 'Post created successfully',
                             variant: 'default'
                         })
-                        router.push(`/posts/${post.id}`);
+                        router.push(`/`);
                     }
                 }
             }
