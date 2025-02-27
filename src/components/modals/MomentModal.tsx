@@ -21,9 +21,9 @@ const MomentModal = ({ moment, allMoments }: { moment: Moment & { author: User }
         <MomentCircle moment={moment} />
       </DialogTrigger>
       <DialogOverlay>
-        <section className="w-full flex items-center justify-center h-screen">
+        <section className="w-full flex items-center justify-center sm:h-screen min-h-[80vh] max-sm:absolute max-sm:top-20">
 
-          <DialogClose className=" absolute top-10 right-10 w-10 h-10 text-white flex items-center justify-center" >
+          <DialogClose className=" absolute top-5 sm:top-10 right-10 w-10 h-10 text-white flex items-center justify-center " >
             <X />
           </DialogClose>
 

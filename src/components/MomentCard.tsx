@@ -120,10 +120,10 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext, momentIdLi
 
 
       </div>
-      <div className="flex justify-between items-center absolute top-1/2 mx-auto w-[330px]">
+      <div className="flex justify-between items-center absolute top-1/2 mx-auto w-[330px] ">
 
-        {isCurrentMoment && <CarouselPrevious onClick={handlePrevious} className="relative z-50" />}
-        {isCurrentMoment && <CarouselNext onClick={handleNext} className="relative z-50" />}
+        {isCurrentMoment && <CarouselPrevious onClick={handlePrevious} className="relative z-50 max-sm:left-4" />}
+        {isCurrentMoment && <CarouselNext onClick={handleNext} className="relative z-50 max-sm:right-1" />}
       </div>
     </div>
   )
