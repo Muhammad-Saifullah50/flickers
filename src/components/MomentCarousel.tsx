@@ -9,12 +9,27 @@ import MomentCard from "./MomentCard"
 import { type CarouselApi } from "@/components/ui/carousel"
 import { useEffect, useRef, useState } from "react"
 import Autoplay from "embla-carousel-autoplay"
+import { cn } from "@/lib/utils"
+import { set } from "zod"
 
 type MomentCarouselProps = {
   allMoments: (Moment & { author: User, assets: MomentAsset[] })[],
-  currMoment: Moment & { author: User, assets: MomentAsset[] }
+  currMoment: Moment & { author: User, assets: MomentAsset[] },
+  setModalOpen: (open: boolean) => void,
+  open: boolean
 }
-const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
+const MomentCarousel = ({ allMoments, currMoment, setModalOpen, open }: MomentCarouselProps) => {
+  const calculateDuration = (moment: Moment & { author: User, assets: MomentAsset[] }) => {
+    const hasAssets = moment.assets.length > 0;
+
+    if (hasAssets) {
+      const totalAssetsDurationArray = moment.assets.map(asset => asset.duration)
+      const totalAssetsDuration = totalAssetsDurationArray.reduce((a, b) => a + b, 0) * 1000;
+      return totalAssetsDuration;
+    } else {
+      return 5000;
+    }
+  }
 
   const [api, setApi] = useState<CarouselApi>();
   const [currentMomentId, setCurrentMomentId] = useState<string>(currMoment.id);
@@ -25,6 +40,37 @@ const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
   let initialIndex = momentIdList.findIndex(id => id === currMoment.id)
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
+  const [duration, setDuration] = useState(() => calculateDuration(currMoment));
+  const [lastMomentPlayed, setLastMomentPlayed] = useState(false);
+
+
+  const plugin = useRef(
+    Autoplay({ delay: duration, stopOnInteraction: true })
+  );
+
+  useEffect(() => {
+    const lastMomentId = momentIdList[momentIdList.length - 1]
+    if (currentMomentId === lastMomentId && !lastMomentPlayed) {
+      const closeTimer = setTimeout(() => {
+        setLastMomentPlayed(true)
+        setModalOpen(false)
+      }, duration);
+      return () => clearTimeout(closeTimer)
+    };
+  }, [open, currentMomentId, setModalOpen, momentIdList, lastMomentPlayed])
+
+  useEffect(() => {
+
+    setDuration(calculateDuration(currMoment));
+    plugin.current = Autoplay({ delay: duration, stopOnInteraction: true })
+
+    const timeout = setTimeout(() => {
+      handleNext()
+    }, duration);
+
+    return () => clearTimeout(timeout)
+
+  }, [duration, currentMoment])
 
   useEffect(() => {
     if (!api) {
@@ -34,7 +80,7 @@ const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
 
     api.scrollTo(currentIndex);
 
-  }, [api, currentIndex])
+  }, [api, currentIndex]);
 
   const handleNext = () => {
 
@@ -69,8 +115,13 @@ const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
   }
 
   return (
-    <Carousel className="w-full " setApi={setApi}
-    
+    <Carousel className="w-full"
+      setApi={setApi}
+      plugins={[plugin.current]}
+      onMouseEnter={plugin.current.stop}
+      onMouseLeave={plugin.current.reset}
+
+
       opts={{
         align: 'center',
         loop: true
@@ -79,7 +130,9 @@ const MomentCarousel = ({ allMoments, currMoment }: MomentCarouselProps) => {
       <CarouselContent className="flex items-center  sm:gap-8 xl:gap-0">
         {allMoments.map((moment, index) => (
           <CarouselItem key={index}
-            className="md:basis-1/2 lg:basis-1/3 flex justify-center  relative -z-50  "
+            className={cn(" flex justify-center  relative -z-50", {
+              'md:basis-1/2 lg:basis-1/3': allMoments.length > 2
+            })}
           >
             <MomentCard
               moment={moment}

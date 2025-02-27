@@ -14,11 +14,11 @@ import { useEffect, useRef, useState } from "react"
 
 type AssetCarouselProps = {
     assets: MomentAsset[]
-    caption: string
+    caption: string | null
     firstAssetDuration: number
 }
 
-const AssetCarousel = ({ assets, caption, firstAssetDuration,nextMomentId }: AssetCarouselProps) => {
+const AssetCarousel = ({ assets, caption, firstAssetDuration,  }: AssetCarouselProps) => {
 
     // converting seconds to milliseconds
     const [duration, setDuration] = useState(firstAssetDuration * 1000);
@@ -50,7 +50,7 @@ const AssetCarousel = ({ assets, caption, firstAssetDuration,nextMomentId }: Ass
                     const mediaType = determineAssetType(asset.url)
 
                     return (
-                        <CarouselItem key={index}>
+                        <CarouselItem key={index} >
                             {mediaType === 'image' ? (
                                 <Image src={asset.url}
                                     width={333}

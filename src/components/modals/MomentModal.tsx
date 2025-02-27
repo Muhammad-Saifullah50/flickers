@@ -1,4 +1,4 @@
-
+'use client';
 import {
   Dialog,
   DialogClose,
@@ -13,12 +13,15 @@ import MomentCarousel from "../MomentCarousel"
 import MomentCircle from "../MomentCircle"
 import { X } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react";
 
 const MomentModal = ({ moment, allMoments }: { moment: Moment & { author: User }, allMoments: (Moment & { author: User })[] }) => {
+
+const [modalOpen, setModalOpen] = useState(false)
   return (
-    <Dialog>
+    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger asChild>
-        <MomentCircle moment={moment} />
+        <MomentCircle moment={moment} setModalOpen={setModalOpen} />
       </DialogTrigger>
       <DialogOverlay>
         <section className="w-full flex items-center justify-center sm:h-screen min-h-[80vh] max-sm:absolute max-sm:top-20">
@@ -27,7 +30,7 @@ const MomentModal = ({ moment, allMoments }: { moment: Moment & { author: User }
             <X />
           </DialogClose>
 
-          <MomentCarousel allMoments={allMoments} currMoment={moment} />
+          <MomentCarousel allMoments={allMoments} currMoment={moment} setModalOpen={setModalOpen} open={modalOpen} />
         </section>
       </DialogOverlay>
     </Dialog>

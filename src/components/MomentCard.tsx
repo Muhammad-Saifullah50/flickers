@@ -8,7 +8,7 @@ import MomentCircle from "./MomentCircle";
 import { CarouselNext, CarouselPrevious } from "./ui/carousel";
 import { Progress } from "@/components/ui/progress"
 import { updateFlick } from "@/actions/flick.actions";
-import  AssetCarousel  from "./AssetCarousel";
+import AssetCarousel from "./AssetCarousel";
 
 
 interface MomentCardProps {
@@ -19,10 +19,10 @@ interface MomentCardProps {
   currMomentId: string
 }
 
-const MomentCard = ({ moment, currMoment, handlePrevious, handleNext, momentIdList }: MomentCardProps) => {
+const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCardProps) => {
 
   const [progress, setProgress] = useState(0);
-  const [asset, setAsset] = useState(currMoment.assets[0])
+  const [hasNextAsset, setHasNextAsset] = useState(false)
 
   const firstAsset = moment.assets[0]
 
@@ -35,7 +35,7 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext, momentIdLi
   useEffect(() => {
     const timer = setTimeout(() => setProgress(100), 1000)
     return () => clearTimeout(timer)
-  }, [currMoment.id])
+  }, [currMoment.id]);
 
   const mediaType = isVideo ? 'video' : isImage ? 'image' : 'text';
   return (
@@ -74,18 +74,18 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext, momentIdLi
             ) : mediaType === 'image' ? (
               <>
                 <Image src={firstAsset?.url}
-                  width={ 133}
-                  height={ 235}
+                  width={133}
+                  height={235}
                   alt="moment image"
                   className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill")} />
 
-                
+
               </>
             ) : (
               <>
                 <video src={firstAsset?.url}
                   controls={false}
-                  autoPlay={ false}
+                  autoPlay={true}
                   controlsList="nodownload nofullscreen noremoteplayback"
                   className={" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill"} />
 
@@ -97,23 +97,22 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext, momentIdLi
         }
         {isCurrentMoment && mediaType === 'text' &&
 
-          (<div 
-          style={{ backgroundColor: moment.bgColor! }}  
-          className="w-[333px] h-[591px] flex rounded-lg items-center justify-center">
+          (<div
+            style={{ backgroundColor: moment.bgColor! }}
+            className="w-[333px] h-[591px] flex rounded-lg items-center justify-center">
             <p className="text-2xl text-white font-bold rounded-lg p-2">
               {moment.text}
             </p>
-          
+
           </div>)
         }
 
         {isCurrentMoment && currMoment.assets.length > 0 && (
           <div className="w-[333px] h-[591px] flex rounded-lg items-center justify-center ">
-            <AssetCarousel 
-            assets={currMoment.assets} 
-            caption={moment.caption} 
-            firstAssetDuration={currMoment.assets[0].duration}
-            nextMomentId={momentIdList[momentIdList.indexOf(moment.id) + 1]}
+            <AssetCarousel
+              assets={currMoment.assets}
+              caption={moment.caption}
+              firstAssetDuration={currMoment.assets[0].duration}
             />
           </div>
         )}
