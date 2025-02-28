@@ -10,7 +10,7 @@ type PostsGridParams = {
 }
 const PostsGrid =  ({ itemsPromise }: PostsGridParams) => {
 
-  const items = use(itemsPromise)
+  const items = use(itemsPromise);
 
   return (
 

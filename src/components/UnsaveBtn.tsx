@@ -13,7 +13,7 @@ const UnsaveBtn = ({saveId}: {saveId: string}) => {
             src={'/icons/save-red.svg'}
             width={20}
             height={20}
-            className="absolute top-4 right-4"
+            className="absolute top-4 right-4 z-50"
             alt="save"
             onClick={handleClick}
         />

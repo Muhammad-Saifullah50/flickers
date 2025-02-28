@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { getPlaiceholder } from "plaiceholder";
+
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -36,7 +38,6 @@ export const formatTimeDifference = (date: Date | string) => {
 }
 
 
-// utils.ts
 export function formatMessageTime(localTime: Date | string): string {
   const date = new Date(localTime);
   
@@ -100,3 +101,5 @@ export const determineAssetType = (url: string) => {
 
   return 'unknown'
 }
+
+

@@ -14,10 +14,8 @@ const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
 
     const post = await getPostById(postId!)
     const user = await getCurrentUserFromDb()
-
     const saveId = post?.saves.filter(save => save.postId === postId && save.userId === user?.id)[0]?.id
 
-    // have to correct the save is coming as an array
     const isVideo = post?.assets.some((item) =>
         item.endsWith(".mp4") ||
         item.endsWith(".avi") ||
@@ -38,16 +36,21 @@ const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
                 </Link>
 
             ) : (
-                <Link href={`/posts/${post?.id}`} className="relative">
-                    <UnsaveBtn postId={postId!} saveId={saveId!}/>
-                    <Image
-                        src={post?.assets[0]}
-                        width={500}
-                        height={500}
-                        alt={post?.altText}
-                        className="rounded-3xl w-[250px] h-[250px]"
-                    />
-                </Link>
+                <div className="relative">
+
+                    <UnsaveBtn postId={postId!} saveId={saveId!} />
+                    <Link href={`/posts/${post?.id}`} className="relative">
+                        <Image
+                            src={post?.assets[0]}
+                            width={500}
+                            height={500}
+                            alt={post?.altText}
+                            blurDataURL={`/_next/image?url=${post.assets[0]}&w=16&q=1`}
+                            placeholder='blur'
+                            className="rounded-3xl w-[250px] h-[250px] "
+                        />
+                    </Link>
+                </div>
             )}
         </>
     );
@@ -56,3 +59,4 @@ const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
 export default SavedPostCard;
 
 // have to make it reusable for flicks
+// have to handkle the saves which are present

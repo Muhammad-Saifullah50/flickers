@@ -12,6 +12,7 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
 
     const router = useRouter();
 
+
     const isVideo = post.assets.some((item) => item.endsWith('.mp4') || item.endsWith('.avi') || item.endsWith('.webm') || item.endsWith('.ogg'))
 
     return (<div className='relative group'>
@@ -20,6 +21,7 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
                 controls={false}
                 className='rounded-3xl w-full h-full'
                 onClick={() => router.push(`/post-modal/${post.id}`)}
+
             />
         ) : (
             <Image
@@ -27,6 +29,8 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
                 width={500}
                 height={500}
                 alt={post.altText}
+                blurDataURL={`/_next/image?url=${post.assets[0]}&w=16&q=1`}
+                placeholder='blur'
                 className={`rounded-3xl w-full h-full min-w-[200px] min-h-[200px] ${extraImageClasses}`}
                 onClick={() => router.push(`/post-modal/${post.id}`)}
             />

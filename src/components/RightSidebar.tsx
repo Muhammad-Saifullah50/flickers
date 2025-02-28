@@ -51,7 +51,7 @@ const RightSidebar = () => {
 
     fetchData()
 
-  }, [window.innerWidth])
+  }, [ pathname])
 
   switch (pathname) {
     case '/':

@@ -141,7 +141,6 @@ export const updatePost = async (postId: string, data: createPostParams) => {
 }
 
 export const deletePost = async (postId: string) => {
-
     try {
         await prisma.post.delete({
             where: {

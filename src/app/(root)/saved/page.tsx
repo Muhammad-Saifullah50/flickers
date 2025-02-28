@@ -37,7 +37,7 @@ const SavedPage = async () => {
                             Flicks</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="posts" className="flex gap-6  flex-wrap">
+                    <TabsContent value="posts" className="flex gap-6  flex-wrap ">
                         <Suspense fallback={<SquarePostsGridSkeleton />}>
 
                             {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
