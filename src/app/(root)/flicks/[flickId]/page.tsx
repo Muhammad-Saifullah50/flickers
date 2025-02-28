@@ -139,6 +139,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
                             flick={currFlick!}
                             classNames="w-[450px] h-[calc(100vh-200px)]"
                             loading={loading}
+                            flickIcon={false}
                         />
                     </motion.div>
                 </AnimatePresence> : (

@@ -25,7 +25,8 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
 
     const isOwner = session?.user?.email === post.author?.email;
 
-    const isSaved = post.saves?.some((save) => save.postId === post.id)
+    const isSaved = post.saves?.some((save) => save.postId === post.id);
+    const saveId = post.saves?.find((save) => save.postId === post.id)?.id;
     return (
         <aside className={cn("flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full",
             'rounded-3xl', isHomeCard
@@ -110,55 +111,56 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
             </section>
 
 
-            {userId && 
-            <section className={"flex flex-col gap-4"}>
-                <Link href={`/posts/${post.id}`}>
-                    <section className="flex items-center justify-between ">
-                        <div className="flex items-center justify-start gap-4">
-                            <div className="flex items-center gap-2">
-                                <Image
-                                    src={'/icons/heart.svg'}
-                                    width={20}
-                                    height={20}
-                                    alt='like'
-                                    className='cursor-pointer'
-                                />
-                                <span className="text-white">{post?.likes?.length}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Image
-                                    src={'/icons/comment.svg'}
-                                    width={20}
-                                    height={20}
-                                    alt='like'
-                                    className='cursor-pointer'
-                                />
-                                <span className="text-white">{post?.comments?.length}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Image
-                                    src={'/icons/share.svg'}
-                                    width={18}
-                                    height={18}
-                                    alt='like'
-                                    className='cursor-pointer'
-                                />
-                                <span className="text-white">{post.shares}</span>
-                            </div>
+            {userId &&
+                <section className={"flex flex-col gap-4"}>
+                    <Link href={`/posts/${post.id}`}>
+                        <section className="flex items-center justify-between ">
+                            <div className="flex items-center justify-start gap-4">
+                                <div className="flex items-center gap-2">
+                                    <Image
+                                        src={'/icons/heart.svg'}
+                                        width={20}
+                                        height={20}
+                                        alt='like'
+                                        className='cursor-pointer'
+                                    />
+                                    <span className="text-white">{post?.likes?.length}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Image
+                                        src={'/icons/comment.svg'}
+                                        width={20}
+                                        height={20}
+                                        alt='like'
+                                        className='cursor-pointer'
+                                    />
+                                    <span className="text-white">{post?.comments?.length}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Image
+                                        src={'/icons/share.svg'}
+                                        width={18}
+                                        height={18}
+                                        alt='like'
+                                        className='cursor-pointer'
+                                    />
+                                    <span className="text-white">{post.shares}</span>
+                                </div>
 
-                        </div>
-                        <div className="">
-                            <SavePostBtn
-                                isHomeCard={isHomeCard}
-                                userId={userId}
-                                postId={post.id}
-                                isSaved={isSaved}
-                            />
-                        </div>
-                    </section>
-                </Link>
-                <PostComment postId={post.id} author={post.author} />
-            </section>}
+                            </div>
+                            <div className="">
+                                <SavePostBtn
+                                    isHomeCard={isHomeCard}
+                                    userId={userId}
+                                    postId={post.id}
+                                    isSaved={isSaved}
+                                    saveId={saveId}
+                                />
+                            </div>
+                        </section>
+                    </Link>
+                    <PostComment postId={post.id} author={post.author} />
+                </section>}
 
         </aside >
     )

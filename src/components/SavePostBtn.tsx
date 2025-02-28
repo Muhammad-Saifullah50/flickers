@@ -1,6 +1,6 @@
 'use client';
 
-import { savePost } from "@/actions/save.actions";
+import { savePost, UnsavePostAndFlick } from "@/actions/save.actions";
 import Image from "next/image";
 import { useState } from "react";
 import Loader from "./Loader";
@@ -11,23 +11,30 @@ type SavePostBtn = {
     userId: string
     postId: string
     isSaved: boolean
+    saveId: string | undefined
 }
 
-const SavePostBtn = ({ isHomeCard, userId, postId, isSaved }: SavePostBtn) => {
+const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId }: SavePostBtn) => {
+console.log(isSaved)
 
-    
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
-    
+
     if (!userId) return;
-    
+
     const isHomePage = pathname === '/';
-    
+
 
     const handleClick = async () => {
         try {
             setLoading(true);
-             await savePost(userId, postId, isHomePage && isHomePage)
+
+            if (isSaved && saveId) {
+                await UnsavePostAndFlick(saveId)
+            } else {
+                await savePost(userId, postId, isHomePage && isHomePage)
+            }
+
 
         } catch (error) {
             console.error(error)
@@ -46,13 +53,13 @@ const SavePostBtn = ({ isHomeCard, userId, postId, isSaved }: SavePostBtn) => {
             <Loader variant="white" />
         ) : (
             <Image
-        //@ts-expect-error have to correct this 
-        src={
+                //@ts-expect-error have to correct this 
+                src={
                     (homeAndSaved && '/icons/bookmark-red.svg') || (homeAndNotSaved && '/icons/bookmark.svg') ||
                     (notHomeAndSaved && '/icons/save-red.svg') ||
                     (notHomeAndNotSaved && '/icons/save.svg')
-                    }
-                    
+                }
+
                 width={20}
                 height={20}
                 alt="savebtn"

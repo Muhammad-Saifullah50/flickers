@@ -13,7 +13,7 @@ type FlickCardProps = {
   flickId?: string
   flickIcon?: boolean
 }
-const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
+const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCardProps) => {
 
   const [flickToUse, setFlickToUse] = useState(flick)
 
@@ -51,13 +51,13 @@ const FlickCard = ({ flick, classNames, loading, flickId }: FlickCardProps) => {
       ) : (
           <>
           
-            <Image
+           { flickIcon && <Image
               src={'/icons/flicks-white.svg'}
               width={15}
               height={15}
               className="absolute right-5 top-5"
               alt="flick"
-            />
+            />}
         <div className="group-hover:flex hidden flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
           <h3 className="text-sm">{flickToUse?.caption}</h3>
           <p className="text-sm text-purple-secondary">{flickToUse?.hashtags}</p>

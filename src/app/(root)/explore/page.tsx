@@ -41,8 +41,8 @@ const ExplorePage =  ({ searchParams }: { searchParams: { hashtag_query: string 
             <Heading text='Most Popular' className='pt-4 !text-xl font-semibold' />
 
             <Suspense fallback={<GridSkeleton />}>
-                <section className='pt-10'>
-                    <PostsGrid itemsPromise={itemsPromise}/>
+                <section className='pt-10 '>
+                    <PostsGrid itemsPromise={itemsPromise} query={usableParams.hashtag_query} />
                 </section>
             </Suspense>
         </main>

@@ -64,6 +64,8 @@ const Messages = ({ room, messages, currUser, containsOlderMessages, olderMessag
                     width={200}
                     height={200}
                     alt={'image'}
+                     blurDataURL={`/_next/image?url=${message.text}&w=16&q=1`}
+                placeholder='blur'
                     className="rounded-lg"
                   />
                 ) : isVideo ? (
