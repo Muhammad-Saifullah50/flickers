@@ -32,7 +32,7 @@ const Flicks = async ({ query }: { query: string }) => {
 
             <TabsContent value="foryou" className="flex gap-10 flex-wrap py-8">
                 {flicks?.map((flick) => (
-                    <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />
+                    <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] sm:w-[240px] w-full" />
                 ))}
             </TabsContent>
             <TabsContent value="following" >
@@ -41,7 +41,7 @@ const Flicks = async ({ query }: { query: string }) => {
                 ) : (
                     <div className="flex gap-10 flex-wrap py-8">
                         {popularFlicks?.map((flick) => (
-                            <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
+                            <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] sm:w-[240px] w-full" />))}
                     </div>
                 )}
             </TabsContent>
@@ -52,7 +52,7 @@ const Flicks = async ({ query }: { query: string }) => {
                     ) : (
                         <div className="flex gap-10 flex-wrap py-8">
                             {popularFlicks?.map((flick) => (
-                                <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
+                                <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] sm:w-[240px] w-full" />))}
                         </div>
                     )
                 }
@@ -65,7 +65,7 @@ const Flicks = async ({ query }: { query: string }) => {
                     ) : (
                         <div  className="flex gap-10 flex-wrap py-8">
                             {mostViewedFlicks?.map((flick) => (
-                                <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] w-[240px]" />))}
+                                <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] sm:w-[240px] w-full" />))}
                         </div>
                     )
                 }

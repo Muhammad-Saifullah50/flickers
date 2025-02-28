@@ -9,7 +9,6 @@ import { Suspense } from "react"
 const SavedPage = async () => {
 
     const savedItems = await getSavedItems();
-
     return (
         <main className="flex flex-col gap-4">
             <section>
@@ -46,6 +45,7 @@ const SavedPage = async () => {
                                         <SavedPostFlickCard
                                             postId={item.postId}
                                             key={item.id}
+                                            saveId={item.id}
                                         />
                                     )
                             }) : (
@@ -64,7 +64,9 @@ const SavedPage = async () => {
                                     <SavedPostFlickCard
                                         key={item.id}
                                         flickId={item.flickId!}
-                                        isFlick={true} />
+                                        isFlick={true} 
+                                        saveId={item.id}
+                                        />
                                 )
                         }) : (
                             <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">

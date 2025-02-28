@@ -4,17 +4,28 @@ import Link from "next/link";
 import React from "react";
 import UnsaveBtn from "./UnsaveBtn";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
+import { getFlickById } from "@/actions/flick.actions";
 type SavedPostFlickCardProps = {
     postId?: string;
     flickId?: string;
     isFlick?: boolean;
+    saveId: string;
 };
 
-const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
+const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPostFlickCardProps) => {
+    let post;
+    let flick;
 
-    const post = await getPostById(postId!)
-    const user = await getCurrentUserFromDb()
-    const saveId = post?.saves.filter(save => save.postId === postId && save.userId === user?.id)[0]?.id
+    if (isFlick) {
+        flick = await getFlickById(flickId!)
+    }
+
+    if (postId) {
+        post = await getPostById(postId!)
+    }
+
+
+
 
     const isVideo = post?.assets.some((item) =>
         item.endsWith(".mp4") ||
@@ -23,8 +34,21 @@ const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
         item.endsWith(".ogg")
     );
 
-    if (!post) return null;
-    return (
+    if (!post || !flick) return null;
+    return flickId ? (
+        <div className="relative">
+
+            <UnsaveBtn saveId={saveId} />
+            <Link href={`/flicks/${flick?.id}`}>
+                <video
+                    src={flick.videoUrl}
+                    controls={false}
+                    className="rounded-3xl w-[200px] h-[200px]"
+                />
+            </Link>
+        </div>
+
+    ) : (
         <>
             {isVideo ? (
                 <Link href={`/posts/${post?.id}`}>
@@ -38,7 +62,7 @@ const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
             ) : (
                 <div className="relative">
 
-                    <UnsaveBtn postId={postId!} saveId={saveId!} />
+                    <UnsaveBtn saveId={saveId} />
                     <Link href={`/posts/${post?.id}`} className="relative">
                         <Image
                             src={post?.assets[0]}
@@ -56,7 +80,4 @@ const SavedPostCard = async ({ postId }: SavedPostFlickCardProps) => {
     );
 };
 
-export default SavedPostCard;
-
-// have to make it reusable for flicks
-// have to handkle the saves which are present
+export default SavedPostFlickCard;
