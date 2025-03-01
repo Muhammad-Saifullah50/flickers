@@ -20,7 +20,7 @@ const FollowButton = ({ followerUserId, userToFollowId, isFollowing, followId }:
     return (
             <Button
                 onClick={isFollowing ? handleUnfollow : handleFollow}
-                size={"lg"}>
+                >
                 {isFollowing ? "Unfollow" : "Follow"}
             </Button>
     )

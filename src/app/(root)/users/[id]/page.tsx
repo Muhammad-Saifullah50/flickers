@@ -48,8 +48,13 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                         priority={true} />
                 </div>
                 <div className='flex flex-col w-full gap-7'>
-                    <div className='flex justify-between w-full pt-3'>
+                    <div className='flex  justify-between w-full pt-3'>
+                        <div>
+                            
                         <h2 className='font-semibold text-4xl text-white'>{user?.name}</h2>
+                        <h3 className='text-lg text-purple-secondary'>{user?.username}</h3>
+                        </div>
+                        
                         {isOwner ? (
                             <Link href={`/settings`}>
                                 <Button>Edit Profile</Button>

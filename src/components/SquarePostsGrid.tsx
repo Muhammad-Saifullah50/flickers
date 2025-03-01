@@ -7,25 +7,26 @@ type Item = (Post & { author: User }) | (Flick & { author: User, likes: Like[] }
 
 type SquareGridProps = {
     itemsPromise: Promise<Item[]>
+    isFlicks?: boolean
 }
 
-const SquarePostsGrid = ({ itemsPromise }: SquareGridProps) => {
+const SquarePostsGrid = ({ itemsPromise, isFlicks }: SquareGridProps) => {
 
     const items = use(itemsPromise)
 
 
     return (
-        <section className='flex flex-wrap gap-5'>
-            {items?.map((item) => {
+        <section className='flex flex-wrap gap-5 relative'>
+            {items && items?.length > 0 ? items?.map((item) => {
                 const isFlick = item.videoUrl
 
                 if (isFlick) {
                     return (
-                            <FlickCard
-                                flick={item}
-                                key={item.id}
-                                classNames='h-[400px] w-[240px] '
-                            />
+                        <FlickCard
+                            flick={item}
+                            key={item.id}
+                            classNames='h-[400px] w-[240px] '
+                        />
                     )
                 }
                 return (
@@ -36,7 +37,16 @@ const SquarePostsGrid = ({ itemsPromise }: SquareGridProps) => {
                     />
 
                 )
-            })}
+            }) : (
+                <div className='flex items-center justify-center w-full  absolute'>
+
+                    {isFlicks ? (
+                            <p >You have not created any flicks</p>
+                    ) : (
+                        <p >You have not created any posts</p>
+                    )}
+                </ div>
+            )}
         </section>
     )
 }

@@ -31,9 +31,14 @@ const Flicks = async ({ query }: { query: string }) => {
             </TabsList>
 
             <TabsContent value="foryou" className="flex gap-10 flex-wrap py-8">
-                {flicks?.map((flick) => (
+                {flicks && flicks.length > 0 ? flicks?.map((flick) => (
                     <FlickCard key={flick?.id} flick={flick} classNames="h-[400px] sm:w-[240px] w-full" />
-                ))}
+                )) : (
+                    <div className='flex items-center justify-center w-full  absolute'>
+
+                    <p >No flicks found for '{query}'</p>
+                  </ div>
+                )}
             </TabsContent>
             <TabsContent value="following" >
                 {followingFlicks?.length === 0 ? (

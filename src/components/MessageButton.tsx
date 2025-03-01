@@ -14,7 +14,7 @@ const MessageButton = ({ currentUserId, otherUserId }: { currentUserId: string, 
         try {
             setLoading(true);
             // will check for existing chat and the create a new one if need be in the database
-            const chat = await createChat(currentUserId, otherUserId);
+            await createChat(currentUserId, otherUserId);
 
             
         } catch (error) {
@@ -24,7 +24,7 @@ const MessageButton = ({ currentUserId, otherUserId }: { currentUserId: string, 
         }
     }
     return (
-        <Button onClick={handleCreateChat}>
+        <Button onClick={handleCreateChat} className="!bg-white !text-black font-medium">
             {loading ? <Loader variant="white" /> : "Message"}</Button>
     )
 }
