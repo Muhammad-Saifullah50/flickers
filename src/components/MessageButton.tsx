@@ -24,7 +24,7 @@ const MessageButton = ({ currentUserId, otherUserId }: { currentUserId: string, 
         }
     }
     return (
-        <Button onClick={handleCreateChat} className="!bg-white !text-black font-medium">
+        <Button onClick={handleCreateChat} className=" font-medium" variant={"secondary"} >
             {loading ? <Loader variant="white" /> : "Message"}</Button>
     )
 }

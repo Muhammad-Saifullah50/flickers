@@ -37,7 +37,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
     return (
         <main className='flex flex-col gap-4 '>
-            <section className='flex gap-4 py-4'>
+            <section className='flex max-lg:flex-wrap gap-4 py-4'>
                 <div className='flex justify-center items-start'>
                     <Image
                         src={user?.image || '/icons/dummyuser.png'}
@@ -48,11 +48,11 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                         priority={true} />
                 </div>
                 <div className='flex flex-col w-full gap-7'>
-                    <div className='flex  justify-between w-full pt-3'>
+                    <div className='flex  flex-wrap gap-4 justify-between w-full pt-3'>
                         <div>
                             
-                        <h2 className='font-semibold text-4xl text-white'>{user?.name}</h2>
-                        <h3 className='text-lg text-purple-secondary'>{user?.username}</h3>
+                        <h2 className='font-semibold text-2xl lg:text-4xl text-white'>{user?.name}</h2>
+                        <h3 className='text-base lg:text-lg text-purple-secondary'>{user?.username}</h3>
                         </div>
                         
                         {isOwner ? (
@@ -60,7 +60,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                                 <Button>Edit Profile</Button>
                             </Link>
                         ) : (
-                            <div className='flex gap-4'>
+                            <div className='flex gap-4 '>
                                 <FollowButton
                                     followerUserId={currentUser?.id!}
                                     userToFollowId={user?.id!}
