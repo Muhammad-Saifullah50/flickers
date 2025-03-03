@@ -215,7 +215,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                 </form>
             </Form>
 
-            <div className="flex gap-2 min-w-[400px] ">
+            <div className="flex flex-wrap gap-2 min-w-[400px] ">
 
                 {Object.values(providerMap).map((provider) => (
                     <form

@@ -1,6 +1,13 @@
+import { Metadata } from 'next'
 import Image from 'next/image'
-import React from 'react'
 
+export const metadata: Metadata = {
+    title: {
+        template: '%s - Flickers',
+        default: 'Flickers',
+    },
+    description: 'A social media platform for all your social needs.',
+  }
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <main className='flex w-full bg-dark-1 min-h-screen '>

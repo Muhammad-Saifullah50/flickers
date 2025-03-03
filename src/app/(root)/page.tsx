@@ -5,8 +5,13 @@ import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
 import MomentsList from "@/components/MomentsList";
 import HomeFeedSkeleton from "@/components/skeletons/HomeFeedSkeleton";
-import MomentSkeleton from "@/components/skeletons/MomentSkeleton";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: 'Home',
+  description: 'Welcome to the home page where you can see recent moments and your feed.',
+}
 
 export default async function HomePage() {
 

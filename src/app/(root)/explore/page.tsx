@@ -4,8 +4,13 @@ import Heading from '@/components/Heading'
 import PostsGrid from '@/components/PostsGrid';
 import QueryForm from '@/components/forms/QueryForm'
 import GridSkeleton from '@/components/skeletons/GridSkeleton';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
 
+export const metadata: Metadata = {
+    title: 'Explore',
+    description: 'Discover popular posts and flicks by hashtags or see what is trending today.',
+}
 
 const ExplorePage =  ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
 
