@@ -21,12 +21,13 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
         title: title || 'Post',
         description: post?.caption,
         openGraph: {
-            title: title || 'Post',
+            title: `${title} - Flickers` || 'Post - Flickers',
             description: post?.caption,
             images: ogImage,
         }
     }
 }
+// haver to figure out how to show the first asset as the og both in case of image and video
 
 export const generateStaticParams = async () => {
     const postIds = await getAllPostIds()

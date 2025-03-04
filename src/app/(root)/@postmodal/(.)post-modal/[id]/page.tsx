@@ -3,6 +3,25 @@ import { getCurrentUserFromDb } from "@/actions/user.actions";
 import PostModal from "@/components/modals/PostModal"
 import { notFound } from "next/navigation";
 
+export const generateMetadata = async ({ params }: { params: { id: string } }) => {
+  const { id } = await params
+
+  const post = await getPostById(id);
+
+  const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + " ..."} - ${post?.author?.name}`
+  const ogImage = `${process.env.NEXT_PUBLIC_APP_URL}/api/og?postId=${id}`
+
+  return {
+      title: title || 'Post',
+      description: post?.caption,
+      openGraph: {
+          title: `${title} - Flickers` || 'Post - Flickers',
+          description: post?.caption,
+          images: ogImage,
+      }
+  }
+}
+
 export const generateStaticParams = async () => {
     const postIds = await getAllPostIds()
 

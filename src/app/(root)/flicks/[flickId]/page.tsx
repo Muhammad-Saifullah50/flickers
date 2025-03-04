@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 import Loader from "@/components/Loader";
 
-
+// have to set video og
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 

@@ -35,6 +35,6 @@ export const GET = async (request: NextRequest) => {
 
 
     return new ImageResponse(
-    <img src={firstImageUrl} width={1200} height={630} alt={post?.caption} />
+    <img src={firstImageUrl} width={100} height={100} alt={post?.caption} />
 )}
     
