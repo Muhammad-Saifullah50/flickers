@@ -111,7 +111,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
             </section>
 
 
-            {userId &&
+            
                 <section className={"flex flex-col gap-4"}>
                     <Link href={`/posts/${post.id}`}>
                         <section className="flex items-center justify-between ">
@@ -149,18 +149,18 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
 
                             </div>
                             <div className="">
-                                <SavePostBtn
+                               {userId && <SavePostBtn
                                     isHomeCard={isHomeCard}
                                     userId={userId}
                                     postId={post.id}
                                     isSaved={isSaved}
                                     saveId={saveId}
-                                />
+                                />}
                             </div>
                         </section>
                     </Link>
                     <PostComment postId={post.id} author={post.author} />
-                </section>}
+                </section>
 
         </aside >
     )
