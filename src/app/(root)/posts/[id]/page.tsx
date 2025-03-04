@@ -16,7 +16,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
     const post = await getPostById(id);
 
     const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + " ..."} - ${post?.author?.name}`
-    const ogImage = determineAssetType(post?.assets[0]) === 'image' || null
+    const ogImage = `/api/og?postId=${id}`
 
     return {
         title: title || 'Post',
