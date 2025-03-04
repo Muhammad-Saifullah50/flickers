@@ -1,7 +1,14 @@
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import ChatsList from "@/components/ChatsList"
 import Heading from "@/components/Heading"
+import { Metadata } from "next";
 
+
+export const metadata: Metadata = {
+  title: 'Chats',
+  description: 'Chat with your friends',
+ 
+}
 const ChatPage = async () => {
   const currentUser = await getCurrentUserFromDb();
   return (
@@ -19,4 +26,3 @@ const ChatPage = async () => {
 }
 
 export default ChatPage
-// haver to make chatl;ist sheet for mobile

@@ -1,6 +1,6 @@
 import { getFlicksByUserId } from '@/actions/flick.actions';
 import { getPostsByUserId } from '@/actions/post.actions';
-import { getAllUserIds, getCurrentUserFromDb, getDbUserByIdWithDetails } from '@/actions/user.actions'
+import { getAllUserIds, getCurrentUserFromDb, getDbUserById, getDbUserByIdWithDetails } from '@/actions/user.actions'
 import FollowButton from '@/components/FollowButton';
 import MessageButton from '@/components/MessageButton';
 import PostTabs from '@/components/PostTabs';
@@ -16,6 +16,23 @@ export const generateStaticParams = async () => {
             id,
         }
     })
+}
+
+export const generateMetadata = async ({ params }: { params: { id: string } }) => {
+    const id = await params.id;
+    const user = await getDbUserById(id);
+
+    return {
+        title: user?.name,
+        description: user?.bio,
+    
+        openGraph: {
+            title: user?.name,
+            description: user?.bio,
+            images: [user?.image || '/icons/dummyuser.png']
+
+        }
+    }
 }
 
 const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
@@ -50,11 +67,11 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                 <div className='flex flex-col w-full gap-7'>
                     <div className='flex  flex-wrap gap-4 justify-between w-full pt-3'>
                         <div>
-                            
-                        <h2 className='font-semibold text-2xl lg:text-4xl text-white'>{user?.name}</h2>
-                        <h3 className='text-base lg:text-lg text-purple-secondary'>{user?.username}</h3>
+
+                            <h2 className='font-semibold text-2xl lg:text-4xl text-white'>{user?.name}</h2>
+                            <h3 className='text-base lg:text-lg text-purple-secondary'>{user?.username}</h3>
                         </div>
-                        
+
                         {isOwner ? (
                             <Link href={`/settings`}>
                                 <Button>Edit Profile</Button>
@@ -108,5 +125,3 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 }
 
 export default UsersProfilePage
-
-// have to implement the follow button as done in the user card

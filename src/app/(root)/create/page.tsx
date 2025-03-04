@@ -5,8 +5,16 @@ import Heading from '@/components/Heading'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import FlickForm from '@/components/forms/FlickForm'
 import Image from 'next/image'
+import { Metadata } from 'next'
 
-export const createPage = () => {
+
+export const metadata: Metadata = {
+  title: 'Create',
+  description: 'Create a post or flick',
+ 
+}
+
+const CreatePage = () => {
 
   return (
     <section>
@@ -48,4 +56,4 @@ export const createPage = () => {
   )
 }
 
-export default createPage
+export default CreatePage

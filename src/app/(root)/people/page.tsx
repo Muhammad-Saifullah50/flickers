@@ -2,8 +2,15 @@ import { getAllUsers, getCurrentUserFromDb } from '@/actions/user.actions';
 import Heading from '@/components/Heading'
 import UserCardSkeleton from '@/components/skeletons/UserCardSkeleton';
 import UsersList from '@/components/UsersList';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
 
+
+export const metadata: Metadata = {
+    title: 'People',
+    description: 'Search for people',
+   
+  }
 const PeoplePage = () => {
 
     const currentUserPromise =  getCurrentUserFromDb();

@@ -2,7 +2,14 @@ import { getCurrentUserFromDb } from '@/actions/user.actions'
 import Heading from '@/components/Heading'
 import ProfileForm from '@/components/forms/ProfileForm'
 import ProfileFormSkeleton from '@/components/skeletons/ProfileFormSkeleton';
+import { Metadata } from 'next';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Edit Profile',
+  description: 'Edit your profile',
+ 
+}
 
 const SettingsPage = async () => {
 

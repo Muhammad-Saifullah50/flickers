@@ -3,8 +3,16 @@ import Heading from "@/components/Heading"
 import SavedPostFlickCard from "@/components/SavedPostFlickCard"
 import SquarePostsGridSkeleton from "@/components/skeletons/SquarePostsGridSkeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Metadata } from "next"
 import Image from "next/image"
 import { Suspense } from "react"
+
+
+export const metadata: Metadata = {
+    title: 'Saved',
+    description: 'Saved Posts and Flicks',
+   
+  }
 
 const SavedPage = async () => {
 

@@ -3,7 +3,15 @@ import HashtagBox from '@/components/HashtagBox';
 import Heading from '@/components/Heading'
 import QueryForm from '@/components/forms/QueryForm'
 import FlickSkeleton from '@/components/skeletons/FlickSkeleton';
+import { Metadata } from 'next';
 import React, { Suspense } from 'react'
+
+
+export const metadata: Metadata = {
+    title: 'Flicks',
+    description: 'Search for flicks',
+   
+  }
 
 const FlicksPage = async ({ searchParams }: { searchParams: { flicks_query: string } }) => {
 
