@@ -5,7 +5,6 @@ import PostDetails from "@/components/PostDetails";
 import PostInfoSkeleton from "@/components/skeletons/PostInfoSkeleton";
 import SquarePostsGridSkeleton from "@/components/skeletons/SquarePostsGridSkeleton";
 import SquarePostsGrid from "@/components/SquarePostsGrid";
-import { determineAssetType } from "@/lib/utils";
 
 import { notFound } from "next/navigation"
 import { Suspense } from "react";
@@ -16,7 +15,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
     const post = await getPostById(id);
 
     const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + " ..."} - ${post?.author?.name}`
-    const ogImage = `/api/og?postId=${id}`
+    const ogImage = `${process.env.NEXT_PUBLIC_APP_URL}/api/og?postId=${id}`
 
     return {
         title: title || 'Post',
@@ -24,7 +23,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
         openGraph: {
             title: title || 'Post',
             description: post?.caption,
-            images: [ogImage],
+            images: ogImage,
         }
     }
 }
