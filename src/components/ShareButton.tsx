@@ -14,19 +14,29 @@ import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { useState } from "react";
 import WhatsAppShareButton from "./WhatsAppShareButton";
+import { toast } from "@/hooks/use-toast";
 
-interface SharePostButtonProps {
+interface ShareButtonProps {
     link: string;
-    modalOpen: boolean
+    modalOpen: boolean;
+    postAuthor: string;
+    caption: string;
+    itemId: string,
+    currentShares: number
 }
 
-const SharePostButton = ({link, modalOpen}: SharePostButtonProps) => {
+const ShareButton = ({link, modalOpen, postAuthor, caption, itemId, currentShares}: ShareButtonProps) => {
 
     const [open, setOpen] = useState(modalOpen);
 
     const handleClick = () => {
         navigator.clipboard.writeText(link);
         setOpen(false);
+        
+        toast( {
+            title: "Copied to clipboard",
+            variant: "default",
+        })
     }
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -42,7 +52,7 @@ const SharePostButton = ({link, modalOpen}: SharePostButtonProps) => {
                 <DialogHeader>
                     <DialogTitle>Share Post</DialogTitle>
                     <DialogDescription>
-                        Share this post with your friends via the link or share through Whatsapp.
+                        Share with your friends via the link or share through Whatsapp.
                     </DialogDescription>
                 </DialogHeader>
                     <div className="flex  items-center justify-center gap-6">
@@ -57,9 +67,12 @@ const SharePostButton = ({link, modalOpen}: SharePostButtonProps) => {
                         />
                     </div>
 
-                    <WhatsAppShareButton url={link}  />
-
-                    {/* ghave to copmplete this  */}
+                    <WhatsAppShareButton 
+                    url={link} 
+                    title={`${postAuthor} posted on Flickers`} 
+                    message={caption}
+                    postId={itemId}
+                    currentShares={currentShares}/>
     
                 <DialogFooter>
                     <Button onClick={handleClick}>Copy Link</Button>
@@ -69,4 +82,4 @@ const SharePostButton = ({link, modalOpen}: SharePostButtonProps) => {
     )
 }
 
-export default SharePostButton
+export default ShareButton

@@ -347,3 +347,21 @@ export const getAllPostIds = async () => {
         console.error('error fetching all post ids', error)
     }
 }
+
+export const updatePostShares = async (postId: string, currentShares: number) => {
+    try {
+        await prisma.post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                shares: currentShares + 1
+            }
+        });
+
+        revalidatePath(`/posts/${postId}`)
+        revalidatePath(`/post-modal/${postId}`)
+    } catch (error) {
+        console.error('Error updating shares on post', error)
+    }
+}

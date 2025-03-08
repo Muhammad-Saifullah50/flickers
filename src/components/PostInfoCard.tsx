@@ -8,7 +8,7 @@ import PostCarousel from "./PostCarousel"
 import Link from "next/link"
 import DeletePost from "./DeletePost"
 import SavePostBtn from "./SavePostBtn"
-import SharePostButton from "./SharePostButton"
+import ShareButton from "./ShareButton";
 
 type PostInfoCardProps = {
     post: Post & {
@@ -152,7 +152,13 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
 
                         </div>
                         <div className="flex gap-2">
-                            <SharePostButton link={shareLink} modalOpen={false}/>
+                            <ShareButton 
+                            itemId={post.id}
+                            link={shareLink} modalOpen={false}
+                            postAuthor={post.author.name}
+                            caption={post.caption}
+                            currentShares={post.shares}
+                            />
                             {userId && <SavePostBtn
                                 isHomeCard={isHomeCard}
                                 userId={userId}
