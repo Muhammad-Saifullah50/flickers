@@ -3,8 +3,6 @@ import { determineAssetType } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 export const GET = async (request: NextRequest) => {
 
     const { searchParams } = new URL(request.url);
