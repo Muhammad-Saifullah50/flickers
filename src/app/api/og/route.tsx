@@ -10,7 +10,7 @@ export const GET = async (request: NextRequest) => {
     const postId = searchParams.get("postId");
     const flickId = searchParams.get("flickId");
 
-    if (!postId || !flickId) {
+    if (!postId && !flickId) {
         return NextResponse.json({
             message: "Post ID or Flick Id is required",
         }, {
