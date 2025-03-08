@@ -10,7 +10,6 @@ import { type CarouselApi } from "@/components/ui/carousel"
 import { useEffect, useRef, useState } from "react"
 import Autoplay from "embla-carousel-autoplay"
 import { cn } from "@/lib/utils"
-import { set } from "zod"
 
 type MomentCarouselProps = {
   allMoments: (Moment & { author: User, assets: MomentAsset[] })[],
@@ -76,11 +75,19 @@ const MomentCarousel = ({ allMoments, currMoment, setModalOpen, open }: MomentCa
     if (!api) {
       return
     }
-
-
     api.scrollTo(currentIndex);
+    setCurrentIndex(api.selectedScrollSnap())
+
+    api.on('select', () => {
+      setCurrentIndex(api.selectedScrollSnap() )
+      setCurrentMomentId(momentIdList[api.selectedScrollSnap() ])
+      setCurrentMoment(allMoments[api.selectedScrollSnap()])
+      
+
+    })
 
   }, [api, currentIndex]);
+
 
   const handleNext = () => {
 
@@ -137,7 +144,6 @@ const MomentCarousel = ({ allMoments, currMoment, setModalOpen, open }: MomentCa
             <MomentCard
               moment={moment}
               currMoment={currentMoment}
-              momentIdList={momentIdList}
               handlePrevious={handlePrevious}
               handleNext={handleNext}
             />

@@ -13,7 +13,7 @@ interface MomentCardProps {
   currMoment: Moment & { author: User, assets: MomentAsset[] },
   handlePrevious: () => void,
   handleNext: () => void,
-  currMomentId: string
+
 }
 
 const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCardProps) => {
@@ -32,7 +32,7 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
       <div className="relative">
 
         {isCurrentMoment && <div className="absolute w-full flex flex-col gap-2 items-center p-2 z-50">
-       
+
           <div className="flex gap-2 items-center justify-start w-full relative z-50 p-2">
 
             <Image
@@ -63,6 +63,8 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
                 <Image src={firstAsset?.url}
                   width={133}
                   height={235}
+                  blurDataURL={`/_next/image?url=${firstAsset?.url}&w=16&q=1`}
+                  placeholder='blur'
                   alt="moment image"
                   className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center object-fill")} />
 
@@ -116,10 +118,3 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
 }
 
 export default MomentCard
-
-// have to complete this
-// have to implement the loading and the next assets etc
-// have to correlctylk imoplement the carousel
-// haver to ckeck and correcvt the prev carousel button not clockable when video is on leift
-//have to us eplaiceholder to genereate lur place holder images
-// haver to delete the loading bar thingy

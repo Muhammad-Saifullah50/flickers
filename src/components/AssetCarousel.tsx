@@ -56,6 +56,8 @@ const AssetCarousel = ({ assets, caption, firstAssetDuration,  }: AssetCarouselP
                                     width={333}
                                     height={591}
                                     alt="moment image"
+                                     blurDataURL={`/_next/image?url=${asset.url}&w=16&q=1`}
+                                    placeholder='blur'
                                     className={" w-[333px] h-[591px] rounded-lg flex items-center justify-center object-fill relative -z-50"} />
                             ) : (
                                 <video src={asset?.url}
@@ -78,6 +80,4 @@ const AssetCarousel = ({ assets, caption, firstAssetDuration,  }: AssetCarouselP
 }
 
 export default AssetCarousel
-
-// havev to figure out how to go to the next moment when the last asset has completed
-// and when the user clicks or slides on the next moment, it should go to the next moment       
+      
