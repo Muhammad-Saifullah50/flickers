@@ -14,7 +14,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 
     const post = await getPostById(id);
 
-    const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + " ..."} - ${post?.author?.name}`
+    const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + "..."} - ${post?.author?.name}`
     const ogImage = `${process.env.NEXT_PUBLIC_APP_URL}/api/og?postId=${id}`
 
     return {
@@ -27,7 +27,6 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
         }
     }
 }
-// haver to figure out how to show the first asset as the og both in case of image and video
 
 export const generateStaticParams = async () => {
     const postIds = await getAllPostIds()

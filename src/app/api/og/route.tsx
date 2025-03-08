@@ -2,37 +2,51 @@ import { getPostById } from "@/actions/post.actions";
 import { determineAssetType } from "@/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 import { ImageResponse } from "next/og";
+import { getFlickById } from "@/actions/flick.actions";
 
 export const GET = async (request: NextRequest) => {
 
     const { searchParams } = new URL(request.url);
     const postId = searchParams.get("postId");
+    const flickId = searchParams.get("flickId");
 
-    if (!postId) {
+    if (!postId || !flickId) {
         return NextResponse.json({
-            message: "Post ID is required",
+            message: "Post ID or Flick Id is required",
         }, {
             status: 400,
         })
     }
 
-    const post = await getPostById(postId);
+    if (postId) {
 
-    const firstImageUrl = post?.assets.filter((asset) => determineAssetType(asset) === 'image')[0];
+        const post = await getPostById(postId);
 
-    if (!firstImageUrl) {
-        return new ImageResponse(
-            <div 
+        const firstAssetUrl = post?.assets[0];
+        const firstAssetType = determineAssetType(firstAssetUrl as string);
 
-            tw="flex flex-col justify-center items-center w-full h-full bg-white text-black"
-            >
-            {post?.caption}
-            </div>
-        )
+        if (firstAssetType === "image") {
+            return new ImageResponse(
+                <img src={firstAssetUrl}  width="100%" height="100%" style={{ maxWidth: '1200px', maxHeight: '630px' }} />
+            )
+        } else {
+            return new ImageResponse(
+                <video src={firstAssetUrl} width="100%" height="100%" style={{ maxWidth: '1200px', maxHeight: '630px' }} />
+            )
+        }
+
     }
 
+    else if (flickId) {
+        const flick = await getFlickById(flickId);
 
-    return new ImageResponse(
-    <img src={firstImageUrl} width={100} height={100} alt={post?.caption} />
-)}
-    
+        const videoUrl = flick?.videoUrl
+        return new ImageResponse(
+            <video src={videoUrl} width={100} height={100} />
+        )
+    }
+}
+
+
+
+
