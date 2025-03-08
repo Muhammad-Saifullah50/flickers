@@ -1,12 +1,18 @@
+
 import { getFlicksByUserId } from '@/actions/flick.actions';
 import { getPostsByUserId } from '@/actions/post.actions';
 import { getAllUserIds, getCurrentUserFromDb, getDbUserById, getDbUserByIdWithDetails } from '@/actions/user.actions'
 import FollowButton from '@/components/FollowButton';
 import MessageButton from '@/components/MessageButton';
+import MomentModal from '@/components/modals/MomentModal';
+import MomentCircle from '@/components/MomentCircle';
+import MomentsList from '@/components/MomentsList';
 import PostTabs from '@/components/PostTabs';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+
+export const revalidate = 86400
 
 export const generateStaticParams = async () => {
     const userIds = await getAllUserIds();
@@ -25,7 +31,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
     return {
         title: user?.name,
         description: user?.bio,
-    
+
         openGraph: {
             title: user?.name,
             description: user?.bio,
@@ -41,6 +47,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
     const user = await getDbUserByIdWithDetails(id);
     const currentUser = await getCurrentUserFromDb();
+
 
     const isFollowing = user?.followedBy.some((follow) => follow?.follower.id === currentUser?.id);
 
@@ -60,6 +67,7 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                         src={user?.image || '/icons/dummyuser.png'}
                         width={150}
                         height={150}
+                      
                         alt='profile photo'
                         className='rounded-full'
                         priority={true} />
@@ -114,8 +122,15 @@ const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
                     <div>
                         <p className='text-base text-light-2'>{user?.bio}</p>
                     </div>
+
+                    <div className='flex flex-wrap gap-4'>
+                        {user?.moments.map((moment) => (
+                            <MomentModal allMoments={user.moments} moment={moment} key={moment.id} />
+                        ))}
+                    </div>
                 </div>
             </section>
+
 
             <section>
                 <PostTabs postsPromise={postsPromise} flicksPromise={flicksPromise} />

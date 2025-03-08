@@ -20,7 +20,7 @@ type MomentCarouselProps = {
 }
 const MomentCarousel = ({ allMoments, currMoment, setModalOpen, open }: MomentCarouselProps) => {
   const calculateDuration = (moment: Moment & { author: User, assets: MomentAsset[] }) => {
-    const hasAssets = moment.assets.length > 0;
+    const hasAssets = moment?.assets?.length > 0;
 
     if (hasAssets) {
       const totalAssetsDurationArray = moment.assets.map(asset => asset.duration)

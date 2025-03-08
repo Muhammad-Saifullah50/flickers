@@ -2,12 +2,9 @@
 import { cn } from "@/lib/utils";
 import { Moment, MomentAsset, User } from "@prisma/client"
 import Image from "next/image";
-import { useEffect, useRef, useState, } from "react";
-import LoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 import MomentCircle from "./MomentCircle";
 import { CarouselNext, CarouselPrevious } from "./ui/carousel";
 import { Progress } from "@/components/ui/progress"
-import { updateFlick } from "@/actions/flick.actions";
 import AssetCarousel from "./AssetCarousel";
 
 
@@ -21,9 +18,6 @@ interface MomentCardProps {
 
 const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCardProps) => {
 
-  const [progress, setProgress] = useState(0);
-  const [hasNextAsset, setHasNextAsset] = useState(false)
-
   const firstAsset = moment.assets[0]
 
   const isVideo = firstAsset?.url.includes('mp4') || firstAsset?.url.includes('mov') || firstAsset?.url.includes('webm');
@@ -32,20 +26,13 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
   const isCurrentMoment = moment.id === currMoment.id;
 
 
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(100), 1000)
-    return () => clearTimeout(timer)
-  }, [currMoment.id]);
-
   const mediaType = isVideo ? 'video' : isImage ? 'image' : 'text';
   return (
     <div className="relative mr-4">
       <div className="relative">
 
         {isCurrentMoment && <div className="absolute w-full flex flex-col gap-2 items-center p-2 z-50">
-          {
-            isCurrentMoment && <Progress value={progress} className="h-1" />
-          }
+       
           <div className="flex gap-2 items-center justify-start w-full relative z-50 p-2">
 
             <Image

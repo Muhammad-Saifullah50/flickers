@@ -7,15 +7,12 @@ export const generateMetadata = async ({ params }: { params: { flickId: string }
   const flick = await getFlickById(flickId);
 
   const title = `${flick?.caption.split(" ").slice(0, 10).join(" ") + "..."} - ${flick?.author?.name}`
-  const ogImage = `${process.env.NEXT_PUBLIC_APP_URL}/api/og?flickId=${flickId}`
-
   return {
       title: title || 'Flick',
       description: flick?.caption,
       openGraph: {
           title: `${title} - Flickers` || 'Flick - Flickers',
           description: flick?.caption,
-          images: ogImage,
       }
   }
 }

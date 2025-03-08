@@ -81,7 +81,13 @@ export const getDbUserByIdWithDetails = async (id: string) => {
                         following: true
                     }
                 },
-                posts: true
+                posts: true,
+                moments: {
+                    include: {
+                        author: true,
+                        assets: true
+                    }
+                }
             }
         })
 
@@ -140,6 +146,7 @@ export const updateProfile = async (data: updateProfileParams, userId: string) =
             }
         });
         revalidatePath('/settings')
+        revalidatePath(`/users/${user.id}`)
         return user;
 
     } catch (error) {
