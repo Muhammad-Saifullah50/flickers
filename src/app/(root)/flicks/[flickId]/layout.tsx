@@ -1,4 +1,4 @@
-import { getAllFlickIds, getFlickById } from '@/actions/flick.actions';
+import { getFlickById } from '@/actions/flick.actions';
 import Heading from '@/components/Heading'
 
 export const generateMetadata = async ({ params }: { params: { flickId: string } }) => {
@@ -20,13 +20,6 @@ export const generateMetadata = async ({ params }: { params: { flickId: string }
   }
 }
 
-export const generateStaticParams = async () => {
-  const postIds = await getAllFlickIds()
-
-  return postIds?.map(id => ({
-      id,
-  }))
-};
 
 
 const FlickIdLayout = ({children} : {children: React.ReactNode}) => {
