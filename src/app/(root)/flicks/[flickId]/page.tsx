@@ -1,14 +1,12 @@
 'use client'
 
-import { getAllFlickIds, getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
+import { getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
 import FlickCard from "@/components/FlickCard";
 import { Flick, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 import Loader from "@/components/Loader";
-
-// have to set video og
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
