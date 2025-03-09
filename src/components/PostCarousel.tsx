@@ -15,7 +15,7 @@ const PostCarousel = ({ items }: { items: string[] }) => {
     return (
         <Carousel
         >
-            <CarouselContent className="flex w-full ">
+            <CarouselContent className="flex w-full">
                 {items.map((item) => {
                     const isVideo = [".mp4", ".webm", ".mov", ".avi", ".mkv"].some(
                         (ext) => item.toLowerCase().endsWith(ext)

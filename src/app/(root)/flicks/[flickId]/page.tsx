@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 import Loader from "@/components/Loader";
+import ShareButton from "@/components/ShareButton";
+import SavePostBtn from "@/components/SavePostBtn";
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
@@ -33,15 +35,15 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
                 const prevFlick = flickList?.[0];
                 const nextFlick = flickList?.[1];
 
-                if (nextFlickId )router.prefetch(`/flicks/${nextFlickId}`);
+                if (nextFlickId) router.prefetch(`/flicks/${nextFlickId}`);
 
 
                 setCurrFlick(currentFlick)
 
-        //@ts-expect-error have to correct this 
-        setPrevFlickId(prevFlick?.id)
-        //@ts-expect-error have to correct this 
-        setNextFlickId(nextFlick?.id)
+                //@ts-expect-error have to correct this 
+                setPrevFlickId(prevFlick?.id)
+                //@ts-expect-error have to correct this 
+                setNextFlickId(nextFlick?.id)
 
             } catch (error) {
                 console.error('errror fetching flicks', error)
@@ -51,22 +53,22 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
         };
 
         fetchData();
-    }, [params, nextFlickId,router])
+    }, [params, nextFlickId, router])
 
 
-    
+
     useEffect(() => {
         const handleGlobalScroll = (e: WheelEvent) => {
-        if (transitioning) return
-    
-    
+            if (transitioning) return
+
+
             if (e.deltaY > 0 && nextFlickId) {
                 setTransitioning(true)
                 setDirection('next')
                 setLoading(true)
                 router.push(`/flicks/${nextFlickId}`)
                 setLoading(false)
-    
+
             }
             if (e.deltaY < 0 && prevFlickId) {
                 setTransitioning(true)
@@ -74,9 +76,9 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
                 setLoading(true)
                 router.push(`/flicks/${prevFlickId}`)
                 setLoading(false)
-    
+
             }
-    
+
             setTimeout(() => {
                 setTransitioning(false)
             }, 200);
@@ -87,7 +89,7 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
         return () => {
             window.removeEventListener('wheel', handleGlobalScroll)
         }
-    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning,currFlick,router ])
+    }, [currFlick?.id, nextFlickId, prevFlickId, transitioning, currFlick, router])
 
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -115,19 +117,20 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
             setTransitioning(false)
         }, 200);
     }
+    const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/flicks/${currFlick?.id}`
 
     return (
         <div
-            className="h-full flex flex-col gap-6 items-center justify-center overflow-y-scroll focus-visible:outline-none "
+            className="h-full flex flex-col gap-6 items-center justify-center overflow-y-scroll focus-visible:outline-none"
             tabIndex={0}
             onKeyDown={handleKeyDown}
         >
-            
+
             {currFlick ?
                 <AnimatePresence>
                     <motion.div
                         key={currFlick?.id}
-                        className=""
+                        className=" flex gap-4"
                         initial={{ y: direction === 'prev' ? -500 : 500 }}
                         animate={{ y: 0 }}
                         exit={{ y: direction === 'prev' ? 500 : -500 }}
@@ -139,14 +142,32 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
                             loading={loading}
                             flickIcon={false}
                         />
+                        <div className="flex flex-col gap-8 self-end">
+                        <div className="bg-gray-800 rounded-full p-2">
+                        {/* <SavePostBtn
+                                isHomeCard={false}
+                                userId={userId}
+                                postId={post.id}
+                                isSaved={isSaved}
+                                saveId={saveId}
+                            /> */}
+                            </div>
+                            <div className="bg-gray-800 rounded-full p-2">
+                                <ShareButton
+                                    itemId={currFlick?.id}
+                                    link={shareLink}
+                                    modalOpen={false}
+                                    authorName={currFlick.author.name}
+                                    caption={currFlick.caption}
+                                />
+                            </div>
+                        </div>
                     </motion.div>
                 </AnimatePresence> : (
-                    <Loader variant="purple"/>
+                    <Loader variant="purple" />
                 )}
         </div>
     )
 }
 
 export default FlickIdPage
-
-// there is some glitch in the previous flick

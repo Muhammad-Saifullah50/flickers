@@ -8,9 +8,9 @@ const FlickSkeleton = () => {
                 <Skeleton className='rounded-full h-10 w-80' />
             </div>
             <div className='flex gap-10 flex-wrap '>
-                <Skeleton className='rounded-lg h-[400px] w-[240px]' />
-                <Skeleton className='rounded-lg h-[400px] w-[240px]' />
-                <Skeleton className='rounded-lg h-[400px] w-[240px]' />
+                <Skeleton className='rounded-lg h-[400px] sm:w-[240px] w-full' />
+                <Skeleton className='rounded-lg h-[400px] sm:w-[240px] w-full' />
+                <Skeleton className='rounded-lg h-[400px] sm:w-[240px] w-full' />
             </div>
         </div>
     )

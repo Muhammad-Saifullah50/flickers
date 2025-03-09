@@ -37,20 +37,6 @@ const MobileNavSheet = () => {
 
 
                 <SheetClose asChild>
-                    <Link href={'/notifications'} className="flex justify-start gap-4" >
-                        <Image
-                            src={'/icons/notifications.svg'}
-                            width={20}
-                            height={20}
-                            className=""
-                            alt="notifications"
-                        />
-                        Notifications
-                    </Link>
-                </SheetClose>
-
-
-                <SheetClose asChild>
                     <Link href={'/settings'} className="flex justify-start gap-4" >
                         <Image
                             src={'/icons/settings.svg'}

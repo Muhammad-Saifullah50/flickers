@@ -26,7 +26,8 @@ const MobileNavbar = async () => {
             </div>
             <div className="flex gap-4 ">
 
-                    {user && (
+                {user && (
+                    <Link href={`/users/${user.id} `}>
                         <Image
                             src={user.image!}
                             width={30}
@@ -34,7 +35,8 @@ const MobileNavbar = async () => {
                             className="rounded-full"
                             alt='profile photo'
                         />
-                    )}
+                    </Link>
+                )}
                 <MobileNavSheet />
             </div>
         </nav>

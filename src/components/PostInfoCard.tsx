@@ -154,8 +154,9 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                         <div className="flex gap-2">
                             <ShareButton 
                             itemId={post.id}
-                            link={shareLink} modalOpen={false}
-                            postAuthor={post.author.name}
+                            link={shareLink} 
+                            modalOpen={false}
+                            authorName={post.author.name}
                             caption={post.caption}
                             currentShares={post.shares}
                             />

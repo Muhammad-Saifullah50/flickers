@@ -13,19 +13,19 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { useState } from "react";
-import WhatsAppShareButton from "./WhatsAppShareButton";
+import ShareButtons from "./ShareButtons";
 import { toast } from "@/hooks/use-toast";
 
 interface ShareButtonProps {
     link: string;
     modalOpen: boolean;
-    postAuthor: string;
+    authorName: string;
     caption: string;
     itemId: string,
-    currentShares: number
+    currentShares?: number
 }
 
-const ShareButton = ({link, modalOpen, postAuthor, caption, itemId, currentShares}: ShareButtonProps) => {
+const ShareButton = ({link, modalOpen, authorName, caption, itemId, currentShares}: ShareButtonProps) => {
 
     const [open, setOpen] = useState(modalOpen);
 
@@ -50,7 +50,7 @@ const ShareButton = ({link, modalOpen, postAuthor, caption, itemId, currentShare
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Share Post</DialogTitle>
+                    <DialogTitle>Share</DialogTitle>
                     <DialogDescription>
                         Share with your friends via the link or share through Whatsapp.
                     </DialogDescription>
@@ -67,9 +67,9 @@ const ShareButton = ({link, modalOpen, postAuthor, caption, itemId, currentShare
                         />
                     </div>
 
-                    <WhatsAppShareButton 
+                    <ShareButtons 
                     url={link} 
-                    title={`${postAuthor} posted on Flickers`} 
+                    title={`${authorName} posted on Flickers`} 
                     message={caption}
                     postId={itemId}
                     currentShares={currentShares}/>

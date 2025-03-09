@@ -34,7 +34,7 @@ const SignoutBtn = () => {
                 <Loader variant='white' />
             ) : (
                 <span className='flex items-center justify-center gap-4'>
-                    <Image src={'icons/logout-white.svg'}
+                    <Image src={'/icons/logout-white.svg'}
                         width={25}
                         height={25}
                         alt='logout' />
