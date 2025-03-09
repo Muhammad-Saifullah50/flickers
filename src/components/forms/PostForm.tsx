@@ -170,7 +170,7 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                     name="altText"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Photo/Video Alt Text</FormLabel>
+                            <FormLabel>Photo/Video Alternate Text</FormLabel>
                             <FormControl>
                                 <Textarea
                                     className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0
@@ -209,3 +209,5 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
 }
 
 export default PostForm
+
+

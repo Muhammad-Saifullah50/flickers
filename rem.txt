@@ -1,7 +1,3 @@
-show moments on users page
 flick save and like functionality
-pagination for flicks and posts
-testing
-metadata
-users page skeleton
-opengrapoh videos for posts and flicks  
+right sidebar issues
+whatsapp button

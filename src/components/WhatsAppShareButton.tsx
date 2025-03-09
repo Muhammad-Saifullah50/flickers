@@ -18,12 +18,12 @@ const WhatsAppShareButton = ({
   currentShares
 }: WhatsAppShareButtonProps) => {
   const handleShare = async () => {
+    // Using wa.me but without the direct send parameter
     const encodedMessage = encodeURIComponent(`${message}\n\n${title}\n${url}`);
-    const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=&text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
 
     if (postId) {
-
       await updatePostShares(postId, currentShares)
     } 
   };

@@ -6,13 +6,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 
-type createMessageParams = {
-    message?: string,
-    image?: string,
-    chatId: string,
-    senderId: string
 
-}
 export const getChatList = async () => {
     try {
 
@@ -114,21 +108,3 @@ export const getChatById = async (chatId: string) => {
     }
 }
 
-export const createMessage = async (data: createMessageParams) => {
-
-    try {
-        const message = await prisma.message.create({
-            data: {
-                body: data.message,
-                chatId: data.chatId,
-                senderId: data.senderId
-            }
-        });
-
-        revalidatePath(`/chats`)
-        revalidatePath(`/chats/${data.chatId}`)
-        return message
-    } catch (error) {
-        console.error('Error creating message on server:', error)
-    }
-}

@@ -71,9 +71,10 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                     });
                 }
                 else {
+                    console.log(result)
                     //todo: have to show erorr to the UI
                     toast({
-                        description: result?.error,
+                        description: 'Authentication failed! Please try again with correct credentials or sign up if you havent created one yet',
                         variant: 'destructive'
                     });
                 }
@@ -111,7 +112,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
     }
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 p-2">
 
             <div className="flex justify-center items-center gap-2">
                 <Image
@@ -123,13 +124,13 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                 <h1 className="font-bold text-2xl text-white">Flickers</h1>
             </div>
 
-            <div className="p-3b text-white flex flex-col items-center justify-center gap-2">
-                <h3 className="text-3xl font-bold">{type === 'signin' ? 'Log in to your account' : 'Create a new account'}</h3>
-                <p className="text-purple-secondary font-normal text-base">{type === 'signin' ? 'Welcome back! ' : ' To use Flickers,'} Please enter your details.</p>
+            <div className="p-3b text-white flex flex-col items-center justify-center gap-2 w-full ">
+                <h3 className="text-2xl sm:text-3xl font-bold w-full text-center">{type === 'signin' ? 'Log in to your account' : 'Create a new account'}</h3>
+                <p className="text-purple-secondary font-normal text-base text-center">{type === 'signin' ? 'Welcome back! ' : ' To use Flickers,'} Please enter your details.</p>
             </div>
             <Form {...form}>
                 <form
-                    className="w-full min-w-[400px] flex flex-col gap-4"
+                    className="w-full flex flex-col flex-shrink gap-4"
                     onSubmit={form.handleSubmit(handleCredentialSubmit)}
                 >
 
@@ -144,7 +145,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                                     <Input
 
                                         placeholder="Your Name"
-                                        className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0 !bg-dark-4" {...field} />
+                                        className="focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0 !bg-dark-4 " {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -215,7 +216,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                 </form>
             </Form>
 
-            <div className="flex flex-wrap gap-2 min-w-[400px] ">
+            <div className="flex flex-wrap gap-2 ">
 
                 {Object.values(providerMap).map((provider) => (
                     <form

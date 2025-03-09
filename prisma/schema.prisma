@@ -30,7 +30,6 @@ model User {
   chatIds String[] @db.ObjectId
   chats   Chat[]   @relation(fields: [chatIds], references: [id])
 
-  messages Message[]
   flick    Flick[]
   moments  Moment[]
 }
@@ -157,7 +156,6 @@ model Chat {
   image         String
 
   messagesIds String[]  @db.ObjectId
-  messages    Message[]
 
   creatorId String @db.ObjectId
 
@@ -165,18 +163,6 @@ model Chat {
   users   User[]   @relation(fields: [userIds], references: [id])
 }
 
-model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  body      String?
-  image     String?
-  createdAt DateTime @default(now())
-
-  chatId String @db.ObjectId
-  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
-
-  senderId String @db.ObjectId
-  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
-}
 
 model Flick {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId

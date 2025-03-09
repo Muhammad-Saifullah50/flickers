@@ -21,5 +21,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
 
-  matcher: [ '/people', '/users/:path*', '/saved', '/explore', '/chats/:path*', '/create','/settings']
+  matcher: [ '/people', '/users/:path*', '/saved', '/chats/:path*', '/create','/settings']
 }
