@@ -93,7 +93,6 @@ export const getChatById = async (chatId: string) => {
                 id: chatId
             },
             include: {
-                messages: true,
                 users: true
             }
         });
