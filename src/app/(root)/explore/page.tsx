@@ -12,9 +12,9 @@ export const metadata: Metadata = {
     description: 'Discover popular posts and flicks by hashtags or see what is trending today.',
 }
 
-const ExplorePage =  ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
+const ExplorePage = async  ({ searchParams }: { searchParams: { hashtag_query: string } }) => {
 
-    const usableParams =  searchParams;
+    const usableParams = await searchParams;
 
     let itemsPromise;
 

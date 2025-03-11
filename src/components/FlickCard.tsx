@@ -37,7 +37,7 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
     <aside className={`group flex relative gap-8   ${classNames} ${loading && 'bg-dark-2'}`}>
       <Link href={loading ? '' : ` /flicks/${flickToUse?.id}`}>
         {loading ? (
-          <Loader variant="purple" />
+          null
         ) : (
           <video
             src={flick?.videoUrl}

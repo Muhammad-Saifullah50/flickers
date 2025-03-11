@@ -25,7 +25,7 @@ export const generateStaticParams = async () => {
 }
 
 export const generateMetadata = async ({ params }: { params: { id: string } }) => {
-    const id = await params.id;
+    const id = await (params.id);
     const user = await getDbUserById(id);
 
     return {
@@ -43,7 +43,7 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 
 const UsersProfilePage = async ({ params }: { params: { id: string } }) => {
 
-    const id = await params.id;
+    const id = await (params.id);
 
     const user = await getDbUserByIdWithDetails(id);
     const currentUser = await getCurrentUserFromDb();
