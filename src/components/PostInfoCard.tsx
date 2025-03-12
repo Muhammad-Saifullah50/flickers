@@ -9,6 +9,7 @@ import Link from "next/link"
 import DeletePost from "./DeletePost"
 import SavePostBtn from "./SavePostBtn"
 import ShareButton from "./ShareButton";
+import { getCurrentUserFromDb } from "@/actions/user.actions"
 
 type PostInfoCardProps = {
     post: Post & {
@@ -22,8 +23,9 @@ type PostInfoCardProps = {
 }
 
 const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => {
-    const session = await auth();
 
+    const session = await auth();
+const currentUser = await getCurrentUserFromDb()
     const isOwner = session?.user?.email === post.author?.email;
 
     const isSaved = post.saves?.some((save) => save.postId === post.id);
@@ -170,7 +172,7 @@ const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => 
                         </div>
                     </section>
                 </Link>
-                <PostComment postId={post.id} author={post.author} />
+                <PostComment postId={post.id} author={currentUser!} />
             </section>
 
         </aside >

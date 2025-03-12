@@ -23,53 +23,16 @@ import { useEffect, useRef, useState } from 'react';
 
 
 const FlickIdLayout = ({ children }: { children: React.ReactNode }) => {
-  const [api, setApi] = useState<CarouselApi>();
-  const carouselRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-
-      if (e.deltaY > 0 && api?.canScrollNext()) {
-        api.scrollNext()
-      }
-      if (e.deltaY < 0 && api?.canScrollPrev()) {
-        api.scrollPrev()
-      }
-    };
-
-    const carousel = carouselRef.current;
-
-    if (carousel) {
-      carousel.addEventListener('wheel', handleWheel);
-    }
-
-    return () => {
-      if (carousel) {
-        carousel.removeEventListener('wheel', handleWheel);
-      }
-    };
-  }, [api]);
+  
   return (
-    <main className='flex flex-col h-[95vh] py-10 items-center my-auto  justify-center overflow-hidden'>
+    <main className='flex flex-col h-[92vh] py-10 items-center my-auto  justify-center overflow-hidden'>
       <section className='flex justify-start w-full'>
         <Heading text="Flicks" icon="/icons/flicks-white.svg" />
       </section>
 
       <section>
-        <Carousel
-          ref={carouselRef}
-          setApi={setApi}
-          opts={{
-            align: "start",
-          }}
-          orientation="vertical"
-          className="w-full"
-        >
-          {children}
-
-
-        </Carousel>
+       {children}
+         
       </section>
     </main>
   )

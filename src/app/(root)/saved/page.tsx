@@ -11,8 +11,8 @@ import { Suspense } from "react"
 export const metadata: Metadata = {
     title: 'Saved',
     description: 'Saved Posts and Flicks',
-   
-  }
+
+}
 
 const SavedPage = async () => {
 
@@ -67,15 +67,22 @@ const SavedPage = async () => {
 
                     <TabsContent value="flicks" className="flex gap-6 flex-wrap ">
                         {savedItems && savedItems.length > 0 ? savedItems?.map((item) => {
-                            if (!item.postId)
+                            if (!item.postId) {
                                 return (
                                     <SavedPostFlickCard
                                         key={item.id}
                                         flickId={item.flickId!}
-                                        isFlick={true} 
+                                        isFlick={true}
                                         saveId={item.id}
-                                        />
+                                    />
                                 )
+                            } else {
+                                return (
+                                    <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
+                                        <p>No saved flicks yet</p>
+                                    </div>
+                                )
+                            }
                         }) : (
                             <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
                                 <p>No saved flicks yet</p>

@@ -13,10 +13,10 @@ type SavedPostFlickCardProps = {
 };
 
 const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPostFlickCardProps) => {
-    let post;
-    let flick;
+    let post = null;
+    let flick = null;
 
-    if (isFlick) {
+    if (isFlick && flickId) {
         flick = await getFlickById(flickId!)
     }
 
@@ -34,7 +34,7 @@ const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPos
         item.endsWith(".ogg")
     );
 
-    if (!post || !flick) return null;
+    if (!post && !flick) return null;
     return flickId ? (
         <div className="relative">
 
@@ -71,7 +71,7 @@ const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPos
                             alt={post?.altText}
                             blurDataURL={`/_next/image?url=${post.assets[0]}&w=16&q=1`}
                             placeholder='blur'
-                            className="rounded-3xl w-[250px] h-[250px] "
+                            className="rounded-3xl w-[250px] h-[250px]  "
                         />
                     </Link>
                 </div>

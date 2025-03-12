@@ -1,19 +1,28 @@
 'use client'
-import { getAllFlickIds, getFlickById } from "@/actions/flick.actions";
+import { getAllFlickIds, getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
 import FlickCard from "@/components/FlickCard"
 import ShareButton from "@/components/ShareButton";
 import {
+    Carousel,
+    CarouselApi,
     CarouselContent,
     CarouselItem,
 } from "@/components/ui/carousel"
 import { Flick, User } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
 
-    const [currFlick, setCurrFlick] = useState<Flick & { author: User } | null>();
+    const [currFlick, setCurrFlick] = useState<Flick & { author: User } | null>(null);
     const [loading, setLoading] = useState(false);
-    const [flickIdList, setFlickIdList] = useState<string[]>([])
+    const [flickList, setFlickList] = useState<Flick & { author: User }[] | null>(null);
+    const [api, setApi] = useState<CarouselApi>();
+    const carouselRef = useRef<HTMLDivElement>(null);
+const router = useRouter();
+const [nextFlick, setNextFlick] = useState<Flick & { author: User } | null>(null);
+const [prevFlick, setPrevFlick] = useState<Flick & { author: User } | null>(null);
+
 
     useEffect(() => {
 
@@ -22,12 +31,28 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
             try {
                 setLoading(true);
 
-                const { flickId } = await params;
+                const { flickId } = await (params);
                 const currentFlick = await getFlickById(flickId);
-                const flickIdsList = await getAllFlickIds();
-
                 setCurrFlick(currentFlick);
-                setFlickIdList(flickIdsList!)
+
+                const prevAndNextFlicks = await getPrevAndNextFlicks(flickId);
+
+
+                const fetchedPrevFlick = prevAndNextFlicks[0];
+                setPrevFlick(fetchedPrevFlick);
+                const fetchedNextFlick = prevAndNextFlicks[1];
+                setNextFlick(fetchedNextFlick);
+
+                if (fetchedNextFlick && fetchedPrevFlick) {
+                    setFlickList([fetchedPrevFlick, currentFlick, fetchedNextFlick])
+                } else if (fetchedPrevFlick && !fetchedNextFlick) {
+                    setFlickList([fetchedPrevFlick, currentFlick])
+                } else if (!fetchedPrevFlick && fetchedNextFlick) {
+                    setFlickList([currentFlick, fetchedNextFlick])
+                } else {
+                    setFlickList([currentFlick])
+                }
+
 
             } catch (error) {
                 console.error('errror fetching flicks', error)
@@ -39,17 +64,52 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
         fetchData();
     }, [params]);
 
+    useEffect(() => {
+        if (!api) return;
+
+        api.scrollTo(flickList?.findIndex(flick => flick.id === (params.flickId)) || 0)
+        const handleWheel = (e: WheelEvent) => {
+
+            e.preventDefault();
+            if (e.deltaY > 0 && api?.canScrollNext()) {
+                api?.scrollNext()
+                router.push(`/flicks/${nextFlick?.id}`)
+            }
+            if (e.deltaY < 0 && api?.canScrollPrev()) {
+                api?.scrollPrev()
+                router.push(`/flicks/${prevFlick?.id}`)
+            }
+        };
+
+        const carousel = carouselRef.current;
+
+        if (carousel) {
+            carousel.addEventListener('wheel', handleWheel, { passive: false });
+        }
+
+        return () => {
+            if (carousel) {
+                carousel.removeEventListener('wheel', handleWheel);
+            }
+        };
+    }, [api, prevFlick, nextFlick]);
     const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/flicks/${currFlick?.id}`
     return (
-        <CarouselContent className="border">
-            {flickIdList.map((flickId, index) => {
+        <Carousel
+            ref={carouselRef}
+            setApi={setApi}
 
-                return (
-                    <CarouselItem key={index} className="pt-1 md:basis-1/2">
-                        <div className="p-1">
+            orientation="vertical"
+            className="w-full"
+        >
+            <CarouselContent className="-mt-1 h-[850px]">
+                {flickList?.map((flick, index) =>
+                (
+                    <CarouselItem key={index} className="pt-1">
+                        <div className="p-1 flex">
                             <FlickCard
-                                flick={currFlick!}
-                                classNames="w-[450px] h-[calc(100vh-200px)] border"
+                                flick={flick!}
+                                classNames="w-[450px] h-[calc(100vh-200px)]"
                                 loading={loading}
                                 flickIcon={false}
                             />
@@ -76,8 +136,12 @@ const FlickIdPage = ({ params }: { params: { flickId: string } }) => {
                         </div>
                     </CarouselItem>
                 )
-            })}
-        </CarouselContent>
+                )}
+            </CarouselContent>
+
+        </Carousel>
+
+
     )
 }
 

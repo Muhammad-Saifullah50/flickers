@@ -1,1 +1,3 @@
 flick save and like functionality
+improve performance
+flick carousel
