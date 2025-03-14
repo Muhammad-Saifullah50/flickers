@@ -15,7 +15,7 @@ type FlickCardProps = {
   flickIcon?: boolean
 }
 const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCardProps) => {
-
+// have to open modal on click
   const [flickToUse, setFlickToUse] = useState(flick)
 
   useEffect(() => {
@@ -35,7 +35,6 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
 
   return (
     <aside className={`group flex relative gap-8   ${classNames} ${loading && 'bg-dark-2'}`}>
-      <Link href={loading ? '' : ` /flicks/${flickToUse?.id}`}>
         {loading ? (
           null
         ) : (
@@ -45,7 +44,6 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
             autoPlay={false}
             className={`${classNames} rounded-lg object-fill `}
           />)}
-      </Link>
 
       {loading ? (
         <Loader variant="purple" />

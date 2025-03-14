@@ -2,10 +2,11 @@ import { Flick, User } from "@prisma/client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import FlickCard from "./FlickCard"
 import { getAllFlicks, getFlicksByQuery, getfollowingFlicks, getMostViewedFlicks, getPopularFlicks } from "@/actions/flick.actions";
+import FlickModal from "./FlickModal";
 
 const Flicks = async ({ query }: { query: string }) => {
 
-    let flicks: (Flick & {author: User})[] | undefined = [];
+    let flicks: (Flick & { author: User })[] | undefined = [];
 
     if (query) {
         flicks = await getFlicksByQuery(query);
@@ -21,6 +22,7 @@ const Flicks = async ({ query }: { query: string }) => {
 
     return (
 
+        <>
         <Tabs defaultValue="foryou" className="">
             <TabsList className="flex flex-wrap !bg-dark-2">
                 <TabsTrigger value="foryou" className="md:px-[20px] lg:!px-[50px]">For You</TabsTrigger>
@@ -77,6 +79,9 @@ const Flicks = async ({ query }: { query: string }) => {
 
             </TabsContent>
         </Tabs>
+
+                            </>
+
     )
 }
 export default Flicks
