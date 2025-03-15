@@ -6,6 +6,8 @@ import Loader from "./Loader"
 import { useEffect, useState } from "react"
 import { getFlickById } from "@/actions/flick.actions"
 import ShareButton from "./ShareButton"
+import DialogContent, { Dialog, DialogTitle, DialogTrigger } from "./ui/dialog"
+import FlickCarousel from "./FlickCarousel"
 
 type FlickCardProps = {
   flick: Flick & { author: User, likes?: Like[] } | null
@@ -15,7 +17,7 @@ type FlickCardProps = {
   flickIcon?: boolean
 }
 const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCardProps) => {
-// have to open modal on click
+  // have to open modal on click
   const [flickToUse, setFlickToUse] = useState(flick)
 
   useEffect(() => {
@@ -34,73 +36,87 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
 
 
   return (
-    <aside className={`group flex relative gap-8   ${classNames} ${loading && 'bg-dark-2'}`}>
-        {loading ? (
-          null
-        ) : (
+    <Dialog>
+
+      <aside className={`group flex relative gap-8   ${classNames} ${loading && 'bg-dark-2'}`}>
+
+        <DialogTrigger asChild>
+
           <video
             src={flick?.videoUrl}
             controls={false}
             autoPlay={false}
             className={`${classNames} rounded-lg object-fill `}
-          />)}
+          />
+        </DialogTrigger>
 
-      {loading ? (
-        <Loader variant="purple" />
-      ) : (
-        <>
+        {loading ? (
+          <Loader variant="purple" />
+        ) : (
 
-          {flickIcon && <Image
-            src={'/icons/flicks-white.svg'}
-            width={15}
-            height={15}
-            className="absolute right-5 top-5"
-            alt="flick"
-          />}
-          <div className="group-hover:flex hidden flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
-            <h3 className="text-sm">{flickToUse?.caption}</h3>
-            <p className="text-sm text-purple-secondary">{flickToUse?.hashtags}</p>
-            <div className="flex justify-between w-full text-sm">
-              <div className="flex items-center gap-2">
-                <Link href={`/users/${flickToUse?.author?.id}`} className="flex items-center gap-1">
-                  <Image
-                    src={flickToUse?.author?.image || '/icons/dummyuser.png'}
-                    width={30}
-                    height={30}
-                    alt="profile"
-                    className="rounded-full" />
-                  <h4 className=" line-clamp-1">{flickToUse?.author?.name}</h4>
-                </Link>
-              </div>
-              <div className="flex gap-2">
-                <div className="flex items-center gap-1">
-                  <Image
-                    src={'/icons/heart.svg'}
-                    width={20}
-                    height={20}
-                    alt="heart"
-                    className=""
-                  />
-                  <span>{flickToUse?.likes?.length}</span>
+          <>
+
+            {flickIcon && <Image
+              src={'/icons/flicks-white.svg'}
+              width={15}
+              height={15}
+              className="absolute right-5 top-5"
+              alt="flick"
+            />}
+            {/* overlay */}
+            <div className="group-hover:flex hidden flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
+              <h3 className="text-sm">{flickToUse?.caption}</h3>
+              <p className="text-sm text-purple-secondary">{flickToUse?.hashtags}</p>
+              <div className="flex justify-between w-full text-sm">
+                <div className="flex items-center gap-2">
+                  <Link href={`/users/${flickToUse?.author?.id}`} className="flex items-center gap-1">
+                    <Image
+                      src={flickToUse?.author?.image || '/icons/dummyuser.png'}
+                      width={30}
+                      height={30}
+                      alt="profile"
+                      className="rounded-full" />
+                    <h4 className=" line-clamp-1">{flickToUse?.author?.name}</h4>
+                  </Link>
                 </div>
+                <div className="flex gap-2">
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={'/icons/heart.svg'}
+                      width={20}
+                      height={20}
+                      alt="heart"
+                      className=""
+                    />
+                    <span>{flickToUse?.likes?.length}</span>
+                  </div>
 
-                <div className="flex items-center gap-1">
-                  <Image
-                    src={'/icons/play.svg'}
-                    width={20}
-                    height={20}
-                    alt="heart"
-                    className=""
-                  />
-                  <span>{flickToUse?.plays}</span>
+                  <div className="flex items-center gap-1">
+                    <Image
+                      src={'/icons/play.svg'}
+                      width={20}
+                      height={20}
+                      alt="heart"
+                      className=""
+                    />
+                    <span>{flickToUse?.plays}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>)}
+          </>
+        )}
 
-      
-    </aside>
+
+      </aside>
+
+      <DialogContent className="sm:max-w-[600px] flex items-center h-[calc(100vh-200px)] justify-center">
+
+        <DialogTitle className="sr-only">{flick?.caption}</DialogTitle>
+        <FlickCarousel flick={flick} flickId={flick?.id} />
+      </DialogContent>
+    </Dialog>
+
   )
 }
 
