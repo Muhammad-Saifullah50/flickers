@@ -199,6 +199,7 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
             }
         });
 
+        console.log(prevFlick?.id, nextFlick?.id)
         return [prevFlick, nextFlick]
     } catch (error) {
         console.error('Error getting prev and next flicks on server:', error);

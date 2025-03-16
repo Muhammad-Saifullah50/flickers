@@ -25,9 +25,7 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
     const [flickList, setFlickList] = useState<Flick & { author: User }[] | null>(null);
     const [api, setApi] = useState<CarouselApi>();
     const carouselRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
-    const [nextFlick, setNextFlick] = useState<Flick & { author: User } | null>(null);
-    const [prevFlick, setPrevFlick] = useState<Flick & { author: User } | null>(null);
+    const [currIndex, setCurrIndex] = useState(0);
 
 
     useEffect(() => {
@@ -38,25 +36,33 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
                 setLoading(true);
 
                 const currentFlick = await getFlickById(flickId);
+
+                if (!currentFlick) {
+                    console.error('current flick not found');
+                }
                 setCurrFlick(currentFlick);
 
                 const prevAndNextFlicks = await getPrevAndNextFlicks(flickId);
 
+                const newFlickList = [];
+                let newIndex = 0;
 
                 const fetchedPrevFlick = prevAndNextFlicks[0];
-                setPrevFlick(fetchedPrevFlick);
                 const fetchedNextFlick = prevAndNextFlicks[1];
-                setNextFlick(fetchedNextFlick);
 
-                if (fetchedNextFlick && fetchedPrevFlick) {
-                    setFlickList([fetchedPrevFlick, currentFlick, fetchedNextFlick])
-                } else if (fetchedPrevFlick && !fetchedNextFlick) {
-                    setFlickList([fetchedPrevFlick, currentFlick])
-                } else if (!fetchedPrevFlick && fetchedNextFlick) {
-                    setFlickList([currentFlick, fetchedNextFlick])
-                } else {
-                    setFlickList([currentFlick])
+                if (fetchedPrevFlick) {
+                    newFlickList.push(fetchedPrevFlick);
+                    newIndex = 1;
                 }
+
+                newFlickList.push(currentFlick);
+
+                if (fetchedNextFlick) {
+                    newFlickList.push(fetchedNextFlick);
+                }
+
+                setFlickList(newFlickList);
+                setCurrIndex(newIndex);
 
 
             } catch (error) {
@@ -70,17 +76,20 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
     }, [flickId]);
 
     useEffect(() => {
-        if (!api) return;
+        if (!api || flickList?.length === 0) return;
 
-        api.scrollTo(flickList?.findIndex(flick => flick.id === (flickId)) || 0)
+        api.scrollTo(currIndex);
+
         const handleWheel = (e: WheelEvent) => {
 
             e.preventDefault();
             if (e.deltaY > 0 && api?.canScrollNext()) {
-                api?.scrollNext()
+                api?.scrollNext();
+                handleScrollNext();
             }
             if (e.deltaY < 0 && api?.canScrollPrev()) {
                 api?.scrollPrev()
+                handleScrollPrev();
             }
         };
 
@@ -95,8 +104,29 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
                 carousel.removeEventListener('wheel', handleWheel);
             }
         };
-    }, [api, prevFlick, nextFlick]);
+    }, [api, flickList, currIndex]);
+
+    const handleScrollNext = () => {
+        if (currIndex < flickList?.length - 1) {
+            const nextIndex = currIndex + 1;
+            setCurrIndex(nextIndex);
+            setCurrFlick(flickList?.[nextIndex]);
+        }
+    };
+
+    const handleScrollPrev = () => {
+        if (currIndex > 0) {
+            const prevIndex = currIndex - 1;
+            setCurrIndex(prevIndex);
+            setCurrFlick(flickList?.[prevIndex]);
+        }
+    };
     const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/flicks/${currFlick?.id}`
+
+    const filteredFlickList = flickList?.filter(flick => flick !== null || undefined);
+
+    // have toi hanklde the implementation iof the behavoiur that whenever tyhe currflick changes i have to make sure that its prev and next flicks are loaded when available 
+    // have to see clausde sol
     return (
         <Carousel
             ref={carouselRef}
@@ -105,19 +135,19 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
             orientation="vertical"
             className="w-full"
         >
-            <CarouselContent className="-mt-1 h-[700px] ">
-                {flickList?.map((flick, index) =>
+            <CarouselContent className="-mt-1 h-[700px]">
+                {filteredFlickList?.map((flick, index) =>
                 (
-                    <CarouselItem key={index} className="pt-1">
-                        <div className="p-1 flex gap-4 items-center justify-center ">
-                            <video src={flick.videoUrl}
+                    <CarouselItem key={index} className="pt-1 flex gap-4
+                    ">
+                        <div className="p-1 flex gap-4 items-center justify-center">
+                            <video src={flick?.videoUrl}
                                 controls
-                                autoPlay
+                                autoPlay={index === currIndex}
                                 loop
-                                className="object-cover h-[660px] "
-                            >
+                                className="object-cover h-[660px] w-[490px]"
+                            />
 
-                            </video>
                             <div className="flex flex-col gap-8 self-end">
                                 <div className="bg-gray-800 rounded-full p-2">
                                     {/* <SavePostBtn

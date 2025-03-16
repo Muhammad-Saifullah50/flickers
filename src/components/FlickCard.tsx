@@ -3,9 +3,6 @@ import { Flick, Like, User } from "@prisma/client"
 import Image from "next/image"
 import Link from "next/link"
 import Loader from "./Loader"
-import { useEffect, useState } from "react"
-import { getFlickById } from "@/actions/flick.actions"
-import ShareButton from "./ShareButton"
 import DialogContent, { Dialog, DialogTitle, DialogTrigger } from "./ui/dialog"
 import FlickCarousel from "./FlickCarousel"
 
@@ -17,23 +14,7 @@ type FlickCardProps = {
   flickIcon?: boolean
 }
 const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCardProps) => {
-  // have to open modal on click
-  const [flickToUse, setFlickToUse] = useState(flick)
-
-  useEffect(() => {
-    if (!flick && flickId) {
-      const getFlick = async () => {
-        const fetchedFlick = await getFlickById(flickId!)
-
-        setFlickToUse(fetchedFlick!)
-      }
-
-      getFlick()
-    }
-
-  }, [flickId, flick])
-
-
+ 
 
   return (
     <Dialog>
@@ -65,18 +46,18 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
             />}
             {/* overlay */}
             <div className="group-hover:flex hidden flex-col absolute p-4 gap-3 bottom-0 w-full bg-black/20">
-              <h3 className="text-sm">{flickToUse?.caption}</h3>
-              <p className="text-sm text-purple-secondary">{flickToUse?.hashtags}</p>
+              <h3 className="text-sm">{flick?.caption}</h3>
+              <p className="text-sm text-purple-secondary">{flick?.hashtags}</p>
               <div className="flex justify-between w-full text-sm">
                 <div className="flex items-center gap-2">
-                  <Link href={`/users/${flickToUse?.author?.id}`} className="flex items-center gap-1">
+                  <Link href={`/users/${flick?.author?.id}`} className="flex items-center gap-1">
                     <Image
-                      src={flickToUse?.author?.image || '/icons/dummyuser.png'}
+                      src={flick?.author?.image || '/icons/dummyuser.png'}
                       width={30}
                       height={30}
                       alt="profile"
                       className="rounded-full" />
-                    <h4 className=" line-clamp-1">{flickToUse?.author?.name}</h4>
+                    <h4 className=" line-clamp-1">{flick?.author?.name}</h4>
                   </Link>
                 </div>
                 <div className="flex gap-2">
@@ -88,7 +69,7 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
                       alt="heart"
                       className=""
                     />
-                    <span>{flickToUse?.likes?.length}</span>
+                    <span>{flick?.likes?.length}</span>
                   </div>
 
                   <div className="flex items-center gap-1">
@@ -99,7 +80,7 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
                       alt="heart"
                       className=""
                     />
-                    <span>{flickToUse?.plays}</span>
+                    <span>{flick?.plays}</span>
                   </div>
                 </div>
               </div>
@@ -114,6 +95,7 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
 
         <DialogTitle className="sr-only">{flick?.caption}</DialogTitle>
         <FlickCarousel flick={flick} flickId={flick?.id} />
+        
       </DialogContent>
     </Dialog>
 
