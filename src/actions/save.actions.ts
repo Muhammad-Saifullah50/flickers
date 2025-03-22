@@ -49,7 +49,7 @@ export const getSavedItems = async () => {
     }
 }
 
-export const UnsavePostAndFlick = async (saveId: string) => {
+export const UnsavePostAndFlick = async (saveId: string, pathname: string) => {
 
     await prisma.save.delete({
         where: {
@@ -57,5 +57,5 @@ export const UnsavePostAndFlick = async (saveId: string) => {
         }
     });
 
-    revalidatePath('/saved')
+    revalidatePath(pathname)
 }

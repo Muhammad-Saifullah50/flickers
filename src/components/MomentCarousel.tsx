@@ -138,7 +138,7 @@ const MomentCarousel = ({ allMoments, currMoment, setModalOpen, open }: MomentCa
         {allMoments.map((moment, index) => (
           <CarouselItem key={index}
             className={cn(" flex justify-center  relative -z-50", {
-              'md:basis-1/2 lg:basis-1/3': allMoments.length > 2
+              'md:basis-1/2 lg:basis-1/3': allMoments.length > 3
             })}
           >
             <MomentCard

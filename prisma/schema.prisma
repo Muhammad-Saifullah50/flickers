@@ -126,10 +126,10 @@ model Like {
 model Save {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
-  postId    String   @db.ObjectId
+  postId    String?   @db.ObjectId
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
-  post      Post     @relation("PostSaves", fields: [postId], references: [id], onDelete: Cascade)
+  post      Post?     @relation("PostSaves", fields: [postId], references: [id], onDelete: Cascade)
   flickId   String?  @db.ObjectId
   flick     Flick?   @relation(fields: [flickId], references: [id])
 

@@ -15,7 +15,6 @@ type SavePostBtn = {
 }
 
 const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId }: SavePostBtn) => {
-console.log(isSaved)
 
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();

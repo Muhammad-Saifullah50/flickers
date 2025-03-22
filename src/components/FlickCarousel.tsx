@@ -1,6 +1,5 @@
 'use client'
 import { getFlickById, getPrevAndNextFlicks } from "@/actions/flick.actions";
-import FlickCard from "@/components/FlickCard"
 import ShareButton from "@/components/ShareButton";
 import {
     Carousel,
@@ -8,29 +7,43 @@ import {
     CarouselContent,
     CarouselItem,
 } from "@/components/ui/carousel"
-import { Flick, User } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { Flick, Save, User } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
+import Loader from "./Loader";
+import SaveFlickBtn from "./SaveFlickBtn";
+import { getCurrentUserFromDb } from "@/actions/user.actions";
 
 
 interface FlickCarouselProps {
     flick: Flick
     flickId: string
+    isModal?: boolean
 }
 
-const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
+const FlickCarousel = ({ flick, flickId, isModal }: FlickCarouselProps) => {
 
-    const [currFlick, setCurrFlick] = useState<Flick & { author: User } | null>(null);
+    const [currFlick, setCurrFlick] = useState<Flick & { author: User, saves: Save[] } | null>(flick);
     const [loading, setLoading] = useState(false);
-    const [flickList, setFlickList] = useState<Flick & { author: User }[] | null>(null);
+    const [flickList, setFlickList] = useState<Flick & { author: User, saves: Save[] }[] | null>(null);
     const [api, setApi] = useState<CarouselApi>();
     const carouselRef = useRef<HTMLDivElement>(null);
     const [currIndex, setCurrIndex] = useState(0);
+    const [currUser, setCurrUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const currentUser = await getCurrentUserFromDb();
+
+            setCurrUser(currentUser);
+        }
+
+        fetchUserData()
+    }, [])
 
 
     useEffect(() => {
 
-        const fetchData = async () => {
+        const fetchInitialData = async () => {
 
             try {
                 setLoading(true);
@@ -72,8 +85,44 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
             }
         };
 
-        fetchData();
-    }, [flickId]);
+        fetchInitialData();
+    }, []);
+
+    const fetchAdjacentFlicks = async (flickId: string) => {
+        try {
+
+            const prevAndNextFlicks = await getPrevAndNextFlicks(flickId);
+            const fetchedPrevFlick = prevAndNextFlicks[0];
+            const fetchedNextFlick = prevAndNextFlicks[1];
+
+            let newFlickList = [...flickList];
+            let needsUpdate = false;
+
+            // checking if we need to add a prev flick
+            if (fetchedPrevFlick && !newFlickList?.some(flick => flick.id === fetchedPrevFlick?.id)) {
+                newFlickList.unshift(fetchedPrevFlick);
+                needsUpdate = true;
+            }
+
+            // checking if we neeed to add  a next flick
+
+            if (fetchedNextFlick && !newFlickList.some(flick => flick?.id === fetchedNextFlick?.id)) {
+
+                newFlickList.push(fetchedNextFlick);
+                needsUpdate = true;
+
+            }
+
+            if (needsUpdate) {
+                setFlickList(newFlickList);
+            }
+
+
+        } catch (error) {
+            console.error('error fetching adjacent flicks', error)
+        }
+
+    }
 
     useEffect(() => {
         if (!api || flickList?.length === 0) return;
@@ -106,27 +155,41 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
         };
     }, [api, flickList, currIndex]);
 
-    const handleScrollNext = () => {
+    const handleScrollNext = async () => {
         if (currIndex < flickList?.length - 1) {
             const nextIndex = currIndex + 1;
+            const nextFlick = flickList?.[nextIndex];
             setCurrIndex(nextIndex);
             setCurrFlick(flickList?.[nextIndex]);
+
+            await fetchAdjacentFlicks(nextFlick?.id);
+
         }
     };
 
-    const handleScrollPrev = () => {
+    const handleScrollPrev = async () => {
         if (currIndex > 0) {
             const prevIndex = currIndex - 1;
+            const prevFlick = flickList?.[prevIndex];
             setCurrIndex(prevIndex);
             setCurrFlick(flickList?.[prevIndex]);
+
+            await fetchAdjacentFlicks(prevFlick?.id);
         }
     };
     const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/flicks/${currFlick?.id}`
 
     const filteredFlickList = flickList?.filter(flick => flick !== null || undefined);
 
-    // have toi hanklde the implementation iof the behavoiur that whenever tyhe currflick changes i have to make sure that its prev and next flicks are loaded when available 
-    // have to see clausde sol
+    if (loading || !currFlick) {
+        return <Loader variant="purple" />
+    }
+
+    const isSaved = currFlick.saves?.some((save) => save.flickId === currFlick.id);
+    const saveId = currFlick.saves?.find((save) => save.flickId === currFlick.id)?.id;
+    
+    console.log(currFlick)
+
     return (
         <Carousel
             ref={carouselRef}
@@ -135,29 +198,21 @@ const FlickCarousel = ({ flick, flickId }: FlickCarouselProps) => {
             orientation="vertical"
             className="w-full"
         >
-            <CarouselContent className="-mt-1 h-[700px]">
+            <CarouselContent className="-mt-1 h-[500px] sm:h-[700px]">
                 {filteredFlickList?.map((flick, index) =>
                 (
-                    <CarouselItem key={index} className="pt-1 flex gap-4
+                    <CarouselItem key={index} className="pt-1 items-center justify-center flex gap-4
                     ">
                         <div className="p-1 flex gap-4 items-center justify-center">
                             <video src={flick?.videoUrl}
                                 controls
                                 autoPlay={index === currIndex}
                                 loop
-                                className="object-cover h-[660px] w-[490px]"
+                                className={` object-cover h-[460px] sm:h-[660px]  ${isModal ? 'w-[270px]' : 'w-[290px]'} md:w-[390px] lg:w-[490px] xl:w-[450px]`}
                             />
 
                             <div className="flex flex-col gap-8 self-end">
-                                <div className="bg-gray-800 rounded-full p-2">
-                                    {/* <SavePostBtn
-                                isHomeCard={false}
-                                userId={userId}
-                                postId={post.id}
-                                isSaved={isSaved}
-                                saveId={saveId}
-                            /> */}
-                                </div>
+                                
                                 <div className="bg-gray-800 rounded-full p-2">
                                     <ShareButton
                                         itemId={currFlick.id}

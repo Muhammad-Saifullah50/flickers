@@ -1,30 +1,18 @@
 import { getPostById } from "@/actions/post.actions";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import UnsaveBtn from "./UnsaveBtn";
-import { getCurrentUserFromDb } from "@/actions/user.actions";
-import { getFlickById } from "@/actions/flick.actions";
-type SavedPostFlickCardProps = {
+type SavedPostCardProps = {
     postId?: string;
-    flickId?: string;
-    isFlick?: boolean;
     saveId: string;
 };
 
-const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPostFlickCardProps) => {
+const SavedPostCard = async ({ postId, saveId }: SavedPostCardProps) => {
     let post = null;
-    let flick = null;
-
-    if (isFlick && flickId) {
-        flick = await getFlickById(flickId!)
-    }
 
     if (postId) {
         post = await getPostById(postId!)
     }
-
-
 
 
     const isVideo = post?.assets.some((item) =>
@@ -34,21 +22,8 @@ const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPos
         item.endsWith(".ogg")
     );
 
-    if (!post && !flick) return null;
-    return flickId ? (
-        <div className="relative">
-
-            <UnsaveBtn saveId={saveId} />
-            <Link href={`/flicks/${flick?.id}`}>
-                <video
-                    src={flick.videoUrl}
-                    controls={false}
-                    className="rounded-3xl w-[200px] h-[200px]"
-                />
-            </Link>
-        </div>
-
-    ) : (
+    if (!post) return null;
+    return (
         <>
             {isVideo ? (
                 <Link href={`/posts/${post?.id}`}>
@@ -80,4 +55,4 @@ const SavedPostFlickCard = async ({ postId, isFlick, flickId, saveId }: SavedPos
     );
 };
 
-export default SavedPostFlickCard;
+export default SavedPostCard;

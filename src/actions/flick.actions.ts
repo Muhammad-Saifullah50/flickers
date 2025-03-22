@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUserFromDb } from "./user.actions";
+import { revalidatePath } from "next/cache";
 
 interface createFlickParams {
     caption: string;
@@ -162,6 +163,7 @@ export const getFlickById = async (flickId: string) => {
             },
             include: {
                 author: true,
+                saves: true
             }
         });
 
@@ -183,8 +185,13 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
                     lt: flickId
                 }
             },
+            orderBy: {
+                id: 'desc'
+            },
             include: {
-                author: true
+                author: true,
+                saves: true
+
             }
         });
 
@@ -195,7 +202,8 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
                 }
             },
             include: {
-                author: true
+                author: true,
+                saves: true
             }
         });
 
@@ -203,7 +211,6 @@ export const getPrevAndNextFlicks = async (flickId: string) => {
         return [prevFlick, nextFlick]
     } catch (error) {
         console.error('Error getting prev and next flicks on server:', error);
-        throw error
 
     }
 }
@@ -238,5 +245,34 @@ export const getAllFlickIds = async () => {
         return flickIdsArray
     } catch (error) {
         console.error('error fetching all flick ids', error)
+    }
+}
+
+export const saveFlick = async (userId: string, flickId: string, pathname: string) => {
+    try {
+
+        const existingSave = await prisma.save.findFirst({
+            where: {
+                userId: userId,
+                flickId: flickId
+            }
+        })
+
+        if (!existingSave) {
+
+            const save = await prisma.save.create({
+                data: {
+                    userId,
+                    flickId
+                }
+            });
+
+            revalidatePath(pathname)
+            return save
+        }
+        revalidatePath(pathname)
+        return existingSave
+    } catch (error) {
+        console.error('error saving flick on server', error)
     }
 }

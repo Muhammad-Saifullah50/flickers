@@ -18,6 +18,8 @@ export default async function HomePage() {
   let currentUser = null;
   let userHasFollowed = false;
 
+  const PAGE_SIZE = 2;
+
   try {
     currentUser = await getCurrentUserFromDb();
 
@@ -60,4 +62,3 @@ export default async function HomePage() {
   )
 }
 
-// have to see why is this page causing aq full page reload

@@ -5,6 +5,7 @@ import Image from "next/image"
 import React, { useEffect, useRef } from "react"
 import MessageActionsDropdown from "./MessageActionsDropdown"
 import Loader from "./Loader"
+import MessageAssetModal from "./modals/MessageAssetModal"
 
 type MessagesProps = {
   messages: Message[]
@@ -27,9 +28,9 @@ const Messages = ({ room, messages, currUser, containsOlderMessages, olderMessag
 
   return (
     <div key={room.roomId} className="flex flex-col gap-2 justify-end overflow-y-scroll overflow-x-clip my-10 ">
-        {olderMessagesLoading && (
-              <Loader variant="purple" />
-            )}
+      {olderMessagesLoading && (
+        <Loader variant="purple" />
+      )}
       {reversed.map((message, index) => {
         const isOwner = message.clientId === currUser?.id;
         const isLastMessage = index === messages.length - 1;
@@ -39,7 +40,7 @@ const Messages = ({ room, messages, currUser, containsOlderMessages, olderMessag
         return (
 
           <React.Fragment key={message.serial}>
-          
+
             <div
               ref={isLastMessage ? msgref : null}
               className={cn("flex relative flex-col  max-w-fit self-start",
@@ -59,23 +60,9 @@ const Messages = ({ room, messages, currUser, containsOlderMessages, olderMessag
 
 
                 {isImage ? (
-                  <Image
-                    src={message.text}
-                    width={200}
-                    height={200}
-                    alt={'image'}
-                     blurDataURL={`/_next/image?url=${message.text}&w=16&q=1`}
-                placeholder='blur'
-                    className="rounded-lg"
-                  />
+                   <MessageAssetModal src={message.text} isVideo={isVideo} />
                 ) : isVideo ? (
-                  <video
-                    src={message.text}
-                    width={200}
-                    height={200}
-                    controls
-                    className="rounded-lg"
-                  />
+                   <MessageAssetModal src={message.text} isVideo={isVideo} />
                 ) : (
                   message.text
                 )}

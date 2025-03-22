@@ -169,4 +169,3 @@ const SendMessageForm = ({ room }: { chatId: string, senderId: string, room: Roo
 }
 
 export default SendMessageForm
-// have to allow sending only images

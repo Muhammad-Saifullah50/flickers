@@ -2,11 +2,14 @@
 
 import { UnsavePostAndFlick } from "@/actions/save.actions"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 const UnsaveBtn = ({saveId}: {saveId: string}) => {
 
+    const pathname = usePathname()
+
     const handleClick = async () => {
-        await UnsavePostAndFlick(saveId)
+        await UnsavePostAndFlick(saveId, pathname)
     }
     return (
         <Image

@@ -5,6 +5,7 @@ import Link from "next/link"
 import Loader from "./Loader"
 import DialogContent, { Dialog, DialogTitle, DialogTrigger } from "./ui/dialog"
 import FlickCarousel from "./FlickCarousel"
+import { useEffect } from "react"
 
 type FlickCardProps = {
   flick: Flick & { author: User, likes?: Like[] } | null
@@ -13,8 +14,7 @@ type FlickCardProps = {
   flickId?: string
   flickIcon?: boolean
 }
-const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCardProps) => {
- 
+const FlickCard = ({ flick, classNames, loading, flickIcon }: FlickCardProps) => {
 
   return (
     <Dialog>
@@ -60,29 +60,7 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
                     <h4 className=" line-clamp-1">{flick?.author?.name}</h4>
                   </Link>
                 </div>
-                <div className="flex gap-2">
-                  <div className="flex items-center gap-1">
-                    <Image
-                      src={'/icons/heart.svg'}
-                      width={20}
-                      height={20}
-                      alt="heart"
-                      className=""
-                    />
-                    <span>{flick?.likes?.length}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <Image
-                      src={'/icons/play.svg'}
-                      width={20}
-                      height={20}
-                      alt="heart"
-                      className=""
-                    />
-                    <span>{flick?.plays}</span>
-                  </div>
-                </div>
+                
               </div>
             </div>
           </>
@@ -91,11 +69,11 @@ const FlickCard = ({ flick, classNames, loading, flickId, flickIcon }: FlickCard
 
       </aside>
 
-      <DialogContent className="sm:max-w-[600px] flex items-center h-[calc(100vh-200px)] justify-center">
+      <DialogContent className="sm:max-w-[600px] flex items-center h-[calc(100vh-120px)] justify-center">
 
         <DialogTitle className="sr-only">{flick?.caption}</DialogTitle>
-        <FlickCarousel flick={flick} flickId={flick?.id} />
-        
+        <FlickCarousel flick={flick} flickId={flick?.id} isModal={true} />
+
       </DialogContent>
     </Dialog>
 
