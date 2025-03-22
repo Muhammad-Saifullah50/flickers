@@ -52,19 +52,7 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
                         <h4 className=" line-clamp-1">{post?.author?.name}</h4>
                     </Link>
                 </div>
-                <div className="flex gap-2">
-                    <div className="flex items-center gap-1">
-                        <Image
-                            src={'/icons/heart.svg'}
-                            width={20}
-                            height={20}
-                            alt="heart"
-                            className=""
-                        />
-                        <span>{post?.likes?.length}</span>
-                    </div>
-
-                </div>
+               
             </div>
         </div>
     </div>)

@@ -10,7 +10,6 @@ import {
 import { Flick, Save, User } from "@prisma/client";
 import { useEffect, useRef, useState } from "react";
 import Loader from "./Loader";
-import SaveFlickBtn from "./SaveFlickBtn";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 
 
@@ -60,8 +59,8 @@ const FlickCarousel = ({ flick, flickId, isModal }: FlickCarouselProps) => {
                 const newFlickList = [];
                 let newIndex = 0;
 
-                const fetchedPrevFlick = prevAndNextFlicks[0];
-                const fetchedNextFlick = prevAndNextFlicks[1];
+                const fetchedPrevFlick = prevAndNextFlicks?.[0];
+                const fetchedNextFlick = prevAndNextFlicks?.[1];
 
                 if (fetchedPrevFlick) {
                     newFlickList.push(fetchedPrevFlick);
@@ -92,15 +91,17 @@ const FlickCarousel = ({ flick, flickId, isModal }: FlickCarouselProps) => {
         try {
 
             const prevAndNextFlicks = await getPrevAndNextFlicks(flickId);
-            const fetchedPrevFlick = prevAndNextFlicks[0];
-            const fetchedNextFlick = prevAndNextFlicks[1];
+            const fetchedPrevFlick = prevAndNextFlicks?.[0];
+            const fetchedNextFlick = prevAndNextFlicks?.[1];
 
             let newFlickList = [...flickList];
             let needsUpdate = false;
+            let newIndex = currIndex;
 
             // checking if we need to add a prev flick
             if (fetchedPrevFlick && !newFlickList?.some(flick => flick.id === fetchedPrevFlick?.id)) {
                 newFlickList.unshift(fetchedPrevFlick);
+                newIndex += 1;
                 needsUpdate = true;
             }
 
@@ -115,6 +116,7 @@ const FlickCarousel = ({ flick, flickId, isModal }: FlickCarouselProps) => {
 
             if (needsUpdate) {
                 setFlickList(newFlickList);
+                setCurrIndex(newIndex);
             }
 
 

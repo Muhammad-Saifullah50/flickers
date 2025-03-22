@@ -1,3 +1,0 @@
-flick save and like functionality
-improve performance
-flick client carousel

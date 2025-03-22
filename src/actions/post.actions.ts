@@ -91,7 +91,7 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
                     comments: true,
                     saves: true,
                     likes: true
-                }
+                },
             });
 
             return posts
@@ -107,7 +107,7 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
                     saves: true,
                     likes: true,
                     comments: true
-                }
+                },
             });
 
             return posts

@@ -1,4 +1,3 @@
-import { getRecentMoments } from "@/actions/moments.actions";
 import { getFeedPosts } from "@/actions/post.actions";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import FeedList from "@/components/FeedList";
@@ -17,8 +16,6 @@ export default async function HomePage() {
 
   let currentUser = null;
   let userHasFollowed = false;
-
-  const PAGE_SIZE = 2;
 
   try {
     currentUser = await getCurrentUserFromDb();
