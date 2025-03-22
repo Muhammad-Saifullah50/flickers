@@ -35,7 +35,7 @@ const PostComment = ({ author, postId, isReply, parentCommentId, setisReplying }
     if (session.status === 'loading') {
         return <CommentFormSkeleton />
     }
-    if (session.status === 'unauthenticated') {
+    if (session.status === 'unauthenticated' || !author) {
         return null;
     }
 
@@ -68,7 +68,7 @@ const PostComment = ({ author, postId, isReply, parentCommentId, setisReplying }
     return (
         <section className="flex justify-between gap-2 w-full py-2">
             <Image
-                src={author.image || '/icons/dummyuser.png'}
+                src={author?.image || '/icons/dummyuser.png'}
                 width={40}
                 height={35}
                 alt="profile photo"

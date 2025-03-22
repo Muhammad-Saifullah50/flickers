@@ -1,4 +1,4 @@
-import { getFeedPosts } from "@/actions/post.actions";
+import { getFeedPosts, getinitialFeedPosts } from "@/actions/post.actions";
 import { getCurrentUserFromDb } from "@/actions/user.actions";
 import FeedList from "@/components/FeedList";
 import Heading from "@/components/Heading";
@@ -33,8 +33,7 @@ export default async function HomePage() {
   } else {
     userHasFollowed = false
   }
-  const postsPromise = getFeedPosts(userHasFollowed);
-
+  const postsPromise =  getinitialFeedPosts(userHasFollowed);
   return (
     <main>
 
@@ -51,7 +50,7 @@ export default async function HomePage() {
           </div>
         }>
 
-          <FeedList postsPromise={postsPromise} currentUser={currentUser} />
+          <FeedList initialPostsPromise={postsPromise} currentUser={currentUser} />
 
         </Suspense>
       </section>

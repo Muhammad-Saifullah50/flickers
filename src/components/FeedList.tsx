@@ -1,11 +1,37 @@
+'use client'
 import PostDetails from './PostDetails';
-import { use } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { Post, User } from '@prisma/client';
+import { getPaginatedPosts } from '@/actions/post.actions';
+import Loader from './Loader';
 
-const FeedList = ({ postsPromise, currentUser }: { postsPromise: Promise<Post[]>, currentUser: User | undefined }) => {
+const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise:Promise<Post[]>, currentUser: User | null }) => {
 
 
-    const posts = use(postsPromise)
+    const initialPosts = use(initialPostsPromise)
+    const [posts, setPosts] = useState(initialPosts)
+    const [page, setPage] = useState(2)
+    const [hasMore, setHasMore] = useState(true)
+    const loaderRef = useRef(null);
+
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        async ([entry]) => {
+            if (entry.isIntersecting && hasMore) {{
+                const {posts: newPosts, nextPage} = await getPaginatedPosts(page, 2);
+
+                setPosts((prev) => [...prev, ...newPosts])
+                setPage(nextPage)
+                setHasMore(!!nextPage)
+            }}
+            
+        }, {rootMargin: '100px'}
+      )
+    
+      if (loaderRef.current) observer.observe(loaderRef.current)
+      return () => observer.disconnect()
+    }, [page, hasMore])
+    
     return (
             <div>
                 {posts && posts?.length > 0 ?
@@ -13,6 +39,7 @@ const FeedList = ({ postsPromise, currentUser }: { postsPromise: Promise<Post[]>
                         <PostDetails
                             key={post.id}
                             post={post}
+                            currentUser={currentUser}
                             isHomeCard={true}
                             userId={currentUser?.id} />
                     ))
@@ -21,8 +48,15 @@ const FeedList = ({ postsPromise, currentUser }: { postsPromise: Promise<Post[]>
                             <h2>No posts to show</h2>
                         </div>
                     )}
-            </div>
+
+{                  hasMore &&  <div ref={loaderRef} className='w-full h-10'>
+   <Loader variant='purple'/> 
+</div>
+}            </div>
     )
 }
 
 export default FeedList
+
+// this is not fetching the last post 
+// ahve to correct it

@@ -1,4 +1,3 @@
-import { auth } from "@/lib/auth"
 import { cn, formatDateTime } from "@/lib/utils"
 import { Comment, Like, Post, Save, User } from "@prisma/client"
 import Image from "next/image"
@@ -9,7 +8,6 @@ import Link from "next/link"
 import DeletePost from "./DeletePost"
 import SavePostBtn from "./SavePostBtn"
 import ShareButton from "./ShareButton";
-import { getCurrentUserFromDb } from "@/actions/user.actions"
 
 type PostInfoCardProps = {
     post: Post & {
@@ -20,18 +18,20 @@ type PostInfoCardProps = {
     },
     isHomeCard?: boolean
     userId?: string
+    currentUser: User | null
 }
 
-const PostInfoCard = async ({ post, isHomeCard, userId }: PostInfoCardProps) => {
+const PostInfoCard = ({ post, isHomeCard, userId, currentUser }: PostInfoCardProps) => {
 
-    const session = await auth();
-const currentUser = await getCurrentUserFromDb()
-    const isOwner = session?.user?.email === post.author?.email;
+
+
+    const isOwner = currentUser?.email === post.author?.email;
 
     const isSaved = post.saves?.some((save) => save.postId === post.id);
     const saveId = post.saves?.find((save) => save.postId === post.id)?.id;
 
-    const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/posts/${post.id}`
+    const shareLink = `${process.env.NEXT_PUBLIC_APP_URL}/posts/${post.id}`;
+
     return (
         <aside className={cn("flex flex-col gap-4 w-full bg-dark-2 p-4 rounded-r-lg justify-between h-full min-h-full",
             'rounded-3xl', isHomeCard
@@ -42,7 +42,7 @@ const currentUser = await getCurrentUserFromDb()
                     <div className="flex items-center gap-2">
                         <div>
                             <Image
-                                src={post.author?.image || '/icons/dummyuser.svg'}
+                                src={post?.author?.image || '/icons/dummyuser.svg'}
                                 width={40}
                                 height={40}
                                 alt='profile photo'
@@ -57,7 +57,7 @@ const currentUser = await getCurrentUserFromDb()
                     </div>
 
 
-                    {isOwner && (<div className="flex items-center justify-end gap-2">
+                    {currentUser && isOwner && (<div className="flex items-center justify-end gap-2">
                         <Link href={`/edit-post/${post.id}`}>
                             <Image
                                 src={'/icons/edit.svg'}
@@ -154,13 +154,13 @@ const currentUser = await getCurrentUserFromDb()
 
                         </div>
                         <div className="flex gap-2">
-                            <ShareButton 
-                            itemId={post.id}
-                            link={shareLink} 
-                            modalOpen={false}
-                            authorName={post.author.name}
-                            caption={post.caption}
-                            currentShares={post.shares}
+                            <ShareButton
+                                itemId={post.id}
+                                link={shareLink}
+                                modalOpen={false}
+                                authorName={post.author.name}
+                                caption={post.caption}
+                                currentShares={post.shares}
                             />
                             {userId && <SavePostBtn
                                 isHomeCard={isHomeCard}
@@ -173,7 +173,7 @@ const currentUser = await getCurrentUserFromDb()
                     </section>
                 </Link>
                 <PostComment postId={post.id} author={currentUser!} />
-            </section>
+                            </section>
 
         </aside >
     )

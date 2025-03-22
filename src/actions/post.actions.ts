@@ -71,7 +71,7 @@ export const getPostById = async (id: string) => {
     }
 }
 
-export const getFeedPosts = async (userhasFollowed: boolean) => {
+export const getinitialFeedPosts = async (userhasFollowed: boolean) => {
     try {
 
         if (userhasFollowed) {
@@ -92,6 +92,7 @@ export const getFeedPosts = async (userhasFollowed: boolean) => {
                     saves: true,
                     likes: true
                 },
+                take: 2
             });
 
             return posts
@@ -363,5 +364,29 @@ export const updatePostShares = async (postId: string, currentShares: number) =>
         revalidatePath(`/post-modal/${postId}`)
     } catch (error) {
         console.error('Error updating shares on post', error)
+    }
+}
+
+export const getPaginatedPosts = async (page: number, limit: number) => {
+    try {
+        const posts = await prisma.post.findMany({
+            skip: (page - 1) * limit,
+            take: limit,
+            orderBy: {
+                createdAt: 'desc'
+            },
+            include: {
+                author: true,
+                saves: true,
+                likes: true,
+                comments: true
+            }
+
+        });
+const nextPage = posts.length < limit ? null : page + 1
+        return {posts, nextPage}
+    } catch (error) {
+        console.error('Error fetching paginated posts on server', error)
+        return {posts: [], nextPage: null}
     }
 }
