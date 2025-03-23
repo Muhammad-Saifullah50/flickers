@@ -72,7 +72,7 @@ const AuthForm = ({ callbackUrl, type }: AuthFormProps) => {
                 }
                 else {
                     console.log(result)
-                    //todo: have to show erorr to the UI
+
                     toast({
                         description: 'Authentication failed! Please try again with correct credentials or sign up if you havent created one yet',
                         variant: 'destructive'

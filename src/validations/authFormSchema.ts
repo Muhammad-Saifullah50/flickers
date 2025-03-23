@@ -27,6 +27,7 @@ const signInSchema = z.object({
 export const authSchema = (type: 'signin' | 'signup') => {
     if (type === 'signin') {
         return signInSchema
+    } else {
+        return signUpSchema
     }
-    return signUpSchema
 }

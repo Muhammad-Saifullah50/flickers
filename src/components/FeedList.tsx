@@ -5,7 +5,7 @@ import { Post, User } from '@prisma/client';
 import { getPaginatedPosts } from '@/actions/post.actions';
 import Loader from './Loader';
 
-const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise:Promise<Post[]>, currentUser: User | null }) => {
+const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: Promise<Post[]>, currentUser: User | null }) => {
 
 
     const initialPosts = use(initialPostsPromise)
@@ -15,48 +15,50 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise:Pr
     const loaderRef = useRef(null);
 
     useEffect(() => {
-      const observer = new IntersectionObserver(
-        async ([entry]) => {
-            if (entry.isIntersecting && hasMore) {{
-                const {posts: newPosts, nextPage} = await getPaginatedPosts(page, 2);
+        const observer = new IntersectionObserver(
+            async ([entry]) => {
+                if (entry.isIntersecting && hasMore) {
+                    {
+                        const { posts: newPosts, nextPage } = await getPaginatedPosts(page, 2);
 
-                setPosts((prev) => [...prev, ...newPosts])
-                setPage(nextPage)
-                setHasMore(!!nextPage)
-            }}
-            
-        }, {rootMargin: '100px'}
-      )
-    
-      if (loaderRef.current) observer.observe(loaderRef.current)
-      return () => observer.disconnect()
+                        setPosts((prev) => [...prev, ...newPosts])
+                        setPage(nextPage)
+                        setHasMore(!!nextPage)
+                    }
+                }
+
+            }, { rootMargin: '100px' }
+        )
+
+        if (loaderRef.current) observer.observe(loaderRef.current)
+        return () => observer.disconnect()
     }, [page, hasMore])
-    
-    return (
-            <div>
-                {posts && posts?.length > 0 ?
-                    (posts.map((post) => (
-                        <PostDetails
-                            key={post.id}
-                            post={post}
-                            currentUser={currentUser}
-                            isHomeCard={true}
-                            userId={currentUser?.id} />
-                    ))
-                    ) : (
-                        <div className="text-white text-center mt-10">
-                            <h2>No posts to show</h2>
-                        </div>
-                    )}
 
-{                  hasMore &&  <div ref={loaderRef} className='w-full h-10'>
-   <Loader variant='purple'/> 
-</div>
-}            </div>
+    return (
+        <div>
+            {posts && posts?.length > 0 ?
+                (posts.map((post) => (
+                    <PostDetails
+                        key={post.id}
+                        post={post}
+                        currentUser={currentUser}
+                        isHomeCard={true}
+                        userId={currentUser?.id} />
+                ))
+                ) : (
+                    <div className="text-white text-center mt-10">
+                        <h2>No posts to show</h2>
+                    </div>
+                )}
+
+            {hasMore && <div ref={loaderRef} className='w-full h-10'>
+                <Loader variant='purple' />
+            </div>
+            }            </div>
     )
 }
 
 export default FeedList
 
-// this is not fetching the last post 
+// this is not fetching the last post
 // ahve to correct it
