@@ -24,7 +24,6 @@ const RightSidebar = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (!window || window.innerWidth < 1280) return;
-      console.log('fetching data')
       try {
         setLoading(true);
         const currUser = await getCurrentUserFromDb();
@@ -67,15 +66,15 @@ const RightSidebar = () => {
           ) : (
             <>
               {topCreatorstoShow && topCreatorstoShow.length > 0 && (
-              <Heading text="Top Creators" className="text-2xl font-semibold text-left sticky top-0 p-10 bg-dark-1" />
+                <Heading text="Top Creators" className="text-2xl font-semibold text-left sticky top-0 p-10 bg-dark-1" />
               )}
 
-                <div className="flex flex-col gap-4 items-center p-10">
-                  {topCreatorstoShow?.map((creator) => (
-                    <UserCard key={creator.id} user={creator} />
-                  ))}
-                </div>
-              
+              <div className="flex flex-col gap-4 items-center p-10">
+                {topCreatorstoShow?.map((creator) => (
+                  <UserCard key={creator.id} user={creator} />
+                ))}
+              </div>
+
             </>
           )}
 
