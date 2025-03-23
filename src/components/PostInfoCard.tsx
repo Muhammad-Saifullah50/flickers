@@ -121,16 +121,7 @@ const PostInfoCard = ({ post, isHomeCard, userId, currentUser }: PostInfoCardPro
                 <Link href={`/posts/${post.id}`}>
                     <section className="flex items-center justify-between ">
                         <div className="flex items-center justify-start gap-4">
-                            <div className="flex items-center gap-2">
-                                <Image
-                                    src={'/icons/heart.svg'}
-                                    width={20}
-                                    height={20}
-                                    alt='like'
-                                    className='cursor-pointer'
-                                />
-                                <span className="text-white">{post?.likes?.length}</span>
-                            </div>
+                            
                             <div className="flex items-center gap-2">
                                 <Image
                                     src={'/icons/comment.svg'}
