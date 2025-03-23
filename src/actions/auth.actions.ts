@@ -41,12 +41,19 @@ export const signUpWithCredentials = async (formData: z.infer<typeof signUpSchem
         throw new Error("User already exists")
     };
 
-    const username = `@${formData?.name?.toLowerCase().replace('')}`;
+    if (!formData) throw new Error("Form data is required")
+
+    let username = '';
+
+    if (formData?.name as string) {
+        username = `@${formData?.name?.toLowerCase().replace(' ', '')}`;
+    }
+
 
     await prisma.user.create({
         data: {
 
-            name: formData.name,
+            name: formData?.name,
             username: username,
             email: formData.email,
             password: await bcrypt.hash(formData.password, 10),

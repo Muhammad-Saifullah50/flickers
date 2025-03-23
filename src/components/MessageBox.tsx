@@ -1,12 +1,11 @@
 'use client'
 import Image from 'next/image'
-import React, { Suspense, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import SendMessageForm from '@/components/forms/SendMessageForm'
 import { User } from '@prisma/client'
 import Messages from './Messages'
 import Loader from './Loader'
-import { Message, MessageEvents, PaginatedResult, Room, useTyping } from '@ably/chat'
-import { set } from 'zod'
+import { Message, MessageEvents, PaginatedResult, Room } from '@ably/chat'
 
 
 const MessageBox = ({ chatId, currentUser, otherUser, room }: {

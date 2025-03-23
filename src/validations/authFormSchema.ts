@@ -15,6 +15,7 @@ const signUpSchema = z.object({
 
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Password and confirm password do not match.",
+    path: ["confirmPassword"],
 })
 const signInSchema = z.object({
     email: z.string().email("Invalid email address."),

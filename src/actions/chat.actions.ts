@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { getCurrentUserFromDb, getDbUserById } from "./user.actions"
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 
@@ -44,8 +44,8 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
 
         const chat = await prisma.chat.create({
             data: {
-        //@ts-expect-error have to correct this 
-        name: otherUser.name!,
+                //@ts-expect-error have to correct this 
+                name: otherUser.name!,
                 image: otherUser?.image || '/icons/dummyuser.png',
                 userIds: [currUserId, otherUserId],
                 creatorId: currUserId
@@ -87,7 +87,6 @@ export const createChat = async (currUserId: string, otherUserId: string) => {
 
 export const getChatById = async (chatId: string) => {
     try {
-
         const chat = await prisma.chat.findUnique({
             where: {
                 id: chatId
@@ -97,13 +96,14 @@ export const getChatById = async (chatId: string) => {
             }
         });
 
+        if ( !chat) return null
 
         return chat
 
     } catch (error) {
         console.error('Error fetching chat by id on server:', error)
-        throw error
-
+        return null
     }
 }
 
+// have tio see the error handluing

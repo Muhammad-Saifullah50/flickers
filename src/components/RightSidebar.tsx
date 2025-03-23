@@ -51,26 +51,28 @@ const RightSidebar = () => {
 
     fetchData()
 
-  }, [ pathname])
+  }, [pathname])
 
   switch (pathname) {
     case '/':
       return (
         <aside className={cn('w-[420px] h-screen overflow-y-scroll')}>
-          <Heading text="Top Creators" className="text-2xl font-semibold text-left sticky top-0 p-10 bg-dark-1" />
 
           {loading ? (
             <div className="flex flex-col gap-4 items-center p-10">
-             {Array.from({ length: 4 }).map((_, index) => (
-              <UserCardSkeleton key={index} />
-            ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4 items-center p-10">
-              {topCreatorstoShow?.map((creator) => (
-                <UserCard key={creator.id} user={creator} />
+              {Array.from({ length: 4 }).map((_, index) => (
+                <UserCardSkeleton key={index} />
               ))}
             </div>
+          ) : (
+            <>
+              <Heading text="Top Creators" className="text-2xl font-semibold text-left sticky top-0 p-10 bg-dark-1" />
+              <div className="flex flex-col gap-4 items-center p-10">
+                {topCreatorstoShow?.map((creator) => (
+                  <UserCard key={creator.id} user={creator} />
+                ))}
+              </div>
+            </>
           )}
 
         </aside>
@@ -121,4 +123,3 @@ const RightSidebar = () => {
 
 export default RightSidebar
 
-// have to correct the foillow unfoillow functionality from the rioght sidebar

@@ -14,6 +14,8 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 
     const post = await getPostById(id);
 
+    if (!post)  return;
+
     const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + "..."} - ${post?.author?.name}`
     const ogImage = `${process.env.NEXT_PUBLIC_APP_URL}/api/og?postId=${id}`
 
@@ -42,8 +44,9 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
 
     const { id } = await params
 
-    const post = await getPostById(id)
-    if (!post) return notFound();
+    const post = await getPostById(id);
+
+    if (!post) return  notFound();
 
     const user = await getCurrentUserFromDb()
     const morePostsPromise = getRelatedOrMoreUserOrLatestPosts(post)
@@ -55,6 +58,7 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
                     post={post}
                     isHomeCard={false}
                     userId={user?.id}
+                    currentUser={user}
                 />
             </Suspense>
 

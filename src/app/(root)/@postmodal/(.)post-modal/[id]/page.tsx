@@ -8,6 +8,8 @@ export const generateMetadata = async ({ params }: { params: { id: string } }) =
 
   const post = await getPostById(id);
 
+  if (!post) return 
+
   const title = `${post?.caption.split(" ").slice(0, 10).join(" ") + " ..."} - ${post?.author?.name}`
   const ogImage = `${process.env.NEXT_PUBLIC_APP_URL}/api/og?postId=${id}`
 
@@ -36,7 +38,7 @@ const PostModalPage = async ({ params }: { params: { id: string } }) => {
   const { id } = await params
 
   const post = await getPostById(id)
-  if (!post) return notFound();
+  if (!post)  notFound();
 
   const user = await getCurrentUserFromDb()
   return (

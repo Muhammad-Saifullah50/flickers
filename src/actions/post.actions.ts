@@ -109,6 +109,7 @@ export const getinitialFeedPosts = async (userhasFollowed: boolean) => {
                     likes: true,
                     comments: true
                 },
+                take: 2
             });
 
             return posts
@@ -367,10 +368,10 @@ export const updatePostShares = async (postId: string, currentShares: number) =>
     }
 }
 
-export const getPaginatedPosts = async (page: number, limit: number) => {
+export const getPaginatedPosts = async (page: number | null, limit: number) => {
     try {
-        const totalPosts = await prisma.post.count();
-
+        if (page === null ) return;
+        
         const posts = await prisma.post.findMany({
             skip: (page - 1) * limit,
             take: limit,
@@ -385,9 +386,7 @@ export const getPaginatedPosts = async (page: number, limit: number) => {
             }
 
         });
-
-        const hasMorePosts = (page * limit) < totalPosts;
-        const nextPage = hasMorePosts ? page + 1 : null;
+        const nextPage = posts.length < limit ? null : page + 1
         return { posts, nextPage }
     } catch (error) {
         console.error('Error fetching paginated posts on server', error)

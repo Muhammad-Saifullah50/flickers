@@ -10,7 +10,7 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
 
     const initialPosts = use(initialPostsPromise)
     const [posts, setPosts] = useState(initialPosts)
-    const [page, setPage] = useState(2)
+    const [page, setPage] = useState<number | null>(2)
     const [hasMore, setHasMore] = useState(true)
     const loaderRef = useRef(null);
 
