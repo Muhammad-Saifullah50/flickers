@@ -15,8 +15,8 @@ const QueryForm = ({ name, action, icon }: QueryFormProps) => {
             <Image src={icon} width={20} height={20} alt='search' className='relative left-8'/>
             <Input name={name}
                 type='text'
-                placeholder='Search for flicks by creators or hashtags'
-                className='!bg-dark-3 focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0 placeholder:!text-purple-tertiary p-5 rounded-lg pl-10 '
+                placeholder={`Search for flicks ${action.includes('explore') && 'and posts'} by creators or hashtags`}
+                className=' text-sm !bg-dark-3 focus-visible:ring-0 ring-0 border-0 focus-visible:ring-offset-0 placeholder:!text-purple-tertiary p-5 rounded-lg pl-10 '
             />
         </Form>
     )

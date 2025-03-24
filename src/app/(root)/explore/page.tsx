@@ -35,7 +35,7 @@ const ExplorePage = async  ({ searchParams }: { searchParams: { hashtag_query: s
                     action='/explore'
                     icon='/icons/search.svg' />
 
-                <div className='flex justify-center gap-4'>
+                <div className='flex justify-center gap-4 flex-wrap'>
                     <HashtagBox text='webdevelopment' />
                     <HashtagBox text='mountains' />
                     <HashtagBox text='sunrise' />

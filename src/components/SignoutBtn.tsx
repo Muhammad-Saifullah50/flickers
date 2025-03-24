@@ -29,7 +29,7 @@ const SignoutBtn = () => {
     return (
         <Button
             onClick={handleClick}
-            className='!bg-[#FF5A5A]'>
+            className='!bg-[#FF5A5A] !hover:bg-red-700'>
             {loading ? (
                 <Loader variant='white' />
             ) : (
