@@ -62,7 +62,7 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 formData.append("file", file!);
 
 
-                const newBlob = await upload(file.name!, file!, {
+                const newBlob = await upload(file?.name!, file!, {
                     access: 'public',
                     handleUploadUrl: '/api/videos/upload'
                 });
@@ -98,7 +98,7 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 }
             } else {
 
-                if (uploadedUrl) {
+                if (uploadedUrl !== '') {
 
                     const flick = await createFlick(formData);
                     if (flick) {
