@@ -70,8 +70,7 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 setBlob(newBlob);
 
                 uploadedUrl = newBlob.url;
-                console.log(uploadedUrl, 'uploadedurl')
-                console.log(newBlob, 'blob')
+               
             } catch (error) {
                 console.error('Error uploading file:', error);
                 toast({
@@ -87,7 +86,6 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 videoUrl: uploadedUrl,
                 hashtags: data.hashtags
             };
-console.log(formData, 'formdata')
 
             if (isEditing && flick) {
                 const updatedflick = await updateFlick(flick?.id, formData)
