@@ -2,13 +2,14 @@
 import AuthForm from "@/components/forms/AuthForm";
 import { toast } from "@/hooks/use-toast";
 import { Metadata } from "next";
+import { PageProps } from "../../../../.next/types/app/(auth)/signin/page";
 
 export const metadata: Metadata = {
   title: 'Signin',
   description: 'Signin to your account account',
 }
 
-export default async function SignInPage({ searchParams }: { searchParams: { callbackUrl: string, error: string } }) {
+export default async function SignInPage({ searchParams }: PageProps) {
 
   const {callbackUrl, error} = await searchParams;
 
