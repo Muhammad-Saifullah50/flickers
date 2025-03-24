@@ -61,17 +61,17 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 const formData = new FormData();
                 formData.append("file", file!);
 
-                if (!file) return;
 
-                const newBlob = await upload(file.name, file, {
+                const newBlob = await upload(file.name!, file!, {
                     access: 'public',
-                    handleUploadUrl: '/api/videos/upload',
+                    handleUploadUrl: '/api/videos/upload'
                 });
 
                 setBlob(newBlob);
 
                 uploadedUrl = newBlob.url;
-
+                console.log(uploadedUrl, 'uploadedurl')
+                console.log(newBlob, 'blob')
             } catch (error) {
                 console.error('Error uploading file:', error);
                 toast({
@@ -87,7 +87,7 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 videoUrl: uploadedUrl,
                 hashtags: data.hashtags
             };
-
+console.log(formData, 'formdata')
 
             if (isEditing && flick) {
                 const updatedflick = await updateFlick(flick?.id, formData)
