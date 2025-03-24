@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/themeProvider"
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/toaster";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   weight: ['300', '400', '500', '600', '700'],
@@ -38,6 +39,7 @@ export default function RootLayout({
           >
             <SessionProvider>
               {children}
+              <SpeedInsights />
               <Toaster />
             </SessionProvider>
           </ThemeProvider>
