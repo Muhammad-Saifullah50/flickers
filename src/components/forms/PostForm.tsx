@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { PostEditingSchema, PostSchema } from '@/validations/postSchema'
 import FileUploader from '../FileUploader'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../ui/button'
 import Loader from '../Loader'
 import { toast } from '@/hooks/use-toast'
@@ -15,7 +15,9 @@ import { createPost, updatePost } from '@/actions/post.actions'
 import { Post } from '@prisma/client'
 import { getMediaTypeByFileObject } from '@/lib/utils'
 import imageCompression from "browser-image-compression";
-// import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
+import { type PutBlobResult } from '@vercel/blob';
+import { upload } from '@vercel/blob/client';
+
 
 
 
@@ -29,6 +31,7 @@ const PostForm = ({ post, isEditing }: PostFormProps) => {
     const [files, setFiles] = useState<File[]>([]);
     const [existingFiles, setExistingFiles] = useState<string[]>(post?.assets || []);
     const [isUploading, setIsUploading] = useState(false);
+    const [blob, setBlob] = useState<PutBlobResult | null>();
 
     const router = useRouter();
 
@@ -50,7 +53,6 @@ const PostForm = ({ post, isEditing }: PostFormProps) => {
         setExistingFiles(prev => prev.filter(f => f !== fileUrl));
     };
 
-    // const ffmpeg = createFFmpeg({log: true});
 
     const handleFormSubmit = async (data: z.infer<typeof schema>) => {
 
@@ -73,38 +75,34 @@ const PostForm = ({ post, isEditing }: PostFormProps) => {
                             useWebWorker: true
                         }
 
-                        compressedfile = await imageCompression(file, options)
+                        compressedfile = await imageCompression(file, options);
+
+                        const formData = new FormData();
+                        formData.append("file", compressedfile);
+
+                        const request = await fetch('/api/upload', {
+                            method: 'POST',
+
+                            body: formData,
+                        });
+
+                        const url = await request.json();
+                        if (url) {
+                            //data field is returned by our upload api
+                            uploadedUrls.push(url.data.url);
+                        }
                     }
 
-                    // if (fileType === 'video') {
-                    //     if (!ffmpeg.isLoaded()) {
-                    //         await ffmpeg.load();
-                    //     }
 
-                    //     ffmpeg.FS('writeFile', file.name, await fetchFile(file));
+                    if (fileType === 'video') {
+                        const newBlob = await upload(file.name, file, {
+                            access: 'public',
+                            handleUploadUrl: '/api/videos/upload',
+                        });
 
-                    //     await ffmpeg.run('-i', file.name, '-vcodec', 'libx264', '-crf', '28', 'output.mp4');
+                        setBlob(newBlob);
 
-                    //     const data = ffmpeg.FS('readFile', 'output.mp4');
-
-                    //     compressedfile = new File([data.buffer], file.name, { type: 'video/mp4' });
-                    // }
-
-
-
-                    const formData = new FormData();
-                    formData.append("file", compressedfile);
-
-                    const request = await fetch('/api/upload', {
-                        method: 'POST',
-
-                        body: formData,
-                    });
-
-                    const url = await request.json();
-                    if (url) {
-                        //data field is returned by our upload api
-                        uploadedUrls.push(url.data.url);
+                        uploadedUrls.push(newBlob.url);
                     }
 
                 } catch (error) {

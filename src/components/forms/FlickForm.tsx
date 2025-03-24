@@ -13,6 +13,8 @@ import { Flick, User } from '@prisma/client'
 import { FlickEditingSchema, FlickSchema } from '@/validations/flickSchema'
 import { createFlick, updateFlick } from '@/actions/flick.actions'
 import FlickUploader from '../FlickUploader'
+import { PutBlobResult } from '@vercel/blob'
+import { upload } from '@vercel/blob/client'
 
 interface FlickFormProps {
     flick?: Flick
@@ -24,6 +26,8 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
     const [file, setFile] = useState<File>();
     const [existingFile, setExistingFile] = useState<string>(flick?.videoUrl || '');
     const [isUploading, setIsUploading] = useState(false);
+    const [blob, setBlob] = useState<PutBlobResult | null>();
+
 
     const router = useRouter();
 
@@ -57,17 +61,16 @@ const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
                 const formData = new FormData();
                 formData.append("file", file!);
 
-                const request = await fetch('/api/upload', {
-                    method: 'POST',
+                if (!file) return;
 
-                    body: formData,
+                const newBlob = await upload(file.name, file, {
+                    access: 'public',
+                    handleUploadUrl: '/api/videos/upload',
                 });
 
-                const url = await request.json();
-                if (url) {
-                    //data field is returned by our upload api
-                    uploadedUrl = url.data.url;
-                }
+                setBlob(newBlob);
+
+                uploadedUrl = newBlob.url;
 
             } catch (error) {
                 console.error('Error uploading file:', error);
