@@ -14,11 +14,11 @@ import { FlickEditingSchema, FlickSchema } from '@/validations/flickSchema'
 import { createFlick, updateFlick } from '@/actions/flick.actions'
 import FlickUploader from '../FlickUploader'
 
-interface PostFormProps {
+interface FlickFormProps {
     flick?: Flick
     isEditing?: boolean
 }
-const FlickForm = ({ flick, isEditing }: PostFormProps) => {
+const FlickForm = ({ flick, isEditing }: FlickFormProps) => {
 
     const [uploadedFile, setUploadedFile] = useState<string>();
     const [file, setFile] = useState<File>();
@@ -87,7 +87,7 @@ const FlickForm = ({ flick, isEditing }: PostFormProps) => {
 
 
             if (isEditing && flick) {
-                const updatedflick = await updateFlick( flick?.id, formData)
+                const updatedflick = await updateFlick(flick?.id, formData)
                 if (updatedflick) {
                     toast({
                         description: 'Post updated successfully',
@@ -96,13 +96,17 @@ const FlickForm = ({ flick, isEditing }: PostFormProps) => {
                     router.push(`/posts/${updatedflick.id}`);
                 }
             } else {
-                const flick = await createFlick(formData);
-                if (flick) {
-                    toast({
-                        description: 'Flick created successfully',
-                        variant: 'default'
-                    })
-                    router.push(`/flicks`);
+
+                if (uploadedUrl) {
+
+                    const flick = await createFlick(formData);
+                    if (flick) {
+                        toast({
+                            description: 'Flick created successfully',
+                            variant: 'default'
+                        })
+                        router.push(`/flicks`);
+                    }
                 }
             }
 

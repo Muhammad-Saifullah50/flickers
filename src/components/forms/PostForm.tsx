@@ -6,19 +6,24 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { PostEditingSchema, PostSchema } from '@/validations/postSchema'
 import FileUploader from '../FileUploader'
-import { useState } from 'react'
+import { use, useState } from 'react'
 import { Button } from '../ui/button'
 import Loader from '../Loader'
 import { toast } from '@/hooks/use-toast'
 import { useRouter } from 'next/navigation'
 import { createPost, updatePost } from '@/actions/post.actions'
-import { Post, User } from '@prisma/client'
+import { Post } from '@prisma/client'
+import { getMediaTypeByFileObject } from '@/lib/utils'
+import imageCompression from "browser-image-compression";
+// import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
+
+
 
 interface PostFormProps {
     post?: Post
     isEditing?: boolean
 }
-const PostForm = ({  post, isEditing }: PostFormProps) => {
+const PostForm = ({ post, isEditing }: PostFormProps) => {
 
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
@@ -45,6 +50,8 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
         setExistingFiles(prev => prev.filter(f => f !== fileUrl));
     };
 
+    // const ffmpeg = createFFmpeg({log: true});
+
     const handleFormSubmit = async (data: z.infer<typeof schema>) => {
 
         try {
@@ -54,8 +61,39 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
             const uploadedUrls: string[] = [];
             for (const file of files) {
                 try {
+
+                    const fileType = getMediaTypeByFileObject(file);
+
+                    let compressedfile = file;
+
+                    if (fileType === 'image') {
+                        const options = {
+                            maxSizeMB: 4,
+                            maxWidthOrHeight: 1024,
+                            useWebWorker: true
+                        }
+
+                        compressedfile = await imageCompression(file, options)
+                    }
+
+                    // if (fileType === 'video') {
+                    //     if (!ffmpeg.isLoaded()) {
+                    //         await ffmpeg.load();
+                    //     }
+
+                    //     ffmpeg.FS('writeFile', file.name, await fetchFile(file));
+
+                    //     await ffmpeg.run('-i', file.name, '-vcodec', 'libx264', '-crf', '28', 'output.mp4');
+
+                    //     const data = ffmpeg.FS('readFile', 'output.mp4');
+
+                    //     compressedfile = new File([data.buffer], file.name, { type: 'video/mp4' });
+                    // }
+
+
+
                     const formData = new FormData();
-                    formData.append("file", file);
+                    formData.append("file", compressedfile);
 
                     const request = await fetch('/api/upload', {
                         method: 'POST',
@@ -98,13 +136,15 @@ const PostForm = ({  post, isEditing }: PostFormProps) => {
                         router.push(`/`);
                     }
                 } else {
-                    const post = await createPost(formData);
-                    if (post) {
-                        toast({
-                            description: 'Post created successfully',
-                            variant: 'default'
-                        })
-                        router.push(`/`);
+                    if (uploadedUrls && uploadedUrls.length > 0) {
+                        const post = await createPost(formData);
+                        if (post) {
+                            toast({
+                                description: 'Post created successfully',
+                                variant: 'default'
+                            })
+                            router.push(`/`);
+                        }
                     }
                 }
             }

@@ -2,20 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = 'edge';
 
-export const config = {
-    api: {
-        bodyParser: false,
-    }
-}
+
 export const POST = async (request: NextRequest) => {
 
 
     const body = await request.formData();
     const formData = new FormData();
-   formData.append("file", body.get("file") as Blob);
+    formData.append("file", body.get("file") as Blob);
     formData.append(
-      "upload_preset",
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+        "upload_preset",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
     );
 
     try {
@@ -30,9 +26,9 @@ export const POST = async (request: NextRequest) => {
             throw new Error(`Upload failed: ${response.statusText}`);
         }
 
-        const data = await response.json(); 
+        const data = await response.json();
 
-    const dataObj = {
+        const dataObj = {
             url: data.secure_url,
             duration: data.duration || null,
         }
