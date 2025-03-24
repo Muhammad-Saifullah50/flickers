@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const runtime = 'edge';
+
+export const config = {
+    api: {
+        bodyParser: false,
+    }
+}
 export const POST = async (request: NextRequest) => {
 
 
