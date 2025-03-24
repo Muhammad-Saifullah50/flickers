@@ -11,9 +11,10 @@ export const metadata: Metadata = {
 
 export default async function SignInPage({ searchParams }: PageProps) {
 
-  const {callbackUrl, error} = await searchParams;
+  const usableParams = await (searchParams);
 
-  if (error === 'OAuthAccountNotLinked') {
+
+  if (usableParams.error === 'OAuthAccountNotLinked') {
     toast({
       variant: 'destructive',
       title: 'The email you are trying to use is already linked to another account. Try logging in through that authentication provider'
@@ -21,7 +22,7 @@ export default async function SignInPage({ searchParams }: PageProps) {
   }
   return (
     <AuthForm
-      callbackUrl={callbackUrl}
+      callbackUrl={usableParams.callbackUrl}
       type="signin" />
   )
 }
