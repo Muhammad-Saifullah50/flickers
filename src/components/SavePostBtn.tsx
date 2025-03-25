@@ -12,12 +12,15 @@ type SavePostBtn = {
     postId: string
     isSaved: boolean
     saveId: string | undefined
+    handleSavePost?: (postId: string, isSaved: boolean, saveId: string) => void
+
 }
 
-const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId }: SavePostBtn) => {
+const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId, handleSavePost }: SavePostBtn) => {
 
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
+    const [saved, setSaved] = useState(isSaved);
 
     if (!userId) return;
 
@@ -30,10 +33,15 @@ const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId }: SavePostBt
 
             if (isSaved && saveId) {
                 await UnsavePostAndFlick(saveId, pathname)
+                setSaved(false)
             } else {
                 await savePost(userId, postId, isHomePage && isHomePage)
+                setSaved(true)
             }
 
+            if (handleSavePost) {
+                handleSavePost(postId, isSaved, saveId || '')
+            }
 
         } catch (error) {
             console.error(error)
@@ -42,10 +50,10 @@ const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId }: SavePostBt
         }
     };
 
-    const homeAndSaved = isHomeCard && isSaved;
-    const homeAndNotSaved = isHomeCard && !isSaved;
-    const notHomeAndSaved = !isHomeCard && isSaved;
-    const notHomeAndNotSaved = !isHomeCard && !isSaved
+    const homeAndSaved = isHomeCard && saved;
+    const homeAndNotSaved = isHomeCard && !saved;
+    const notHomeAndSaved = !isHomeCard && saved;
+    const notHomeAndNotSaved = !isHomeCard && !saved
 
     return (
         loading ? (

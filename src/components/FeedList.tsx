@@ -5,7 +5,7 @@ import { Post, User } from '@prisma/client';
 import { getPaginatedPosts } from '@/actions/post.actions';
 import Loader from './Loader';
 
-const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: Promise<Post[]>, currentUser: User | null }) => {
+const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: Promise<Post[] >, currentUser: User | null }) => {
 
 
     const initialPosts = use(initialPostsPromise)
@@ -19,11 +19,20 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
         setPosts(updatedPosts);
     };
 
-    // const handleSavePost = (saveId: string) => {
-    //     const saveId = posts.saves?.find((save) => save.postId === post.id)?.id;
-    // }
-// have to brainstorm on this 
-   
+    const handleSavePost = (postId: string, isSaved: boolean, saveId: string) => {
+        setPosts((prevPosts) => prevPosts.map((post) =>
+            post.id === postId ?
+                {
+                    ...post,
+                     saves: isSaved ?
+                        [...post?.saves, { id: saveId }] :
+                        post?.saves.filter((save) => save.id !== saveId)
+                }
+                : post))
+
+
+    }
+
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -56,6 +65,7 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
                         isHomeCard={true}
                         userId={currentUser?.id}
                         handleDeletePost={handleDeletePost}
+                        handleSavePost={handleSavePost}
                     />
                 ))
                 ) : (

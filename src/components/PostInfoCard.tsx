@@ -20,9 +20,11 @@ type PostInfoCardProps = {
     userId?: string
     currentUser: User | null
     handleDeletePost?: (postId: string) => void
+    handleSavePost?: (postId: string, isSaved:boolean, saveId: string) => void
+
 }
 
-const PostInfoCard = ({ post, isHomeCard, userId, currentUser, handleDeletePost }: PostInfoCardProps) => {
+const PostInfoCard = ({ post, isHomeCard, userId, currentUser, handleDeletePost, handleSavePost }: PostInfoCardProps) => {
 
 
 
@@ -160,6 +162,7 @@ const PostInfoCard = ({ post, isHomeCard, userId, currentUser, handleDeletePost 
                                 postId={post.id}
                                 isSaved={isSaved}
                                 saveId={saveId}
+                                handleSavePost={handleSavePost}
                             />}
                         </div>
                     </section>

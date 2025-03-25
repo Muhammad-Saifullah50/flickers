@@ -14,9 +14,10 @@ interface PostDetailsProps {
   userId?:string;
   currentUser: User | null
   handleDeletePost?: (postId: string) => void
+  handleSavePost?: (postId: string, isSaved:boolean, saveId: string) => void
 }
 
-const PostDetails = ({ post, isHomeCard,userId, currentUser, handleDeletePost }: PostDetailsProps) => {
+const PostDetails = ({ post, isHomeCard,userId, currentUser, handleDeletePost, handleSavePost }: PostDetailsProps) => {
   return (
     <section className="max-md:flex-col flex  w-full h-full ">
       <div className={cn("flex flex-1  w-full md:w-1/2 items-center justify-center ", {
@@ -32,6 +33,7 @@ const PostDetails = ({ post, isHomeCard,userId, currentUser, handleDeletePost }:
           isHomeCard={isHomeCard}
           userId={ userId} 
           handleDeletePost={handleDeletePost}
+          handleSavePost={handleSavePost}
           />
       </div>
     </section>
