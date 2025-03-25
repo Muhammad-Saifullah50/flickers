@@ -14,6 +14,11 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
     const [hasMore, setHasMore] = useState(true)
     const loaderRef = useRef(null);
 
+    const handleDeletePost = (postId: string) => {
+        const updatedPosts = posts.filter((post) => post.id !== postId);
+        setPosts(updatedPosts);
+    };
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             async ([entry]) => {
@@ -43,7 +48,9 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
                         post={post}
                         currentUser={currentUser}
                         isHomeCard={true}
-                        userId={currentUser?.id} />
+                        userId={currentUser?.id}
+                        handleDeletePost={handleDeletePost}
+                    />
                 ))
                 ) : (
                     <div className="text-white text-center mt-10">
@@ -60,5 +67,3 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
 
 export default FeedList
 
-// this is not fetching the last post
-// ahve to correct it

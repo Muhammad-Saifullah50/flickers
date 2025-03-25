@@ -51,6 +51,8 @@ const PostPage = async ({ params }: { params: { id: string } }) => {
     const user = await getCurrentUserFromDb()
     const morePostsPromise = getRelatedOrMoreUserOrLatestPosts(post)
 
+   
+
     return (
         <main className="w-full flex flex-col gap-10">
             <Suspense fallback={<PostInfoSkeleton />}>

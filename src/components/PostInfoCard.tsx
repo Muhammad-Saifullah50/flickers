@@ -19,9 +19,10 @@ type PostInfoCardProps = {
     isHomeCard?: boolean
     userId?: string
     currentUser: User | null
+    handleDeletePost?: (postId: string) => void
 }
 
-const PostInfoCard = ({ post, isHomeCard, userId, currentUser }: PostInfoCardProps) => {
+const PostInfoCard = ({ post, isHomeCard, userId, currentUser, handleDeletePost }: PostInfoCardProps) => {
 
 
 
@@ -57,7 +58,7 @@ const PostInfoCard = ({ post, isHomeCard, userId, currentUser }: PostInfoCardPro
                     </div>
 
 
-                    {currentUser && isOwner && (<div className="flex items-center justify-end gap-2">
+                    {currentUser && isOwner  &&  (<div className="flex items-center justify-end gap-2">
                         <Link href={`/edit-post/${post.id}`}>
                             <Image
                                 src={'/icons/edit.svg'}
@@ -66,7 +67,7 @@ const PostInfoCard = ({ post, isHomeCard, userId, currentUser }: PostInfoCardPro
                                 alt='edit'
                                 className='cursor-pointer' />
                         </Link>
-                        <DeletePost postId={post.id} />
+                        <DeletePost postId={post.id} onDelete={handleDeletePost} />
                     </div>)}
                 </section>
 

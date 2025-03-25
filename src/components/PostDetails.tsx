@@ -13,9 +13,10 @@ interface PostDetailsProps {
   isHomeCard?: boolean
   userId?:string;
   currentUser: User | null
+  handleDeletePost?: (postId: string) => void
 }
 
-const PostDetails = ({ post, isHomeCard,userId, currentUser }: PostDetailsProps) => {
+const PostDetails = ({ post, isHomeCard,userId, currentUser, handleDeletePost }: PostDetailsProps) => {
   return (
     <section className="max-md:flex-col flex  w-full h-full ">
       <div className={cn("flex flex-1  w-full md:w-1/2 items-center justify-center ", {
@@ -29,7 +30,9 @@ const PostDetails = ({ post, isHomeCard,userId, currentUser }: PostDetailsProps)
           post={post}
           currentUser={currentUser}
           isHomeCard={isHomeCard}
-          userId={ userId} />
+          userId={ userId} 
+          handleDeletePost={handleDeletePost}
+          />
       </div>
     </section>
   )

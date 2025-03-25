@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUserFromDb } from "./user.actions";
 import { revalidatePath } from "next/cache";
 import { Post, User } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 interface createPostParams {
     caption: string;
@@ -149,7 +150,9 @@ export const deletePost = async (postId: string) => {
                 id: postId
             }
         });
+
         revalidatePath('/')
+        
     } catch (error) {
         console.error('Error deleting post on server:', error);
     }
