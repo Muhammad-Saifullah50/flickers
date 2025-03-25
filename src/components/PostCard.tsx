@@ -19,8 +19,8 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
         {isVideo ? (
             <video src={post.assets[0]}
                 controls={false}
-                className='rounded-3xl w-full h-full'
-                onClick={() => router.push(`/post-modal/${post.id}`)}
+                className='rounded-3xl w-[250px] h-[250px]'
+                onClick={() => router.push(`/posts/${post.id}`)}
 
             />
         ) : (
@@ -32,7 +32,7 @@ const PostCard = ({ post, extraImageClasses }: PostCardProps) => {
                 blurDataURL={`/_next/image?url=${post.assets[0]}&w=16&q=1`}
                 placeholder='blur'
                 className={`rounded-3xl w-full h-full min-w-[200px] min-h-[200px] ${extraImageClasses}`}
-                onClick={() => router.push(`/post-modal/${post.id}`)}
+                onClick={() => router.push(`/posts/${post.id}`)}
             />
         )}
 

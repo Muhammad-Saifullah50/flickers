@@ -19,6 +19,12 @@ const FeedList = ({ initialPostsPromise, currentUser }: { initialPostsPromise: P
         setPosts(updatedPosts);
     };
 
+    // const handleSavePost = (saveId: string) => {
+    //     const saveId = posts.saves?.find((save) => save.postId === post.id)?.id;
+    // }
+// have to brainstorm on this 
+   
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             async ([entry]) => {

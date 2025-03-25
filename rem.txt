@@ -1,4 +1,1 @@
-redirect to homepage after deletion
-user page post video responssiveness
 post saving error 
-small momebnt card text overflow hidden or text small

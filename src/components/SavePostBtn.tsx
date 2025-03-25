@@ -29,7 +29,7 @@ const SavePostBtn = ({ isHomeCard, userId, postId, isSaved, saveId }: SavePostBt
             setLoading(true);
 
             if (isSaved && saveId) {
-                await UnsavePostAndFlick(saveId)
+                await UnsavePostAndFlick(saveId, pathname)
             } else {
                 await savePost(userId, postId, isHomePage && isHomePage)
             }

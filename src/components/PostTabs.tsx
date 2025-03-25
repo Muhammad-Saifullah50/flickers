@@ -40,7 +40,7 @@ const PostTabs = ({ postsPromise, flicksPromise }: PostTabsProps) => {
                 </Suspense>
             </TabsContent>
             <TabsContent value="flicks">
-            <SquarePostsGrid itemsPromise={flicksPromise} isFlicks/>
+                <SquarePostsGrid itemsPromise={flicksPromise} isFlicks />
             </TabsContent>
         </Tabs>
 

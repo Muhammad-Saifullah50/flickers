@@ -48,12 +48,12 @@ const MomentCard = ({ moment, currMoment, handlePrevious, handleNext }: MomentCa
 
         {!isCurrentMoment &&
           <div style={{ backgroundColor: moment.bgColor! }}
-            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center")}>
+            className={cn(" w-[133px] h-[235px] rounded-lg flex items-center justify-center overflow-hidden")}>
 
 
             {mediaType === 'text' ? (
               <>
-                <p className="text-2xl text-white font-bold text-center rounded-lg p-2">
+                <p className={cn("text-2xl text-white font-bold text-center rounded-lg p-2", {'text-lg': !isCurrentMoment})}>
                   {moment.text}
                 </p>
                 {!isCurrentMoment && <MomentCircle moment={moment} classNames='absolute' />}

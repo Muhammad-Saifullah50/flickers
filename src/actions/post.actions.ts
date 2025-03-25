@@ -365,7 +365,6 @@ export const updatePostShares = async (postId: string, currentShares: number) =>
         });
 
         revalidatePath(`/posts/${postId}`)
-        revalidatePath(`/post-modal/${postId}`)
     } catch (error) {
         console.error('Error updating shares on post', error)
     }
